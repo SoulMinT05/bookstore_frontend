@@ -45,7 +45,7 @@
           </td>
           <td class="border px-4 py-2 text-center align-middle">
             <button @click="viewUser(user.id)" class="text-blue-500">View</button>
-            <button @click="editUser(user.id)" class="text-yellow-500 ml-2">Edit</button>
+            <button @click="openEditUserModal(user.id)" class="text-yellow-500 ml-2">Edit</button>
             <button @click="deleteUser(user.id)" class="text-red-500 ml-2">Delete</button>
           </td>
         </tr>
@@ -152,6 +152,148 @@
         </form>
       </div>
     </div>
+
+    <!-- Edit User Modal -->
+    <!-- <div
+      v-if="isEditUserModalOpen"
+      class="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50 z-50"
+    >
+      <div class="bg-white p-6 rounded shadow-md w-96 h-auto max-h-[80vh] overflow-y-auto">
+        <h2 class="text-xl font-bold mb-4">Chỉnh sửa người dùng</h2>
+        <form @submit.prevent="updateUser">
+          <div class="mb-4">
+            <label for="editFirstName" class="block">Firstname</label>
+            <input
+              v-model="selectedUser.firstName"
+              id="editFirstName"
+              class="border w-full p-2"
+              type="text"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="editLastName" class="block">Lastname</label>
+            <input
+              v-model="selectedUser.lastName"
+              id="editLastName"
+              class="border w-full p-2"
+              type="text"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="editEmail" class="block">Email</label>
+            <input
+              v-model="selectedUser.email"
+              id="editEmail"
+              class="border w-full p-2"
+              type="email"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="editAddress" class="block">Địa chỉ</label>
+            <input
+              v-model="selectedUser.address"
+              id="editAddress"
+              class="border w-full p-2"
+              type="text"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="editRole" class="block">Vai trò</label>
+            <input
+              v-model="selectedUser.role"
+              id="editRole"
+              class="border w-full p-2"
+              type="text"
+            />
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" class="hover:opacity-80 bg-blue-500 text-white px-4 py-2 rounded">
+              Xác nhận
+            </button>
+            <button
+              @click="closeEditUserModal"
+              class="hover:opacity-80 bg-gray-500 text-white px-4 py-2 rounded ml-2"
+            >
+              Huỷ bỏ
+            </button>
+          </div>
+        </form>
+      </div>
+    </div> -->
+    <div
+      v-if="isEditUserModalOpen"
+      class="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50 z-50"
+    >
+      <div class="bg-white p-6 rounded shadow-md w-96 h-auto max-h-[80vh] overflow-y-auto">
+        <h2 class="text-xl font-bold mb-4">Chỉnh sửa người dùng</h2>
+        <form @submit.prevent="editUser">
+          <div class="mb-4">
+            <label for="editFirstName" class="block">Firstname</label>
+            <input
+              v-model="selectedUser.firstName"
+              id="editFirstName"
+              class="border w-full p-2"
+              type="text"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="editLastName" class="block">Lastname</label>
+            <input
+              v-model="selectedUser.lastName"
+              id="editLastName"
+              class="border w-full p-2"
+              type="text"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="editEmail" class="block">Email</label>
+            <input
+              v-model="selectedUser.email"
+              id="editEmail"
+              class="border w-full p-2"
+              type="email"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="editAddress" class="block">Địa chỉ</label>
+            <input
+              v-model="selectedUser.address"
+              id="editAddress"
+              class="border w-full p-2"
+              type="text"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="editRole" class="block">Vai trò</label>
+            <input
+              v-model="selectedUser.role"
+              id="editRole"
+              class="border w-full p-2"
+              type="text"
+            />
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" class="hover:opacity-90 bg-blue-500 text-white px-4 py-2 rounded">
+              Xác nhận
+            </button>
+            <button
+              @click="closeEditUserModal"
+              class="hover:opacity-90 bg-gray-500 text-white px-4 py-2 rounded ml-2"
+            >
+              Huỷ bỏ
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -182,6 +324,7 @@ export default {
       ],
       isAddUserModalOpen: false,
       isUserDetailModalOpen: false,
+      isEditUserModalOpen: false,
       selectedUser: {},
       newUser: {
         firstName: '',
@@ -210,6 +353,15 @@ export default {
       this.users.push(newUser)
       this.closeAddUserModal()
     },
+
+    openEditUserModal(user) {
+      this.selectedUser = { ...user } // Sao chép thông tin người dùng vào selectedUser
+      this.isEditUserModalOpen = true
+    },
+    closeEditUserModal() {
+      this.isEditUserModalOpen = false
+    },
+
     viewUser(userId) {
       // Logic để xem thông tin người dùng
       console.log('userId: ', userId)
@@ -219,9 +371,19 @@ export default {
     closeUserDetailModal() {
       this.isUserDetailModalOpen = false
     },
-    editUser(userId) {
-      // Logic để sửa thông tin người dùng
-      alert(`Editing user: ${userId}`)
+
+    // editUser(userId) {
+    //   // Logic để sửa thông tin người dùng
+    //   alert(`Editing user: ${userId}`)
+    // },
+    editUser() {
+      console.log('this.users: ', this.users)
+      console.log('this.selectedUser: ', this.selectedUser)
+      // const index = this.users.findIndex((u) => u.id === this.selectedUser.id)
+      // if (index !== -1) {
+      //   this.users.splice(index, 1, { ...this.selectedUser }) // Cập nhật thông tin người dùng
+      // }
+      this.closeEditUserModal() // Đóng modal sau khi cập nhật
     },
     deleteUser(userId) {
       this.users = this.users.filter((user) => user.id !== userId)
