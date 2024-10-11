@@ -52,6 +52,40 @@
       </tbody>
     </table>
 
+    <!-- View detail user -->
+    <div
+      v-if="isUserDetailModalOpen"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-lg shadow-lg p-6 w-[32rem]">
+        <h2 class="text-xl font-semibold mb-2">Thông tin người dùng</h2>
+        <p class="mb-3"><strong>Tên:</strong> {{ selectedUser.firstName }}</p>
+        <!-- Thêm khoảng cách dưới mỗi thẻ p -->
+        <p class="mb-3"><strong>Họ:</strong> {{ selectedUser.lastName }}</p>
+        <p class="mb-3"><strong>Email:</strong> {{ selectedUser.email }}</p>
+        <p class="mb-3"><strong>Địa chỉ:</strong> {{ selectedUser.address }}</p>
+        <p class="mb-3">
+          <strong>Vai trò:</strong>
+          {{ selectedUser.role === 'user' ? 'Người dùng' : 'Quản lý' }}
+        </p>
+        <p class="mb-3">
+          <strong>Trạng thái:</strong>
+          <span
+            class="inline-block px-3 py-1 ml-2 text-white rounded"
+            :class="selectedUser.isBlocked ? 'bg-red-500' : 'bg-green-500'"
+          >
+            {{ selectedUser.isBlocked ? 'Blocked' : 'Active' }}
+          </span>
+        </p>
+        <button
+          @click="closeUserDetailModal"
+          class="flex justify-end hover:opacity-90 bg-red-500 text-white px-4 py-2 rounded mt-4 ml-auto"
+        >
+          Đóng
+        </button>
+      </div>
+    </div>
+
     <!-- Add User Modal (Example) -->
     <div
       v-if="isAddUserModalOpen"
@@ -147,12 +181,14 @@ export default {
         // Thêm dữ liệu người dùng mẫu khác ở đây
       ],
       isAddUserModalOpen: false,
+      isUserDetailModalOpen: false,
+      selectedUser: {},
       newUser: {
         firstName: '',
         lastName: '',
         email: '',
         address: '',
-        role: ''
+        role: 'user'
       }
     }
   },
@@ -160,9 +196,10 @@ export default {
     openAddUserModal() {
       this.isAddUserModalOpen = true
     },
+
     closeAddUserModal() {
       this.isAddUserModalOpen = false
-      this.newUser = { firstName: '', lastName: '', email: '', address: '', role: '' } // Reset form
+      this.newUser = { firstName: '', lastName: '', email: '', address: '', role: 'user' } // Reset form
     },
     addUser() {
       const newUser = {
@@ -175,7 +212,12 @@ export default {
     },
     viewUser(userId) {
       // Logic để xem thông tin người dùng
-      alert(`Viewing user: ${userId}`)
+      console.log('userId: ', userId)
+      this.selectedUser = userId // Lưu thông tin người dùng đã chọn
+      this.isUserDetailModalOpen = true
+    },
+    closeUserDetailModal() {
+      this.isUserDetailModalOpen = false
     },
     editUser(userId) {
       // Logic để sửa thông tin người dùng
