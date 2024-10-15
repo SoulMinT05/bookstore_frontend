@@ -1,378 +1,343 @@
 <template>
-    <div class="p-4">
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold">Quản lý người dùng</h1>
-            <button @click="openAddUserModal" class="hover:opacity-90 bg-blue-500 text-white px-4 py-2 rounded">
-                Thêm người dùng
-            </button>
+    <div class="container">
+        <h1 class="text-3xl font-bold mb-6">User Management</h1>
+        <!-- <button @click="addUser" class="mb-4 px-4 py-2 bg-green-500 text-white rounded-md">Add User</button> -->
+        <button
+            @click="showAddUserModal"
+            type="button"
+            class="text-white mb-4 bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition duration-150 ease-in-out"
+        >
+            Add User
+        </button>
+
+        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+            <table class="w-full table-auto">
+                <thead>
+                    <tr class="text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">First Name</th>
+                        <th class="py-3 px-6 text-left">Last Name</th>
+                        <th class="py-3 px-6 text-left">Email</th>
+                        <th class="py-3 px-6 text-center">Status</th>
+                        <th class="py-3 px-6 text-center">Role</th>
+                        <th class="py-3 px-6 text-center">Creation Date</th>
+                        <th class="py-3 px-6 text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-600 text-sm font-light">
+                    <tr
+                        v-for="user in paginatedUsers"
+                        :key="user.id"
+                        class="border-b border-gray-200 hover:bg-gray-100"
+                    >
+                        <td class="py-3 px-6 text-left">
+                            <span class="font-medium">{{ user.firstName }}</span>
+                        </td>
+                        <td class="py-3 px-6 text-left">
+                            <span>{{ user.lastName }}</span>
+                        </td>
+                        <td class="py-3 px-6 text-left">
+                            <span>{{ user.email }}</span>
+                        </td>
+                        <td class="px-6 py-4 flex justify-center items-center">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer" v-model="user.isLocked" />
+                                <div
+                                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer dark:bg-gray-700 peer-checked:bg-blue-600 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"
+                                ></div>
+                                <!-- <span class="ml-2 text-sm font-medium text-gray-900">{{
+                                  user.isLocked ? 'Unlocked' : 'Locked'
+                              }}</span> -->
+                            </label>
+                        </td>
+
+                        <td class="py-3 px-6 text-center">
+                            <span
+                                :class="[
+                                    user.role === 'Admin' ? 'bg-green-200 text-green-600' : 'bg-red-200 text-red-600',
+                                    'py-1 px-3 rounded-full text-xs',
+                                ]"
+                            >
+                                {{ user.role }}
+                            </span>
+                        </td>
+                        <td class="py-3 px-6 text-center">
+                            <span>{{ user.createdAt }}</span>
+                        </td>
+                        <td class="py-3 px-6 text-center">
+                            <div class="flex item-center justify-center">
+                                <button
+                                    @click="viewUser(user)"
+                                    class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110 transition-all duration-300 z-50"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button
+                                    @click="editUser(user)"
+                                    class="w-4 mr-2 transform hover:text-yellow-500 hover:scale-110 transition-all duration-300"
+                                >
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button
+                                    @click="deleteUser(user)"
+                                    class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 transition-all duration-300"
+                                >
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <table class="min-w-full mt-4 border">
-            <thead>
-                <tr>
-                    <th class="border px-4 py-2">Firstname</th>
-                    <th class="border px-4 py-2">Lastname</th>
-                    <th class="border px-4 py-2">Email</th>
-                    <th class="border px-4 py-2">Địa chỉ</th>
-                    <th class="border px-4 py-2">Vai trò</th>
-                    <th class="border px-4 py-2">Trạng thái</th>
-                    <th class="border px-4 py-2">Ngày tạo</th>
-                    <th class="border px-4 py-2">Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="user in users" :key="user.id">
-                    <td class="border px-4 py-2 text-center align-middle">{{ user.firstName }}</td>
-                    <td class="border px-4 py-2 text-center align-middle">{{ user.lastName }}</td>
-                    <td class="border px-4 py-2 text-center align-middle">{{ user.email }}</td>
-                    <td class="border px-4 py-2 text-center align-middle">{{ user.address }}</td>
-                    <td class="border px-4 py-2 text-center align-middle">
-                        {{ user.role === 'user' ? 'Người dùng' : 'Quản lý' }}
-                    </td>
-                    <td class="border px-4 py-2 text-center align-middle">
-                        <span
-                            class="inline-block text-xs font-medium me-2 px-2.5 py-0.5 rounded"
-                            :class="
-                                user.isBlocked
-                                    ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-                                    : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                            "
+        <!-- Add user modal -->
+        <div
+            v-if="isAddUserModalVisible"
+            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+        >
+            <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3">
+                <h2 class="text-lg font-bold mb-4">Add New User</h2>
+                <form @submit.prevent="addUser">
+                    <div class="mb-4">
+                        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <input
+                            v-model="newUser.firstName"
+                            type="text"
+                            id="firstName"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <input
+                            v-model="newUser.lastName"
+                            type="text"
+                            id="lastName"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input
+                            v-model="newUser.email"
+                            type="email"
+                            id="email"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div>
+                    <div class="flex justify-end mt-6">
+                        <button
+                            type="button"
+                            @click="closeAddUserModal"
+                            class="mr-2 px-4 py-2 bg-gray-500 text-white rounded-md"
                         >
-                            {{ user.isBlocked ? 'Blocked' : 'Active' }}
-                        </span>
-                    </td>
-                    <td class="border px-4 py-2 text-center align-middle">{{ user.createdAt }}</td>
-                    <td class="border px-4 py-2 text-center align-middle">
-                        <button @click="viewUser(user.id)" class="text-blue-500">View</button>
-                        <button @click="openEditUserModal(user.id)" class="text-yellow-500 ml-2">Edit</button>
-                        <button @click="deleteUser(user.id)" class="text-red-500 ml-2">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">Add User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <!-- View detail user -->
         <div
-            v-if="isUserDetailModalOpen"
-            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            v-if="selectedUser"
+            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            @click="closeModal"
         >
-            <div class="bg-white rounded-lg shadow-lg p-6 w-[32rem]">
-                <h2 class="text-xl font-semibold mb-2">Thông tin người dùng</h2>
-                <p class="mb-3"><strong>Tên:</strong> {{ selectedUser.firstName }}</p>
-                <!-- Thêm khoảng cách dưới mỗi thẻ p -->
-                <p class="mb-3"><strong>Họ:</strong> {{ selectedUser.lastName }}</p>
-                <p class="mb-3"><strong>Email:</strong> {{ selectedUser.email }}</p>
-                <p class="mb-3"><strong>Địa chỉ:</strong> {{ selectedUser.address }}</p>
-                <p class="mb-3">
-                    <strong>Vai trò:</strong>
-                    {{ selectedUser.role === 'user' ? 'Người dùng' : 'Quản lý' }}
-                </p>
-                <p class="mb-3">
-                    <strong>Trạng thái:</strong>
-                </p>
-
-                <p class="border px-4 py-2 text-center align-middle">
-                    <span
-                        class="inline-block text-xs font-medium me-2 px-2.5 py-0.5 rounded"
-                        :class="
-                            selectedUser.isBlocked
-                                ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-                                : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                        "
-                    >
-                        {{ selectedUser.isBlocked ? 'Blocked' : 'Active' }}
-                    </span>
-                </p>
-
-                <!-- </p> -->
-                <!-- <p class="mb-3">
-          <strong>Trạng thái:</strong>
-          <span
-            class="inline-block px-3 py-1 ml-2 text-white rounded"
-            :class="selectedUser.isBlocked ? 'bg-red-500' : 'bg-green-500'"
-          >
-            {{ selectedUser.isBlocked ? 'Blocked' : 'Active' }}
-          </span>
-        </p> -->
-                <button
-                    @click="closeUserDetailModal"
-                    class="flex justify-end hover:opacity-90 bg-red-500 text-white px-4 py-2 rounded mt-4 ml-auto"
-                >
-                    Đóng
-                </button>
+            <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3">
+                <h2 class="text-lg font-bold mb-4">User Details</h2>
+                <p><strong>First Name:</strong> {{ selectedUser.firstName }}</p>
+                <p><strong>Last Name:</strong> {{ selectedUser.lastName }}</p>
+                <p><strong>Email:</strong> {{ selectedUser.email }}</p>
+                <p><strong>Status:</strong> {{ selectedUser.isLocked ? 'Locked' : 'Unlocked' }}</p>
+                <p><strong>Role:</strong> {{ selectedUser.role }}</p>
+                <p><strong>Creation Date:</strong> {{ selectedUser.createdAt }}</p>
+                <div class="mt-4">
+                    <button @click="closeModal" class="text-white bg-blue-500 rounded-md px-4 py-2">Close</button>
+                </div>
             </div>
         </div>
 
-        <!-- Add User Modal (Example) -->
+        <!-- Edit user modal -->
         <div
-            v-if="isAddUserModalOpen"
-            class="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50 z-50"
+            v-if="isEditUserModalVisible"
+            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
-            <div class="bg-white p-6 rounded shadow-md w-96 h-auto max-h-[80vh] overflow-y-auto">
-                <h2 class="text-xl font-bold mb-4">Thêm người dùng</h2>
-                <form @submit.prevent="addUser">
+            <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3">
+                <h2 class="text-lg font-bold mb-4">Edit User</h2>
+                <form @submit.prevent="saveEditedUser">
                     <div class="mb-4">
-                        <label for="firstName" class="block">Firstname</label>
+                        <label for="editFirstName" class="block text-sm font-medium text-gray-700">First Name</label>
                         <input
-                            v-model="newUser.firstName"
-                            id="firstName"
-                            class="border w-full p-2"
+                            v-model="userToEdit.firstName"
                             type="text"
-                            required
-                        />
-                    </div>
-                    <div class="mb-4">
-                        <label for="lastName" class="block">Lastname</label>
-                        <input
-                            v-model="newUser.lastName"
-                            id="lastName"
-                            class="border w-full p-2"
-                            type="text"
-                            required
-                        />
-                    </div>
-                    <div class="mb-4">
-                        <label for="email" class="block">Email</label>
-                        <input v-model="newUser.email" id="email" class="border w-full p-2" type="email" required />
-                    </div>
-                    <div class="mb-4">
-                        <label for="address" class="block">Địa chỉ</label>
-                        <input v-model="newUser.address" id="address" class="border w-full p-2" type="text" required />
-                    </div>
-                    <div class="mb-4">
-                        <label for="role" class="block">Vai trò</label>
-                        <input v-model="newUser.role" id="role" class="border w-full p-2" type="text" />
-                    </div>
-                    <div class="flex justify-end">
-                        <button type="submit" class="hover:opacity-80 bg-blue-500 text-white px-4 py-2 rounded">
-                            Xác nhận
-                        </button>
-                        <button
-                            @click="closeAddUserModal"
-                            class="hover:opacity-80 bg-gray-500 text-white px-4 py-2 rounded ml-2"
-                        >
-                            Huỷ bỏ
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Edit User Modal -->
-
-        <div
-            v-if="isEditUserModalOpen"
-            class="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50 z-50"
-        >
-            <div class="bg-white p-6 rounded shadow-md w-96 h-auto max-h-[80vh] overflow-y-auto">
-                <h2 class="text-xl font-bold mb-4">Chỉnh sửa người dùng</h2>
-                <form @submit.prevent="editUser">
-                    <div class="mb-4">
-                        <label for="editFirstName" class="block">Firstname</label>
-                        <input
-                            v-model="selectedUser.firstName"
                             id="editFirstName"
-                            class="border w-full p-2"
-                            type="text"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editLastName" class="block">Lastname</label>
+                        <label for="editLastName" class="block text-sm font-medium text-gray-700">Last Name</label>
                         <input
-                            v-model="selectedUser.lastName"
+                            v-model="userToEdit.lastName"
+                            type="text"
                             id="editLastName"
-                            class="border w-full p-2"
-                            type="text"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editEmail" class="block">Email</label>
+                        <label for="editEmail" class="block text-sm font-medium text-gray-700">Email</label>
                         <input
-                            v-model="selectedUser.email"
-                            id="editEmail"
-                            class="border w-full p-2"
+                            v-model="userToEdit.email"
                             type="email"
+                            id="editEmail"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
                     </div>
-                    <div class="mb-4">
-                        <label for="editAddress" class="block">Địa chỉ</label>
-                        <input
-                            v-model="selectedUser.address"
-                            id="editAddress"
-                            class="border w-full p-2"
-                            type="text"
-                            required
-                        />
-                    </div>
-                    <div class="mb-4">
-                        <label for="editRole" class="block">Vai trò</label>
-                        <input v-model="selectedUser.role" id="editRole" class="border w-full p-2" type="text" />
-                    </div>
-                    <div class="flex justify-end">
-                        <button type="submit" class="hover:opacity-90 bg-blue-500 text-white px-4 py-2 rounded">
-                            Xác nhận
-                        </button>
+                    <div class="flex justify-end mt-6">
                         <button
+                            type="button"
                             @click="closeEditUserModal"
-                            class="hover:opacity-90 bg-gray-500 text-white px-4 py-2 rounded ml-2"
+                            class="mr-2 px-4 py-2 bg-gray-500 text-white rounded-md"
                         >
-                            Huỷ bỏ
+                            Cancel
                         </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">Save Changes</button>
                     </div>
                 </form>
             </div>
+        </div>
+
+        <div class="mt-4 flex justify-between">
+            <button
+                @click="previousPage"
+                :disabled="currentPage === 1"
+                class="px-4 py-2 bg-blue-500 text-white rounded-md hover:opacity-95 transition duration-150 ease-in-out"
+            >
+                Previous
+            </button>
+            <span class="self-center">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button
+                @click="nextPage"
+                :disabled="currentPage === totalPages"
+                class="px-4 py-2 bg-blue-500 text-white rounded-md hover:opacity-95 transition duration-150 ease-in-out"
+            >
+                Next
+            </button>
         </div>
     </div>
 </template>
 
 <script>
-import axiosConfig from '@/config/axiosConfig'; // Đường dẫn tuỳ thuộc vào nơi bạn đặt axiosInstance.js
-
 export default {
     data() {
         return {
-            users: [],
-
-            newUser: {
-                firstName: '',
-                lastName: '',
-                email: '',
-                address: '',
-                role: 'user',
-            },
-            selectedUser: {},
-            products: [
-                {
-                    id: 1,
-                    code: 'P001',
-                    name: 'Product 1',
-                    image: 'product1.jpg',
-                    price: 100,
-                    category: 'Category 1',
-                    rating: 4,
-                    inventoryStatus: 'In Stock',
-                },
-                {
-                    id: 2,
-                    code: 'P002',
-                    name: 'Product 2',
-                    image: 'product2.jpg',
-                    price: 150,
-                    category: 'Category 2',
-                    rating: 5,
-                    inventoryStatus: 'Low Stock',
-                },
-                {
-                    id: 3,
-                    code: 'P003',
-                    name: 'Product 3',
-                    image: 'product3.jpg',
-                    price: 200,
-                    category: 'Category 3',
-                    rating: 3,
-                    inventoryStatus: 'Out of Stock',
-                },
-                // Thêm các sản phẩm khác vào đây
-            ],
-            selectedProducts: [],
-            filters: {
-                global: { value: '', matchMode: 'contains' },
-            },
-            isAddUserModalOpen: false,
-            isUserDetailModalOpen: false,
-            isEditUserModalOpen: false,
+            users: [], // Dữ liệu người dùng
+            newUser: { firstName: '', lastName: '', email: '' },
+            isAddUserModalVisible: false,
+            currentPage: 1, // Bắt đầu với trang đầu tiên
+            pageSize: 10, // Hiển thị 10 người dùng mỗi trang
+            selectedUser: null,
+            userToEdit: null,
+            isEditUserModalVisible: false, // For Edit User modal
         };
     },
+    computed: {
+        totalPages() {
+            return Math.ceil(this.users.length / this.pageSize);
+        },
+        paginatedUsers() {
+            const start = (this.currentPage - 1) * this.pageSize;
+            return this.users.slice(start, start + this.pageSize);
+        },
+    },
     methods: {
-        async fetchUsers() {
-            try {
-                const res = await fetch('/api/user/getAllUsers', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const data = await res.json();
-                console.log('data: ', data);
-
-                // this.users = res.data;
-                console.log('this.users: ', this.users);
-            } catch (error) {
-                console.error('Lỗi khi lấy danh sách người dùng:', error);
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++;
             }
         },
-        openAddUserModal() {
-            this.isAddUserModalOpen = true;
+        previousPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+            }
         },
-
+        showAddUserModal() {
+            this.isAddUserModalVisible = true;
+        },
         closeAddUserModal() {
-            this.isAddUserModalOpen = false;
-            this.newUser = { firstName: '', lastName: '', email: '', address: '', role: 'user' }; // Reset form
+            this.isAddUserModalVisible = false;
+            this.resetNewUser(); // Đặt lại thông tin người dùng mới sau khi đóng modal
+        },
+        resetNewUser() {
+            this.newUser = { firstName: '', lastName: '', email: '' };
         },
         addUser() {
+            // Thêm người dùng mới vào danh sách
             const newUser = {
                 id: this.users.length + 1,
-                ...this.newUser,
-                isBlocked: false,
+                firstName: this.newUser.firstName,
+                lastName: this.newUser.lastName,
+                email: this.newUser.email,
+                isLocked: false, // Mặc định khóa là false
+                role: 'User', // Mặc định role là User
+                createdAt: new Date().toLocaleDateString(),
             };
-            this.users.push(newUser);
-            this.closeAddUserModal();
+            this.users.push(newUser); // Thêm người dùng mới vào danh sách
+            this.closeAddUserModal(); // Đóng modal sau khi thêm người dùng
         },
-
-        openEditUserModal(user) {
-            this.selectedUser = { ...user }; // Sao chép thông tin người dùng vào selectedUser
-            this.isEditUserModalOpen = true;
+        editUser(user) {
+            this.userToEdit = { ...user }; // Make a copy of the user object to avoid directly modifying the array
+            this.isEditUserModalVisible = true;
         },
         closeEditUserModal() {
-            this.isEditUserModalOpen = false;
+            this.isEditUserModalVisible = false;
+            this.userToEdit = null; // Clear the userToEdit data after closing the modal
+        },
+        saveEditedUser() {
+            // Find the user in the users array and update its data
+            const index = this.users.findIndex((u) => u.id === this.userToEdit.id);
+            if (index !== -1) {
+                this.users.splice(index, 1, this.userToEdit); // Replace the old user with the edited user
+            }
+            this.closeEditUserModal(); // Close the modal after saving
+        },
+        viewUser(user) {
+            // Logic xem chi tiết người dùng
+            this.selectedUser = user;
+        },
+        closeModal() {
+            this.selectedUser = null;
         },
 
-        viewUser(userId) {
-            // Logic để xem thông tin người dùng
-            console.log('userId: ', userId);
-            this.selectedUser = userId; // Lưu thông tin người dùng đã chọn
-            this.isUserDetailModalOpen = true;
-        },
-        closeUserDetailModal() {
-            this.isUserDetailModalOpen = false;
-        },
-
-        // editUser(userId) {
-        //   // Logic để sửa thông tin người dùng
-        //   alert(`Editing user: ${userId}`)
-        // },
-        editUser() {
-            console.log('this.users: ', this.users);
-            console.log('this.selectedUser: ', this.selectedUser);
-            // const index = this.users.findIndex((u) => u.id === this.selectedUser.id)
-            // if (index !== -1) {
-            //   this.users.splice(index, 1, { ...this.selectedUser }) // Cập nhật thông tin người dùng
-            // }
-            this.closeEditUserModal(); // Đóng modal sau khi cập nhật
-        },
-        deleteUser(userId) {
-            this.users = this.users.filter((user) => user.id !== userId);
+        deleteUser(user) {
+            if (window.confirm(`Are you sure you want to delete ${user.firstName} ${user.lastName}?`)) {
+                // Proceed with deletion
+                this.users = this.users.filter((u) => u.id !== user.id);
+            }
         },
     },
     mounted() {
-        this.fetchUsers();
+        // Giả lập dữ liệu người dùng (thay thế bằng API gọi thực tế)
+        this.users = Array.from({ length: 50 }, (_, index) => ({
+            id: index + 1,
+            firstName: `First ${index + 1}`,
+            lastName: `Last ${index + 1}`,
+            email: `user${index + 1}@example.com`,
+            isLocked: false,
+            role: index % 2 === 0 ? 'Admin' : 'User',
+            createdAt: new Date().toLocaleDateString(),
+        }));
     },
 };
 </script>
 
 <style scoped>
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table th,
-.table td {
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #ddd;
-}
+/* Thêm CSS tùy chỉnh ở đây nếu cần */
 </style>

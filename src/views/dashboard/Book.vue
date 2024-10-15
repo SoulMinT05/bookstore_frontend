@@ -3,6 +3,7 @@
         <h1 class="text-3xl font-bold mb-6">User Management</h1>
         <!-- <button @click="addUser" class="mb-4 px-4 py-2 bg-green-500 text-white rounded-md">Add User</button> -->
         <button
+            @click="showAddUserModal"
             type="button"
             class="text-white mb-4 bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition duration-150 ease-in-out"
         >
@@ -60,7 +61,7 @@
                             </span>
                         </td>
                         <td class="py-3 px-6 text-center">
-                            <span>{{ user.creationDate }}</span>
+                            <span>{{ user.createdAt }}</span>
                         </td>
                         <td class="py-3 px-6 text-center">
                             <div class="flex item-center justify-center">
@@ -77,7 +78,7 @@
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button
-                                    @click="confirmDelete(user)"
+                                    @click="deleteUser(user)"
                                     class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 transition-all duration-300"
                                 >
                                     <i class="fas fa-trash-alt"></i>
@@ -87,6 +88,58 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Add user modal -->
+        <div
+            v-if="isAddUserModalVisible"
+            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+        >
+            <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3">
+                <h2 class="text-lg font-bold mb-4">Add New User</h2>
+                <form @submit.prevent="addUser">
+                    <div class="mb-4">
+                        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <input
+                            v-model="newUser.firstName"
+                            type="text"
+                            id="firstName"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <input
+                            v-model="newUser.lastName"
+                            type="text"
+                            id="lastName"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input
+                            v-model="newUser.email"
+                            type="email"
+                            id="email"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div>
+                    <div class="flex justify-end mt-6">
+                        <button
+                            type="button"
+                            @click="closeAddUserModal"
+                            class="mr-2 px-4 py-2 bg-gray-500 text-white rounded-md"
+                        >
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">Add User</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- View detail user -->
@@ -102,12 +155,65 @@
                 <p><strong>Email:</strong> {{ selectedUser.email }}</p>
                 <p><strong>Status:</strong> {{ selectedUser.isLocked ? 'Locked' : 'Unlocked' }}</p>
                 <p><strong>Role:</strong> {{ selectedUser.role }}</p>
-                <p><strong>Creation Date:</strong> {{ selectedUser.creationDate }}</p>
+                <p><strong>Creation Date:</strong> {{ selectedUser.createdAt }}</p>
                 <div class="mt-4">
                     <button @click="closeModal" class="text-white bg-blue-500 rounded-md px-4 py-2">Close</button>
                 </div>
             </div>
         </div>
+
+        <!-- Edit user modal -->
+        <div
+            v-if="isEditUserModalVisible"
+            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+        >
+            <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3">
+                <h2 class="text-lg font-bold mb-4">Edit User</h2>
+                <form @submit.prevent="saveEditedUser">
+                    <div class="mb-4">
+                        <label for="editFirstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <input
+                            v-model="userToEdit.firstName"
+                            type="text"
+                            id="editFirstName"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <label for="editLastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <input
+                            v-model="userToEdit.lastName"
+                            type="text"
+                            id="editLastName"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <label for="editEmail" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input
+                            v-model="userToEdit.email"
+                            type="email"
+                            id="editEmail"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div>
+                    <div class="flex justify-end mt-6">
+                        <button
+                            type="button"
+                            @click="closeEditUserModal"
+                            class="mr-2 px-4 py-2 bg-gray-500 text-white rounded-md"
+                        >
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="mt-4 flex justify-between">
             <button
                 @click="previousPage"
@@ -133,9 +239,13 @@ export default {
     data() {
         return {
             users: [], // Dữ liệu người dùng
+            newUser: { firstName: '', lastName: '', email: '' },
+            isAddUserModalVisible: false,
             currentPage: 1, // Bắt đầu với trang đầu tiên
             pageSize: 10, // Hiển thị 10 người dùng mỗi trang
             selectedUser: null,
+            userToEdit: null,
+            isEditUserModalVisible: false, // For Edit User modal
         };
     },
     computed: {
@@ -158,6 +268,46 @@ export default {
                 this.currentPage--;
             }
         },
+        showAddUserModal() {
+            this.isAddUserModalVisible = true;
+        },
+        closeAddUserModal() {
+            this.isAddUserModalVisible = false;
+            this.resetNewUser(); // Đặt lại thông tin người dùng mới sau khi đóng modal
+        },
+        resetNewUser() {
+            this.newUser = { firstName: '', lastName: '', email: '' };
+        },
+        addUser() {
+            // Thêm người dùng mới vào danh sách
+            const newUser = {
+                id: this.users.length + 1,
+                firstName: this.newUser.firstName,
+                lastName: this.newUser.lastName,
+                email: this.newUser.email,
+                isLocked: false, // Mặc định khóa là false
+                role: 'User', // Mặc định role là User
+                createdAt: new Date().toLocaleDateString(),
+            };
+            this.users.push(newUser); // Thêm người dùng mới vào danh sách
+            this.closeAddUserModal(); // Đóng modal sau khi thêm người dùng
+        },
+        editUser(user) {
+            this.userToEdit = { ...user }; // Make a copy of the user object to avoid directly modifying the array
+            this.isEditUserModalVisible = true;
+        },
+        closeEditUserModal() {
+            this.isEditUserModalVisible = false;
+            this.userToEdit = null; // Clear the userToEdit data after closing the modal
+        },
+        saveEditedUser() {
+            // Find the user in the users array and update its data
+            const index = this.users.findIndex((u) => u.id === this.userToEdit.id);
+            if (index !== -1) {
+                this.users.splice(index, 1, this.userToEdit); // Replace the old user with the edited user
+            }
+            this.closeEditUserModal(); // Close the modal after saving
+        },
         viewUser(user) {
             // Logic xem chi tiết người dùng
             this.selectedUser = user;
@@ -165,11 +315,12 @@ export default {
         closeModal() {
             this.selectedUser = null;
         },
-        editUser(user) {
-            // Logic sửa thông tin người dùng
-        },
-        confirmDelete(user) {
-            // Logic xác nhận xóa người dùng
+
+        deleteUser(user) {
+            if (window.confirm(`Are you sure you want to delete ${user.firstName} ${user.lastName}?`)) {
+                // Proceed with deletion
+                this.users = this.users.filter((u) => u.id !== user.id);
+            }
         },
     },
     mounted() {
@@ -181,7 +332,7 @@ export default {
             email: `user${index + 1}@example.com`,
             isLocked: false,
             role: index % 2 === 0 ? 'Admin' : 'User',
-            creationDate: new Date().toLocaleDateString(),
+            createdAt: new Date().toLocaleDateString(),
         }));
     },
 };
