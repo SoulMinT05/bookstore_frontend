@@ -21,6 +21,7 @@
                                     >
                                     <input
                                         type="text"
+                                        placeholder="Nguyen Van"
                                         v-model="firstName"
                                         id="firstName"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -35,6 +36,7 @@
                                     >
                                     <input
                                         type="text"
+                                        placeholder="Teo"
                                         v-model="lastName"
                                         id="lastName"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -51,7 +53,7 @@
                                     v-model="email"
                                     id="email"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="name@company.com"
+                                    placeholder="name@gmail.com"
                                     required
                                 />
                             </div>
@@ -65,7 +67,7 @@
                                     type="text"
                                     v-model="password"
                                     id="password"
-                                    placeholder="••••••••"
+                                    placeholder="password"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     required
                                 />
@@ -76,13 +78,14 @@
                             >
                                 Create account
                             </button>
-                            <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                            <p class="text-center text-sm font-light text-gray-500 dark:text-gray-400">
                                 Already have an account?
                                 <router-link
                                     to="/login"
-                                    class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                                    >Login here</router-link
+                                    class="font-medium text-blue-600 hover:underline dark:text-blue-500"
                                 >
+                                    Login here
+                                </router-link>
                             </p>
                         </form>
                     </div>
@@ -94,6 +97,7 @@
 
 <script>
 import { useToast } from 'vue-toastification';
+import { useRouter } from 'vue-router';
 
 export default {
     data() {
@@ -130,7 +134,8 @@ export default {
                     toast.error(data.message);
                     return;
                 }
-                toast.success('Đăng ký thành công!');
+                toast.success('Đăng ký thành công!. Hãy đăng nhập tài khoản');
+                this.$router.push('/login');
             } catch (error) {
                 console.error('Error:', error);
                 toast.error('Đăng ký thất bại: ' + error.message);
