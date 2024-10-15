@@ -1,43 +1,17 @@
-<script setup lang="ts">
-import { useForm } from 'vee-validate';
-import { toTypedSchema } from '@vee-validate/zod';
-import * as z from 'zod';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { FormControl, FormField, FormLabel, FormItem } from '@/components/ui/form';
-
-const formSchema = toTypedSchema(
-    z.object({
-        password: z.string().min(8),
-        email: z.string().email(),
-    }),
-);
-
-const form = useForm({
-    validationSchema: formSchema,
-});
-
-const onSubmit = form.handleSubmit((val) => {
-    console.log(val);
-});
-</script>
 <template>
     <main class="h-screen w-screen flex items-center justify-center">
         <section class="bg-gray-50 dark:bg-gray-900">
             <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
                 <div
-                    class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-sm lg:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+                    class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
                 >
                     <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1
                             class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
                         >
-                            Sign up
+                            Register
                         </h1>
-                        <form class="space-y-4 md:space-y-6" action="#">
+                        <form class="space-y-4 md:space-y-6" @submit.prevent="onRegister">
                             <div class="flex gap-4">
                                 <div class="w-1/2">
                                     <label
@@ -47,7 +21,7 @@ const onSubmit = form.handleSubmit((val) => {
                                     >
                                     <input
                                         type="text"
-                                        name="firstName"
+                                        v-model="firstName"
                                         id="firstName"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         required
@@ -61,7 +35,7 @@ const onSubmit = form.handleSubmit((val) => {
                                     >
                                     <input
                                         type="text"
-                                        name="lastName"
+                                        v-model="lastName"
                                         id="lastName"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         required
@@ -74,7 +48,7 @@ const onSubmit = form.handleSubmit((val) => {
                                 >
                                 <input
                                     type="email"
-                                    name="email"
+                                    v-model="email"
                                     id="email"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="name@company.com"
@@ -88,35 +62,14 @@ const onSubmit = form.handleSubmit((val) => {
                                     >Password</label
                                 >
                                 <input
-                                    type="password"
-                                    name="password"
+                                    type="text"
+                                    v-model="password"
                                     id="password"
                                     placeholder="••••••••"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     required
                                 />
                             </div>
-
-                            <!-- Uncomment this section if you want to include terms acceptance -->
-                            <!--
-                          <div class="flex items-start">
-                              <div class="flex items-center h-5">
-                                  <input
-                                      id="terms"
-                                      aria-describedby="terms"
-                                      type="checkbox"
-                                      class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                                      required
-                                  />
-                              </div>
-                              <div class="ml-3 text-sm">
-                                  <label for="terms" class="font-light text-gray-500 dark:text-gray-300">I accept the
-                                      <a class="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Terms and Conditions</a>
-                                  </label>
-                              </div>
-                          </div>
-                          -->
-
                             <button
                                 type="submit"
                                 class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -128,9 +81,8 @@ const onSubmit = form.handleSubmit((val) => {
                                 <router-link
                                     to="/login"
                                     class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                                    >Login here</router-link
                                 >
-                                    Login here
-                                </router-link>
                             </p>
                         </form>
                     </div>
@@ -139,6 +91,54 @@ const onSubmit = form.handleSubmit((val) => {
         </section>
     </main>
 </template>
+
+<script>
+import { useToast } from 'vue-toastification';
+
+export default {
+    data() {
+        return {
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+        };
+    },
+    methods: {
+        async onRegister() {
+            const userData = {
+                firstName: this.firstName,
+                lastName: this.lastName,
+                email: this.email,
+                password: this.password,
+            };
+
+            try {
+                const res = await fetch('http://localhost:3001/api/user/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData),
+                });
+
+                const toast = useToast(); // Khởi tạo toast
+                const data = await res.json();
+                console.log('dataRegister: ', data); // Xử lý dữ liệu trả về
+
+                if (!data.success) {
+                    toast.error(data.message);
+                    return;
+                }
+                toast.success('Đăng ký thành công!');
+            } catch (error) {
+                console.error('Error:', error);
+                toast.error('Đăng ký thất bại: ' + error.message);
+            }
+        },
+    },
+};
+</script>
 
 <style scoped>
 /* Điều chỉnh kích thước form */

@@ -55,7 +55,7 @@ const onSubmit = form.handleSubmit((val) => {
                                 >Password</label
                             >
                             <input
-                                type="password"
+                                type="text"
                                 name="password"
                                 id="password"
                                 placeholder="••••••••"
@@ -89,7 +89,7 @@ const onSubmit = form.handleSubmit((val) => {
                         >
                             Sign in
                         </button>
-                        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                        <p class="text-sm text-center font-light text-gray-500 dark:text-gray-400">
                             Don’t have an account yet?
                             <router-link
                                 to="/register"
