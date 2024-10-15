@@ -62,7 +62,6 @@
 
 <script>
 import { useToast } from 'vue-toastification';
-import { useRouter } from 'vue-router';
 
 export default {
     data() {
@@ -95,7 +94,7 @@ export default {
                 }
                 toast.success('Đăng nhập thành công!');
                 localStorage.setItem('user', JSON.stringify(data)); // Store user info
-                this.$router.push('/');
+                this.$router.push('/admin/dashboard');
             } catch (error) {
                 console.log('error: ', error);
                 toast.error(error.message);
