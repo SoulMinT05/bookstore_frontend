@@ -2,13 +2,21 @@
     <div class="container">
         <h1 class="text-3xl font-bold mb-6">Quản lý người dùng</h1>
         <!-- <button @click="addUser" class="mb-4 px-4 py-2 bg-green-500 text-white rounded-md">Add User</button> -->
-        <button
-            @click="showAddUserModal"
-            type="button"
-            class="cursor-pointer text-white mb-4 bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition duration-150 ease-in-out"
-        >
-            Thêm người dùng
-        </button>
+        <div class="flex justify-between items-center">
+            <button
+                @click="showAddUserModal"
+                type="button"
+                class="cursor-pointer text-white mb-4 bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition duration-150 ease-in-out"
+            >
+                Thêm người dùng
+            </button>
+            <button
+                @click="exportToExcel"
+                class="cursor-pointer hover:opacity-95 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 transition duration-150 ease-in-out"
+            >
+                Xuất excel
+            </button>
+        </div>
 
         <div class="overflow-x-auto bg-white shadow-md rounded-lg">
             <div v-if="isLoading" class="flex justify-center items-center py-10">
@@ -375,7 +383,7 @@
 
 <script>
 import { useToast } from 'vue-toastification';
-console.log('Birthday for edit:', this?.userToEdit?.birthday);
+import * as XLSX from 'xlsx';
 
 export default {
     data() {
@@ -393,7 +401,7 @@ export default {
             },
             isAddUserModalVisible: false,
             currentPage: 1, // Bắt đầu với trang đầu tiên
-            pageSize: 5, // Hiển thị 10 người dùng mỗi trang
+            pageSize: 5, // Hiển thị 5 người dùng mỗi trang
             selectedUser: null,
             userToEdit: null,
             isEditUserModalVisible: false, // For Edit User modal
@@ -447,7 +455,22 @@ export default {
             const year = date.getFullYear(); // Lấy năm
             return `${year}-${month}-${day}`;
         },
+        exportToExcel() {
+            // Tạo một workbook mới
+            const wb = XLSX.utils.book_new();
 
+            // Chuyển đổi dữ liệu người dùng thành bảng
+            const ws = XLSX.utils.json_to_sheet(this.users);
+
+            // Thêm bảng vào workbook
+            XLSX.utils.book_append_sheet(wb, ws, 'Users');
+
+            // Tạo tên file
+            const fileName = `users_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+            // Xuất file
+            XLSX.writeFile(wb, fileName);
+        },
         async fetchUsers() {
             this.isLoading = true;
             try {
