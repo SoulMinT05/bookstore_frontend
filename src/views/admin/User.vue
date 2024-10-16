@@ -401,7 +401,7 @@ export default {
             },
             isAddUserModalVisible: false,
             currentPage: 1, // Bắt đầu với trang đầu tiên
-            pageSize: 5, // Hiển thị 5 người dùng mỗi trang
+            pageSize: 10, // Hiển thị 10 người dùng mỗi trang
             selectedUser: null,
             userToEdit: null,
             isEditUserModalVisible: false, // For Edit User modal

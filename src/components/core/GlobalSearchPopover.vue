@@ -33,7 +33,7 @@ const searchList = computed(() => {
                 item.description.toLowerCase().includes(search.value.toLowerCase()) ||
                 item.section.toLowerCase().includes(search.value.toLowerCase()),
         )
-        .map((menu) => ({ ...menu, isActive: route.path === `/dashboard/${menu.path}` }));
+        .map((menu) => ({ ...menu, isActive: route.path === `/admin/${menu.path}` }));
 });
 
 const onKeyDown = (e: KeyboardEvent) => {
@@ -49,7 +49,7 @@ const onKeyDown = (e: KeyboardEvent) => {
             const current = searchList.value[activeIndex.value];
             isFocused.value = false;
             if (!current.isActive) {
-                router.push(`/dashboard/${current.path}`);
+                router.push(`/admin/${current.path}`);
                 (document.getElementById('globalSearchInput')?.children[1] as HTMLInputElement).blur();
             }
         }
@@ -57,7 +57,7 @@ const onKeyDown = (e: KeyboardEvent) => {
 };
 
 const handleClick = (path: string) => {
-    const toRoute = `/dashboard/${path}`;
+    const toRoute = `/admin/${path}`;
     router.push(toRoute);
 };
 
