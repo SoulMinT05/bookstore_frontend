@@ -12,7 +12,7 @@ import { RouterLink } from 'vue-router';
                 The page you're trying to access <br />
                 could not be found
             </p>
-            <RouterLink to="/admin/dashboard">
+            <RouterLink to="/">
                 <Button class="mt-4" variant="outline" prepend-icon="ArrowLeft">Back to Home</Button>
             </RouterLink>
         </div>

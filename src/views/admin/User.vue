@@ -11,7 +11,12 @@
         </button>
 
         <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-            <table class="w-full table-auto">
+            <div v-if="isLoading" class="flex justify-center items-center py-10">
+                <div class="loader"></div>
+                <!-- Đây là phần tử loader -->
+            </div>
+
+            <table v-else class="w-full table-auto">
                 <thead>
                     <tr class="text-gray-600 uppercase text-sm leading-normal">
                         <th class="py-3 px-6 text-left">First Name</th>
@@ -53,15 +58,16 @@
                         <td class="py-3 px-6 text-center">
                             <span
                                 :class="[
-                                    user.role === 'Admin' ? 'bg-green-200 text-green-600' : 'bg-red-200 text-red-600',
+                                    user.role === 'admin' ? 'bg-green-200 text-green-600' : 'bg-red-200 text-red-600',
                                     'py-1 px-3 rounded-full text-xs',
                                 ]"
                             >
-                                {{ user.role }}
+                                {{ user.role === 'admin' ? 'Quản lý' : 'Người dùng' }}
                             </span>
                         </td>
                         <td class="py-3 px-6 text-center">
-                            <span>{{ user.createdAt }}</span>
+                            <!-- <span>{{ user.createdAt }}</span> -->
+                            <span>{{ formatCreatedAt(user.createdAt) }}</span>
                         </td>
                         <td class="py-3 px-6 text-center">
                             <div class="flex item-center justify-center">
@@ -127,6 +133,73 @@
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
+                    </div>
+                    <div class="mb-4">
+                        <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                        <input
+                            v-model="newUser.address"
+                            type="text"
+                            id="address"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div>
+                    <!-- <div class="mb-4">
+                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone number</label>
+                        <input
+                            v-model="newUser.phoneNumber"
+                            type="string"
+                            id="phoneNumber"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div> -->
+                    <!-- <div class="mb-4">
+                        <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
+                        <input
+                            v-model="newUser.gender"
+                            type=""
+                            id="gender"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div> -->
+
+                    <div class="mb-4">
+                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone number:</label>
+                        <input
+                            v-model="newUser.phoneNumber"
+                            type="text"
+                            id="phoneNumber"
+                            aria-describedby="helper-text-explanation"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            pattern="[0-9]{10}"
+                            placeholder="123-456-7890"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <label for="gender" class="block text-sm font-medium text-gray-700">Select gender</label>
+                        <select
+                            v-model="newUser.gender"
+                            id="gender"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        >
+                            <option value="" disabled selected>Choose a gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input
+                            v-model="newUser.password"
+                            type="text"
+                            id="password"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                        />
+                        <p class="text-sm italic text-gray-500 mt-1">Nếu không nhập, mật khẩu mặc định là '123456'</p>
                     </div>
                     <div class="flex justify-end mt-6">
                         <button
@@ -200,6 +273,58 @@
                             required
                         />
                     </div>
+                    <div class="mb-4">
+                        <label for="editAddress" class="block text-sm font-medium text-gray-700">Address</label>
+                        <input
+                            v-model="userToEdit.address"
+                            type="text"
+                            id="editAddress"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div>
+                    <!-- <div class="mb-4">
+                        <label for="editPhoneNumber" class="block text-sm font-medium text-gray-700"
+                            >Phone Number</label
+                        >
+                        <input
+                            v-model="userToEdit.phoneNumber"
+                            type="text"
+                            id="editPhoneNumber"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div> -->
+
+                    <div class="mb-4">
+                        <label for="editPhoneNumber" class="block text-sm font-medium text-gray-700"
+                            >Phone number:</label
+                        >
+                        <input
+                            v-model="userToEdit.phoneNumber"
+                            type="text"
+                            id="editPhoneNumber"
+                            aria-describedby="helper-text-explanation"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            pattern="[0-9]{10}"
+                            placeholder="123-456-7890"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <label for="editGender" class="block text-sm font-medium text-gray-700">Select gender</label>
+                        <select
+                            v-model="userToEdit.gender"
+                            id="editGender"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        >
+                            <option value="" disabled selected>Choose a gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
                     <div class="flex justify-end mt-6">
                         <button
                             type="button"
@@ -235,17 +360,20 @@
 </template>
 
 <script>
+import { useToast } from 'vue-toastification';
+
 export default {
     data() {
         return {
             users: [], // Dữ liệu người dùng
-            newUser: { firstName: '', lastName: '', email: '' },
+            newUser: { firstName: '', lastName: '', email: '', address: '', phoneNumber: '', gender: '', password: '' },
             isAddUserModalVisible: false,
             currentPage: 1, // Bắt đầu với trang đầu tiên
             pageSize: 10, // Hiển thị 10 người dùng mỗi trang
             selectedUser: null,
             userToEdit: null,
             isEditUserModalVisible: false, // For Edit User modal
+            isLoading: false,
         };
     },
     computed: {
@@ -268,6 +396,45 @@ export default {
                 this.currentPage--;
             }
         },
+        formatCreatedAt(date) {
+            // const createdAtDate = new Date(date); // Tạo đối tượng Date
+            // return createdAtDate.toGMTString(); // Chuyển đổi thành chuỗi GMT
+            const d = new Date(date);
+            const year = d.getUTCFullYear();
+            const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(d.getUTCDate()).padStart(2, '0');
+
+            return `${day}/${month}/${year}`;
+        },
+
+        async fetchUsers() {
+            this.isLoading = true;
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                const userToken = user.accessToken;
+                const res = await fetch('http://localhost:3001/api/user/getAllUsers', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${userToken}`,
+                    },
+                });
+                const data = await res.json();
+                const toast = useToast();
+                console.log('dataUsers: ', data);
+
+                if (!data.success) {
+                    toast.error(data.message);
+                    return;
+                }
+                this.users = data.users;
+            } catch (error) {
+                console.log('error: ', error);
+                toast.error(error.message);
+            } finally {
+                this.isLoading = false;
+            }
+        },
         showAddUserModal() {
             this.isAddUserModalVisible = true;
         },
@@ -276,21 +443,45 @@ export default {
             this.resetNewUser(); // Đặt lại thông tin người dùng mới sau khi đóng modal
         },
         resetNewUser() {
-            this.newUser = { firstName: '', lastName: '', email: '' };
-        },
-        addUser() {
-            // Thêm người dùng mới vào danh sách
-            const newUser = {
-                id: this.users.length + 1,
-                firstName: this.newUser.firstName,
-                lastName: this.newUser.lastName,
-                email: this.newUser.email,
-                isLocked: false, // Mặc định khóa là false
-                role: 'User', // Mặc định role là User
-                createdAt: new Date().toLocaleDateString(),
+            this.newUser = {
+                firstName: '',
+                lastName: '',
+                email: '',
+                address: '',
+                phoneNumber: '',
+                gender: '',
+                password: '',
             };
-            this.users.push(newUser); // Thêm người dùng mới vào danh sách
-            this.closeAddUserModal(); // Đóng modal sau khi thêm người dùng
+        },
+        async addUser() {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                const userToken = user.accessToken;
+                const res = await fetch('http://localhost:3001/api/user/createUserFromAdmin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${userToken}`,
+                    },
+                    body: JSON.stringify(this.newUser),
+                });
+
+                const data = await res.json();
+                const toast = useToast();
+                console.log('dataAddUsers: ', data);
+
+                if (!data.success) {
+                    toast.error(data.message);
+                    return;
+                }
+                this.users.push(data.newUser);
+                // this.showToast('Thêm người dùng thành công');
+                toast.success('Thêm người dùng thành công');
+                this.closeAddUserModal();
+            } catch (error) {
+                console.error('Error adding user:', error);
+                toast.error(error.message);
+            }
         },
         editUser(user) {
             this.userToEdit = { ...user }; // Make a copy of the user object to avoid directly modifying the array
@@ -300,13 +491,43 @@ export default {
             this.isEditUserModalVisible = false;
             this.userToEdit = null; // Clear the userToEdit data after closing the modal
         },
-        saveEditedUser() {
-            // Find the user in the users array and update its data
-            const index = this.users.findIndex((u) => u.id === this.userToEdit.id);
-            if (index !== -1) {
-                this.users.splice(index, 1, this.userToEdit); // Replace the old user with the edited user
+        async saveEditedUser() {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                const userToken = user.accessToken;
+
+                // Lấy userId từ userToEdit
+                const userId = this.userToEdit._id;
+                const res = await fetch(`http://localhost:3001/api/user/updateInfoFromAdmin/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${userToken}`,
+                    },
+                    body: JSON.stringify(this.userToEdit),
+                });
+
+                const data = await res.json();
+                const toast = useToast();
+                console.log('dataEditUsers: ', data);
+
+                if (!data.success) {
+                    toast.error(data.message);
+                    return;
+                }
+                // Cập nhật danh sách users sau khi chỉnh sửa
+                const index = this.users.findIndex((user) => user._id === userId);
+                if (index !== -1) {
+                    // this.$set(this.users, index, data.updatedUser); // Cập nhật thông tin user đã sửa
+                    this.users[index] = data.updatedUser;
+                }
+
+                toast.success('Cập nhật thông tin người dùng thành công');
+                this.closeEditUserModal();
+            } catch (error) {
+                console.error('Error adding user:', error);
+                toast.error(error.message);
             }
-            this.closeEditUserModal(); // Close the modal after saving
         },
         viewUser(user) {
             // Logic xem chi tiết người dùng
@@ -322,22 +543,33 @@ export default {
                 this.users = this.users.filter((u) => u.id !== user.id);
             }
         },
+        showToast(message) {
+            this.toastMessage = message;
+            setTimeout(() => {
+                this.toastMessage = '';
+            }, 3000);
+        },
     },
     mounted() {
-        // Giả lập dữ liệu người dùng (thay thế bằng API gọi thực tế)
-        this.users = Array.from({ length: 50 }, (_, index) => ({
-            id: index + 1,
-            firstName: `First ${index + 1}`,
-            lastName: `Last ${index + 1}`,
-            email: `user${index + 1}@example.com`,
-            isLocked: false,
-            role: index % 2 === 0 ? 'Admin' : 'User',
-            createdAt: new Date().toLocaleDateString(),
-        }));
+        this.fetchUsers();
     },
 };
 </script>
 
 <style scoped>
 /* Thêm CSS tùy chỉnh ở đây nếu cần */
+.loader {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #4f46e5;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 </style>
