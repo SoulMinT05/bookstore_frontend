@@ -537,10 +537,36 @@ export default {
             this.selectedUser = null;
         },
 
-        deleteUser(user) {
-            if (window.confirm(`Are you sure you want to delete ${user.firstName} ${user.lastName}?`)) {
-                // Proceed with deletion
-                this.users = this.users.filter((u) => u.id !== user.id);
+        async deleteUser(user) {
+            if (!confirm('Are you sure you want to delete this user?')) return;
+            try {
+                const userLocalStorage = JSON.parse(localStorage.getItem('user'));
+                const userToken = userLocalStorage.accessToken;
+
+                const res = await fetch(`http://localhost:3001/api/user/${user._id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${userToken}`,
+                    },
+                });
+
+                const data = await res.json();
+                const toast = useToast();
+                console.log('dataDeleteUsers: ', data);
+
+                if (!data.success) {
+                    toast.error(data.message);
+                    return;
+                }
+                this.users.splice(
+                    this.users.findIndex((u) => u._id === user._id),
+                    1,
+                );
+                toast.success('Xoá người dùng thành công');
+            } catch (error) {
+                console.error('Error deleting user:', error.message);
+                toast.error('Error deleting user: ', error.message);
             }
         },
         showToast(message) {
