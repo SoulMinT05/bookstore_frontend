@@ -41,6 +41,12 @@ export const APP_MENU: Record<string, { name: string; routes: IDashboardMenus[] 
                 description: 'Manage Book',
             },
             {
+                path: 'publisher',
+                title: 'Publisher',
+                icon: 'Book',
+                description: 'Manage publisher',
+            },
+            {
                 path: 'order',
                 title: 'Order',
                 icon: 'ShoppingCart',

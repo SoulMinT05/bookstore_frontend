@@ -39,7 +39,7 @@ const router = createRouter({
             component: DashboardLayoutVue,
             redirect: '/admin/dashboard',
             meta: {
-                title: 'Dashboard',
+                title: 'Admin',
             },
             children: [
                 {
@@ -71,6 +71,13 @@ const router = createRouter({
                     component: () => import('@/views/admin/Book.vue'),
                     meta: {
                         title: 'Book',
+                    } as RouteMeta & IRouteMeta,
+                },
+                {
+                    path: 'publisher',
+                    component: () => import('@/views/admin/Publisher.vue'),
+                    meta: {
+                        title: 'Publisher',
                     } as RouteMeta & IRouteMeta,
                 },
                 {

@@ -1,14 +1,13 @@
 <template>
     <div class="container">
-        <h1 class="text-3xl font-bold mb-6">Quản lý người dùng</h1>
-        <!-- <button @click="addUser" class="mb-4 px-4 py-2 bg-green-500 text-white rounded-md">Add User</button> -->
+        <h1 class="text-3xl font-bold mb-6">Quản lý sách</h1>
         <div class="flex justify-between items-center">
             <button
                 @click="showAddUserModal"
                 type="button"
                 class="cursor-pointer text-white mb-4 bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition duration-150 ease-in-out"
             >
-                Thêm người dùng
+                Thêm sách
             </button>
             <button
                 @click="exportToExcel"
@@ -74,7 +73,7 @@
                                     'py-1 px-3 rounded-full text-xs',
                                 ]"
                             >
-                                {{ user.role === 'admin' ? 'Quản lý' : 'Người dùng' }}
+                                {{ user.role === 'admin' ? 'Quản lý' : 'sách' }}
                             </span>
                         </td>
                         <td class="py-3 px-6 text-center">
@@ -116,7 +115,7 @@
             class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
             <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3 modal-content">
-                <h2 class="text-lg font-bold mb-4">Thêm người dùng</h2>
+                <h2 class="text-lg font-bold mb-4">Thêm sách</h2>
                 <form @submit.prevent="addUser">
                     <div class="mb-4">
                         <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
@@ -215,7 +214,7 @@
                             type="submit"
                             class="cursor-pointer hover:opacity-95 px-4 py-2 bg-blue-500 text-white rounded-md"
                         >
-                            Thêm người dùng
+                            Thêm sách
                         </button>
                     </div>
                 </form>
@@ -225,7 +224,7 @@
         <!-- View detail user -->
         <div v-if="selectedUser" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div @click.stop class="bg-white rounded-lg p-6 w-11/12 md:w-1/3">
-                <h2 class="text-lg font-bold mb-4">Thông tin người dùng</h2>
+                <h2 class="text-lg font-bold mb-4">Thông tin sách</h2>
                 <p><strong>First Name:</strong> {{ selectedUser.firstName }}</p>
                 <p><strong>Last Name:</strong> {{ selectedUser.lastName }}</p>
                 <p><strong>Email:</strong> {{ selectedUser.email }}</p>
@@ -234,7 +233,7 @@
                 <p><strong>Gender:</strong> {{ selectedUser.gender }}</p>
                 <p><strong>Phone number:</strong> {{ selectedUser.phoneNumber }}</p>
                 <p><strong>Status:</strong> {{ selectedUser.isLocked ? 'Đã khoá' : 'Không khoá' }}</p>
-                <p><strong>Role:</strong> {{ selectedUser.role === 'admin' ? 'Quản lý' : 'Người dùng' }}</p>
+                <p><strong>Role:</strong> {{ selectedUser.role === 'admin' ? 'Quản lý' : 'sách' }}</p>
                 <p><strong>Created Date:</strong> {{ formatDate(selectedUser.createdAt) }}</p>
                 <p><strong>Updated Date:</strong> {{ formatDate(selectedUser.updatedAt) }}</p>
 
@@ -255,7 +254,7 @@
             class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
             <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3 modal-content">
-                <h2 class="text-lg font-bold mb-4">Chỉnh sửa thông tin người dùng</h2>
+                <h2 class="text-lg font-bold mb-4">Chỉnh sửa thông tin sách</h2>
                 <form @submit.prevent="saveEditedUser">
                     <div class="mb-4">
                         <label for="editFirstName" class="block text-sm font-medium text-gray-700">First Name</label>
@@ -388,7 +387,7 @@ import * as XLSX from 'xlsx';
 export default {
     data() {
         return {
-            users: [], // Dữ liệu người dùng
+            users: [], // Dữ liệu sách
             newUser: {
                 firstName: '',
                 lastName: '',
@@ -401,7 +400,7 @@ export default {
             },
             isAddUserModalVisible: false,
             currentPage: 1, // Bắt đầu với trang đầu tiên
-            pageSize: 5, // Hiển thị 5 người dùng mỗi trang
+            pageSize: 5, // Hiển thị 5 sách mỗi trang
             selectedUser: null,
             userToEdit: null,
             isEditUserModalVisible: false, // For Edit User modal
@@ -459,7 +458,7 @@ export default {
             // Tạo một workbook mới
             const wb = XLSX.utils.book_new();
 
-            // Chuyển đổi dữ liệu người dùng thành bảng
+            // Chuyển đổi dữ liệu sách thành bảng
             const ws = XLSX.utils.json_to_sheet(this.users);
 
             // Thêm bảng vào workbook
@@ -504,7 +503,7 @@ export default {
         },
         closeAddUserModal() {
             this.isAddUserModalVisible = false;
-            this.resetNewUser(); // Đặt lại thông tin người dùng mới sau khi đóng modal
+            this.resetNewUser(); // Đặt lại thông tin sách mới sau khi đóng modal
         },
         resetNewUser() {
             this.newUser = {
@@ -540,8 +539,8 @@ export default {
                     return;
                 }
                 this.users.push(data.newUser);
-                // this.showToast('Thêm người dùng thành công');
-                toast.success('Thêm người dùng thành công');
+                // this.showToast('Thêm sách thành công');
+                toast.success('Thêm sách thành công');
                 this.closeAddUserModal();
             } catch (error) {
                 console.error('Error adding user:', error);
@@ -591,7 +590,7 @@ export default {
                     this.users[index] = data.updatedUser;
                 }
 
-                toast.success('Cập nhật thông tin người dùng thành công');
+                toast.success('Cập nhật thông tin sách thành công');
                 this.closeEditUserModal();
             } catch (error) {
                 console.error('Error adding user:', error);
@@ -599,7 +598,7 @@ export default {
             }
         },
         viewUser(user) {
-            // Logic xem chi tiết người dùng
+            // Logic xem chi tiết sách
             this.selectedUser = user;
         },
         closeModal() {
@@ -607,7 +606,7 @@ export default {
         },
 
         async deleteUser(user) {
-            if (!confirm('Bạn chắc chắn xoá người dùng này không?')) return;
+            if (!confirm('Bạn chắc chắn xoá sách này không?')) return;
             try {
                 const userLocalStorage = JSON.parse(localStorage.getItem('user'));
                 const userToken = userLocalStorage.accessToken;
@@ -632,7 +631,7 @@ export default {
                     this.users.findIndex((u) => u._id === user._id),
                     1,
                 );
-                toast.success('Xoá người dùng thành công');
+                toast.success('Xoá sách thành công');
             } catch (error) {
                 console.error('Error deleting user:', error.message);
                 toast.error('Error deleting user: ', error.message);
@@ -660,7 +659,7 @@ export default {
                     toast.error(data.message);
                     return;
                 }
-                toast.success(`${user.isLocked ? 'Khoá' : 'Mở khoá'} tài khoản người dùng thành công`);
+                toast.success(`${user.isLocked ? 'Khoá' : 'Mở khoá'} tài khoản sách thành công`);
             } catch (error) {
                 console.error('Error locking/unlocking user:', error.message);
                 toast.error('Failed to toggle lock state');

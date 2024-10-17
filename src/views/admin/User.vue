@@ -384,6 +384,7 @@
 <script>
 import { useToast } from 'vue-toastification';
 import * as XLSX from 'xlsx';
+import { Download } from 'lucide-vue-next';
 
 export default {
     data() {
@@ -693,6 +694,32 @@ export default {
 .modal-content {
     max-height: 100vh; /* Đặt chiều cao tối đa cho modal */
     overflow-y: auto; /* Cho phép cuộn nếu nội dung vượt quá chiều cao */
+}
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 60px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Xuất hiện ở phía trên biểu tượng */
+    left: 50%;
+    margin-left: -30px; /* Trung tâm tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
 }
 
 @keyframes spin {
