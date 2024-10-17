@@ -11,7 +11,7 @@
             </button>
             <button
                 @click="exportToExcel"
-                class="cursor-pointer hover:opacity-95 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 transition duration-150 ease-in-out"
+                class="cursor-pointer text-white mb-4 bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 transition duration-150 ease-in-out"
             >
                 Xuất excel
             </button>
@@ -420,7 +420,7 @@ export default {
                 const userLocalStorage = JSON.parse(localStorage.getItem('user'));
                 const userToken = userLocalStorage.accessToken;
 
-                const res = await fetch(`http://localhost:3001/api/user/${user._id}`, {
+                const res = await fetch(`http://localhost:3001/api/publisher/${publisher._id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -430,14 +430,14 @@ export default {
 
                 const data = await res.json();
                 const toast = useToast();
-                console.log('dataDeleteUsers: ', data);
+                console.log('dataDeletePublishers: ', data);
 
                 if (!data.success) {
                     toast.error(data.message);
                     return;
                 }
-                this.users.splice(
-                    this.users.findIndex((u) => u._id === user._id),
+                this.publishers.splice(
+                    this.publishers.findIndex((p) => p._id === publisher._id),
                     1,
                 );
                 toast.success('Xoá nhà xuất bản thành công');
@@ -447,33 +447,6 @@ export default {
             }
         },
 
-        async toggleLockPublisher(publisher) {
-            try {
-                const userLocalStorage = JSON.parse(localStorage.getItem('user'));
-                const userToken = userLocalStorage.accessToken;
-
-                const res = await fetch(`http://localhost:3001/api/user/locked/${user._id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
-                    },
-                });
-
-                const data = await res.json();
-                console.log('dataLocked: ', data);
-                const toast = useToast();
-
-                if (!data.success) {
-                    toast.error(data.message);
-                    return;
-                }
-                toast.success(`${user.isLocked ? 'Khoá' : 'Mở khoá'} tài khoản nhà xuất bản thành công`);
-            } catch (error) {
-                console.error('Error locking/unlocking user:', error.message);
-                toast.error('Failed to toggle lock state');
-            }
-        },
         showToast(message) {
             this.toastMessage = message;
             setTimeout(() => {
