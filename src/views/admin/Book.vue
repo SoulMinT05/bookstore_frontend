@@ -276,13 +276,29 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editPublisher" class="block text-sm font-medium text-gray-700">Publisher</label>
-                        <input
-                            v-model="productToEdit.publisher"
-                            type="text"
-                            id="editPublisher"
+                        <label for="publisher" class="block text-sm font-medium text-gray-700">Publisher</label>
+                        <!-- <select
+                            v-model="productToEdit.publisherId.name"
+                            id="publisher"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                        />
+                            required
+                        >
+                            <option disabled value="">Chọn nhà xuất bản</option>
+                            <option v-for="publisher in publishers" :key="publisher._id" :value="publisher.name">
+                                {{ publisher.name }}
+                            </option>
+                        </select> -->
+                        <select
+                            v-model="productToEdit.publisherId"
+                            id="publisher"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        >
+                            <option disabled value="">Chọn nhà xuất bản</option>
+                            <option v-for="publisher in publishers" :key="publisher._id" :value="publisher._id">
+                                {{ publisher.name }}
+                            </option>
+                        </select>
                     </div>
 
                     <div class="flex justify-end mt-6">
@@ -354,6 +370,14 @@ export default {
             currentPage: 1, // Bắt đầu với trang đầu tiên
             pageSize: 10, // Hiển thị 10 sách mỗi trang
             selectedProduct: null,
+            // productToEdit: {
+            //     name: '',
+            //     author: '',
+            //     price: null,
+            //     quantity: null,
+            //     yearOfPublication: null,
+            //     publisher: '',
+            // },
             productToEdit: null,
             isEditProductModalVisible: false, // For Edit product modal
             isLoading: false,
@@ -484,7 +508,7 @@ export default {
                 price: null,
                 quantity: null,
                 yearOfPublication: null,
-                publisher: null,
+                publisher: '',
             };
         },
         async addProduct() {
@@ -519,6 +543,7 @@ export default {
 
         editProduct(product) {
             this.productToEdit = { ...product }; // Make a copy of the publisher object to avoid directly modifying the array
+            console.log('this.productToEdit: ', this.productToEdit);
             this.isEditProductModalVisible = true;
         },
         closeEditProductModal() {
@@ -530,29 +555,29 @@ export default {
                 const user = JSON.parse(localStorage.getItem('user'));
                 const userToken = user.accessToken;
 
-                // Lấy productId từ publisherToEdit
-                const publisherId = this.publisherToEdit._id;
-                const res = await fetch(`http://localhost:3001/api/publisher/${publisherId}`, {
+                // Lấy productId từ productToEdit
+                const productId = this.productToEdit._id;
+                const res = await fetch(`http://localhost:3001/api/book/${productId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${userToken}`,
                     },
-                    body: JSON.stringify(this.publisherToEdit),
+                    body: JSON.stringify(this.productToEdit),
                 });
 
                 const data = await res.json();
                 const toast = useToast();
-                console.log('dataEditPublishers: ', data);
+                console.log('dataEditProducts: ', data);
 
                 if (!data.success) {
                     toast.error(data.message);
                     return;
                 }
                 // Cập nhật danh sách users sau khi chỉnh sửa
-                const index = this.publishers.findIndex((publisher) => publisher._id === publisherId);
+                const index = this.products.findIndex((product) => product._id === productId);
                 if (index !== -1) {
-                    this.publishers[index] = data.updatedPublisher;
+                    this.products[index] = data.updatedProduct;
                 }
                 toast.success('Cập nhật thông tin sách thành công');
                 this.closeEditProductModal();
@@ -575,7 +600,7 @@ export default {
                 const userLocalStorage = JSON.parse(localStorage.getItem('user'));
                 const userToken = userLocalStorage.accessToken;
 
-                const res = await fetch(`http://localhost:3001/api/publisher/${publisher._id}`, {
+                const res = await fetch(`http://localhost:3001/api/book/${product._id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -585,14 +610,14 @@ export default {
 
                 const data = await res.json();
                 const toast = useToast();
-                console.log('dataDeletePublishers: ', data);
+                console.log('dataDeleteProducts: ', data);
 
                 if (!data.success) {
                     toast.error(data.message);
                     return;
                 }
-                this.publishers.splice(
-                    this.publishers.findIndex((p) => p._id === publisher._id),
+                this.products.splice(
+                    this.products.findIndex((p) => p._id === product._id),
                     1,
                 );
                 toast.success('Xoá sách thành công');
