@@ -25,11 +25,12 @@
             <table v-else class="w-full table-auto">
                 <thead>
                     <tr class="text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">Hình ảnh</th>
                         <th class="py-3 px-6 text-left">Name</th>
                         <th class="py-3 px-6 text-left">Address</th>
                         <!-- <th class="py-3 px-6 text-left">Price</th> -->
                         <th class="py-3 px-6 text-left">Quantity</th>
-                        <th class="py-3 px-6 text-left">Year of publication</th>
+                        <th class="py-3 px-6 text-left">Year publication</th>
                         <th class="py-3 px-6 text-left">Publisher</th>
                         <th class="py-3 px-6 text-center">Created Date</th>
                         <th class="py-3 px-6 text-center">Updated Date</th>
@@ -42,6 +43,12 @@
                         :key="product?.id"
                         class="border-b border-gray-200 hover:bg-gray-100"
                     >
+                        <td class="py-4 px-6 text-left">
+                            <div v-if="product.images?.length">
+                                <img class="w-16 h-16 object-cover" :src="product.images[0]" alt="Product Image" />
+                            </div>
+                            <div v-else>No images available</div>
+                        </td>
                         <td class="py-4 px-6 text-left">
                             <span class="font-medium">{{ product?.name }}</span>
                         </td>
@@ -128,7 +135,6 @@
                             type="text"
                             id="price"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                            required
                         />
                     </div>
                     <div class="mb-4">
@@ -138,7 +144,6 @@
                             type="text"
                             id="quantity"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                            required
                         />
                     </div>
                     <div class="mb-4">
@@ -150,7 +155,6 @@
                             type="number"
                             id="yearOfPublication"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                            required
                         />
                     </div>
                     <div class="mb-4">
@@ -175,6 +179,23 @@
                             </option>
                         </select>
                     </div>
+                    <div class="mb-4">
+                        <!-- Thêm trường upload ảnh -->
+                        <label for="images" class="block text-sm font-medium text-gray-700">Chọn ảnh</label>
+                        <input
+                            type="file"
+                            id="images"
+                            multiple
+                            @change="handleFileChange"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                        />
+                        <small class="text-gray-500">Chọn tối đa 10 ảnh</small>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div v-for="(image, index) in previewImages" :key="index" class="relative">
+                            <img :src="image" alt="Preview Image" class="w-full h-32 object-cover rounded-md" />
+                        </div>
+                    </div>
                     <div class="flex justify-end mt-6">
                         <button
                             type="button"
@@ -185,9 +206,15 @@
                         </button>
                         <button
                             type="submit"
-                            class="cursor-pointer hover:opacity-95 px-4 py-2 bg-blue-500 text-white rounded-md"
+                            :disabled="loading"
+                            class="cursor-pointer hover:opacity-95 px-4 py-2 bg-blue-500 text-white rounded-md relative flex items-center justify-center"
                         >
-                            Thêm sách
+                            <div v-if="loading" class="flex justify-center items-center absolute">
+                                <div class="loader"></div>
+                            </div>
+                            <span :class="{ 'opacity-0': loading, 'transition-opacity duration-200': loading }"
+                                >Thêm sách</span
+                            >
                         </button>
                     </div>
                 </form>
@@ -351,7 +378,6 @@
 <script>
 import { useToast } from 'vue-toastification';
 import * as XLSX from 'xlsx';
-import { Download } from 'lucide-vue-next';
 
 export default {
     data() {
@@ -365,19 +391,14 @@ export default {
                 yearOfPublication: null,
                 publisher: '',
             },
+            uploadImages: [],
+            previewImages: [],
             publishers: [],
             isAddProductModalVisible: false,
+            loading: false,
             currentPage: 1, // Bắt đầu với trang đầu tiên
             pageSize: 10, // Hiển thị 10 sách mỗi trang
             selectedProduct: null,
-            // productToEdit: {
-            //     name: '',
-            //     author: '',
-            //     price: null,
-            //     quantity: null,
-            //     yearOfPublication: null,
-            //     publisher: '',
-            // },
             productToEdit: null,
             isEditProductModalVisible: false, // For Edit product modal
             isLoading: false,
@@ -510,18 +531,62 @@ export default {
                 yearOfPublication: null,
                 publisher: '',
             };
+            this.uploadImages = [];
+            this.previewImages = [];
         },
+
+        handleFileChange(event) {
+            const files = event.target.files; // Lấy danh sách file từ input
+            if (files.length > 10) {
+                // Nếu người dùng chọn quá 10 ảnh, có thể báo lỗi
+                alert('Chọn tối đa 10 ảnh.');
+                return;
+            }
+
+            this.uploadImages = []; // Xóa danh sách ảnh cũ
+            this.previewImages = [];
+            for (let i = 0; i < files.length; i++) {
+                this.uploadImages.push(files[i]); // Thêm từng file vào uploadImages
+
+                // Tạo URL cho preview
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.previewImages.push(e.target.result); // Lưu URL của ảnh
+                };
+                reader.readAsDataURL(files[i]); // Đọc file dưới dạng UR
+            }
+
+            console.log('this.uploadImages: ', this.uploadImages);
+            console.log('this.previewImages: ', this.previewImages);
+        },
+
         async addProduct() {
+            this.loading = true;
             try {
                 const user = JSON.parse(localStorage.getItem('user'));
                 const userToken = user.accessToken;
+
+                this.isUploading = true;
+
+                const formData = new FormData();
+                formData.append('name', this.newProduct.name);
+                formData.append('author', this.newProduct.author);
+                formData.append('price', this.newProduct.price);
+                formData.append('quantity', this.newProduct.quantity);
+                formData.append('yearOfPublication', this.newProduct.yearOfPublication);
+                formData.append('publisher', this.newProduct.publisher);
+                // Thêm các ảnh đã chọn vào form data
+                this.uploadImages.forEach((image) => {
+                    formData.append('images', image); // Gửi từng ảnh
+                });
+
+                // Gửi request tạo sản phẩm cùng với ảnh
                 const res = await fetch('http://localhost:3001/api/book/createProduct', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
                         Authorization: `Bearer ${userToken}`,
                     },
-                    body: JSON.stringify(this.newProduct),
+                    body: formData,
                 });
 
                 const data = await res.json();
@@ -532,12 +597,18 @@ export default {
                     toast.error(data.message);
                     return;
                 }
+
+                // Thêm sản phẩm mới vào danh sách
                 this.products.push(data.newProduct);
+
+                console.log('this.products: ', this.products);
                 toast.success('Thêm sách thành công');
                 this.closeAddProductModal();
             } catch (error) {
                 console.error('Error adding product:', error);
                 toast.error(error.message);
+            } finally {
+                this.loading = false;
             }
         },
 
@@ -648,8 +719,8 @@ export default {
     border: 4px solid rgba(0, 0, 0, 0.1);
     border-left-color: #4f46e5;
     border-radius: 50%;
-    width: 36px;
-    height: 36px;
+    width: 20px; /* Giảm kích thước của loader */
+    height: 20px;
     animation: spin 1s linear infinite;
 }
 .modal-content {
