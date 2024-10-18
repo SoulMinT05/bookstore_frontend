@@ -200,10 +200,10 @@
                 <h2 class="text-lg font-bold mb-4">Thông tin sách</h2>
                 <p><strong>Name:</strong> {{ selectedProduct.name }}</p>
                 <p><strong>Author:</strong> {{ selectedProduct.author }}</p>
-                <p><strong>Price:</strong> {{ selectedProduct.price }}</p>
+                <p><strong>Price:</strong> {{ formatPrice(selectedProduct.price) }}</p>
                 <p><strong>Quantity:</strong> {{ selectedProduct.quantity }}</p>
                 <p><strong>Year publication:</strong> {{ selectedProduct.yearOfPublication }}</p>
-                <p><strong>Publisher:</strong> {{ selectedProduct.publisher }}</p>
+                <p><strong>Publisher:</strong> {{ selectedProduct.publisherId.name }}</p>
                 <p><strong>Created Date:</strong> {{ formatDate(selectedProduct.createdAt) }}</p>
                 <p><strong>Updated Date:</strong> {{ formatDate(selectedProduct.updatedAt) }}</p>
 
@@ -388,6 +388,15 @@ export default {
             const day = String(d.getUTCDate()).padStart(2, '0');
 
             return `${day}/${month}/${year}`;
+        },
+        formatPrice(value) {
+            if (value >= 1000000) {
+                return (value / 1000000).toFixed(1).replace(/\.0$/, '') + 'M VND';
+            } else if (value >= 1000) {
+                return (value / 1000).toFixed(1).replace(/\.0$/, '') + 'k VND';
+            } else {
+                return value.toString();
+            }
         },
         exportToExcel() {
             // Tạo một workbook mới
