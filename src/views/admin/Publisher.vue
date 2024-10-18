@@ -38,19 +38,19 @@
                         :key="publisher?.id"
                         class="border-b border-gray-200 hover:bg-gray-100"
                     >
-                        <td class="py-3 px-6 text-left">
+                        <td class="py-4 px-6 text-left">
                             <span class="font-medium">{{ publisher?.name }}</span>
                         </td>
-                        <td class="py-3 px-6 text-left">
+                        <td class="py-4 px-6 text-left">
                             <span>{{ publisher?.address }}</span>
                         </td>
-                        <td class="py-3 px-6 text-center">
+                        <td class="py-4 px-6 text-center">
                             <span>{{ formatDate(publisher?.createdAt) }}</span>
                         </td>
-                        <td class="py-3 px-6 text-center">
+                        <td class="py-4 px-6 text-center">
                             <span>{{ formatDate(publisher?.updatedAt) }}</span>
                         </td>
-                        <td class="py-3 px-6 text-center">
+                        <td class="py-4 px-6 text-center">
                             <div class="flex item-center justify-center">
                                 <button
                                     @click="viewPublisher(publisher)"
