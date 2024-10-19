@@ -105,7 +105,7 @@
             v-if="isAddProductModalVisible"
             class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
-            <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3 modal-content">
+            <div class="bg-white rounded-lg p-6 w-11/12 md:w-2/3 lg:w-1/2 modal-content">
                 <h2 class="text-lg font-bold mb-4">Thêm sách</h2>
                 <form @submit.prevent="addProduct">
                     <div class="mb-4">
@@ -191,9 +191,9 @@
                         />
                         <small class="text-gray-500">Chọn tối đa 10 ảnh</small>
                     </div>
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-3 gap-4 mb-6 overflow-hidden">
                         <div v-for="(image, index) in previewImages" :key="index" class="relative">
-                            <img :src="image" alt="Preview Image" class="w-full h-32 object-cover rounded-md" />
+                            <img :src="image" alt="Preview Image" class="w-full h-44 object-cover rounded-md" />
                         </div>
                     </div>
                     <div class="flex justify-end mt-6">
