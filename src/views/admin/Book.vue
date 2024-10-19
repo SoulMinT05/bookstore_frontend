@@ -222,22 +222,33 @@
         </div>
 
         <!-- View detail product -->
-        <div v-if="selectedProduct" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div @click.stop class="bg-white rounded-lg p-6 w-11/12 md:w-1/3">
-                <h2 class="text-lg font-bold mb-4">Thông tin sách</h2>
-                <p><strong>Name:</strong> {{ selectedProduct.name }}</p>
-                <p><strong>Author:</strong> {{ selectedProduct.author }}</p>
-                <p><strong>Price:</strong> {{ formatPrice(selectedProduct.price) }}</p>
-                <p><strong>Quantity:</strong> {{ selectedProduct.quantity }}</p>
-                <p><strong>Year publication:</strong> {{ selectedProduct.yearOfPublication }}</p>
-                <p><strong>Publisher:</strong> {{ selectedProduct.publisherId.name }}</p>
-                <p><strong>Created Date:</strong> {{ formatDate(selectedProduct.createdAt) }}</p>
-                <p><strong>Updated Date:</strong> {{ formatDate(selectedProduct.updatedAt) }}</p>
+        <div
+            v-if="selectedProduct"
+            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 overflow-y-scroll"
+        >
+            <div @click.stop class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-2/3 lg:w-1/2">
+                <h2 class="text-xl font-bold text-center mb-4">Thông tin sách</h2>
 
-                <div class="mt-4">
+                <div class="space-y-2">
+                    <p><strong>Hình ảnh:</strong></p>
+                    <div class="flex flex-wrap justify-start gap-3 mb-4">
+                        <div v-for="(image, index) in selectedProduct.images" :key="index" class="flex-shrink-0">
+                            <img :src="image" alt="Hình ảnh sách" class="rounded-lg w-24 h-24 object-cover" />
+                        </div>
+                    </div>
+                    <p><strong>Tên sách:</strong> {{ selectedProduct.name }}</p>
+                    <p><strong>Tác giả:</strong> {{ selectedProduct.author }}</p>
+                    <p><strong>Giá:</strong> {{ formatPrice(selectedProduct.price) }}</p>
+                    <p><strong>Số lượng:</strong> {{ selectedProduct.quantity }}</p>
+                    <p><strong>Năm xuất bản:</strong> {{ selectedProduct.yearOfPublication }}</p>
+                    <p><strong>Nhà xuất bản:</strong> {{ selectedProduct.publisherId.name }}</p>
+                    <p><strong>Ngày tạo:</strong> {{ formatDate(selectedProduct.createdAt) }}</p>
+                    <p><strong>Ngày cập nhật:</strong> {{ formatDate(selectedProduct.updatedAt) }}</p>
+                </div>
+                <div class="mt-6 flex justify-end">
                     <button
                         @click="closeModal"
-                        class="cursor-pointer hover:opacity-95 text-white bg-blue-500 rounded-md px-4 py-2"
+                        class="cursor-pointer hover:opacity-95 text-white bg-blue-600 rounded-md px-4 py-2 transition duration-300 ease-in-out transform hover:scale-105"
                     >
                         Đóng
                     </button>
@@ -250,7 +261,7 @@
             v-if="isEditProductModalVisible"
             class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
-            <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3 modal-content">
+            <div class="bg-white rounded-lg p-6 w-11/12 md:w-2/3 lg:w-1/2 modal-content">
                 <h2 class="text-lg font-bold mb-4">Chỉnh sửa thông tin sách</h2>
                 <form @submit.prevent="saveEditedProduct">
                     <div class="mb-4">
@@ -331,7 +342,7 @@
                         <label class="block text-sm font-medium text-gray-700">Ảnh hiện tại</label>
                         <div class="grid grid-cols-3 gap-4">
                             <div v-for="(image, index) in currentImages" :key="index" class="relative">
-                                <img :src="image" alt="Current Image" class="w-full h-32 object-cover rounded-md" />
+                                <img :src="image" alt="Current Image" class="w-full h-44 object-cover rounded-md" />
                                 <button
                                     @click="removeCurrentImage(index)"
                                     type="button"
@@ -368,6 +379,13 @@
                         >
                             Đóng
                         </button>
+                        <!-- <button
+                            type="button"
+                            @click="exportToPDF"
+                            class="cursor-pointer hover:opacity-95 px-4 py-2 bg-green-500 text-white rounded-md"
+                        >
+                            Xuất PDF
+                        </button> -->
                         <button
                             type="submit"
                             :disabled="loading"
@@ -510,6 +528,36 @@ export default {
 
             // Xuất file
             XLSX.writeFile(wb, fileName);
+        },
+        exportToPDF() {
+            // Tạo một tài liệu PDF mới
+            const doc = new jsPDF();
+
+            // Tiêu đề
+            doc.setFontSize(20);
+            doc.text('Danh sách sản phẩm', 10, 10);
+
+            // Thêm tiêu đề bảng
+            doc.setFontSize(12);
+            const headers = ['Tên', 'Tác giả', 'Giá', 'Số lượng', 'Năm xuất bản', 'Nhà xuất bản'];
+            const data = this.products.map((product) => [
+                product.name,
+                product.author,
+                this.formatPrice(product.price),
+                product.quantity,
+                product.yearOfPublication,
+                product.publisher,
+            ]);
+
+            // Tạo bảng
+            doc.autoTable({
+                head: [headers],
+                body: data,
+                startY: 20, // Bắt đầu vẽ bảng từ vị trí Y = 20
+            });
+
+            // Lưu file PDF
+            doc.save(`products_${new Date().toISOString().split('T')[0]}.pdf`);
         },
         async fetchPublishers() {
             this.isLoading = true;

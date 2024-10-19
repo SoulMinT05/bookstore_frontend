@@ -127,19 +127,20 @@
         <!-- View detail publisher -->
         <div
             v-if="selectedPublisher"
-            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 overflow-y-scroll"
         >
-            <div @click.stop class="bg-white rounded-lg p-6 w-11/12 md:w-1/3">
-                <h2 class="text-lg font-bold mb-4">Thông tin nhà xuất bản</h2>
-                <p><strong>Name:</strong> {{ selectedPublisher.name }}</p>
-                <p><strong>Address:</strong> {{ selectedPublisher.address }}</p>
-                <p><strong>Created Date:</strong> {{ formatDate(selectedPublisher.createdAt) }}</p>
-                <p><strong>Updated Date:</strong> {{ formatDate(selectedPublisher.updatedAt) }}</p>
-
-                <div class="mt-4">
+            <div @click.stop class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-1/3">
+                <h2 class="text-xl font-bold text-center mb-4">Thông tin nhà xuất bản</h2>
+                <div class="space-y-2">
+                    <p><strong>Name:</strong> {{ selectedPublisher.name }}</p>
+                    <p><strong>Address:</strong> {{ selectedPublisher.address }}</p>
+                    <p><strong>Created Date:</strong> {{ formatDate(selectedPublisher.createdAt) }}</p>
+                    <p><strong>Updated Date:</strong> {{ formatDate(selectedPublisher.updatedAt) }}</p>
+                </div>
+                <div class="mt-6 flex justify-end">
                     <button
                         @click="closeModal"
-                        class="cursor-pointer hover:opacity-95 text-white bg-blue-500 rounded-md px-4 py-2"
+                        class="cursor-pointer hover:opacity-95 text-white bg-blue-600 rounded-md px-4 py-2 transition duration-300 ease-in-out transform hover:scale-105"
                     >
                         Đóng
                     </button>

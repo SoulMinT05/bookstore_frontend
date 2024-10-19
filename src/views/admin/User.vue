@@ -223,25 +223,61 @@
         </div>
 
         <!-- View detail user -->
-        <div v-if="selectedUser" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div @click.stop class="bg-white rounded-lg p-6 w-11/12 md:w-1/3">
-                <h2 class="text-lg font-bold mb-4">Thông tin người dùng</h2>
-                <p><strong>First Name:</strong> {{ selectedUser.firstName }}</p>
-                <p><strong>Last Name:</strong> {{ selectedUser.lastName }}</p>
-                <p><strong>Email:</strong> {{ selectedUser.email }}</p>
-                <p><strong>Birthday:</strong> {{ formatBirthdayHtml(selectedUser.birthday) }}</p>
-                <p><strong>Address:</strong> {{ selectedUser.address }}</p>
-                <p><strong>Gender:</strong> {{ selectedUser.gender }}</p>
-                <p><strong>Phone number:</strong> {{ selectedUser.phoneNumber }}</p>
-                <p><strong>Status:</strong> {{ selectedUser.isLocked ? 'Đã khoá' : 'Không khoá' }}</p>
-                <p><strong>Role:</strong> {{ selectedUser.role === 'admin' ? 'Quản lý' : 'Người dùng' }}</p>
-                <p><strong>Created Date:</strong> {{ formatDate(selectedUser.createdAt) }}</p>
-                <p><strong>Updated Date:</strong> {{ formatDate(selectedUser.updatedAt) }}</p>
+        <div
+            v-if="selectedUser"
+            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 overflow-y-scroll"
+        >
+            <div @click.stop class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-1/3">
+                <h2 class="text-xl font-bold text-center mb-4">Thông tin người dùng</h2>
+                <div class="space-y-2">
+                    <p><strong>First Name:</strong> {{ selectedUser.firstName }}</p>
+                    <p><strong>Last Name:</strong> {{ selectedUser.lastName }}</p>
+                    <p><strong>Email:</strong> {{ selectedUser.email }}</p>
+                    <p><strong>Birthday:</strong> {{ formatBirthdayHtml(selectedUser.birthday) }}</p>
+                    <p><strong>Address:</strong> {{ selectedUser.address }}</p>
+                    <p><strong>Gender:</strong> {{ selectedUser.gender }}</p>
+                    <p><strong>Phone number:</strong> {{ selectedUser.phoneNumber }}</p>
+                    <p>
+                        <strong>Status:</strong>
+                        <span
+                            :class="[
+                                selectedUser.isLocked
+                                    ? 'bg-red-200 text-red-600' // Màu đỏ cho trạng thái đã khoá
+                                    : 'bg-green-200 text-green-600', // Màu xanh cho trạng thái hoạt động
+                                'py-1 px-3 rounded-full text-xs',
+                            ]"
+                        >
+                            {{ selectedUser.isLocked ? 'Đã khoá' : 'Hoạt động' }}
+                        </span>
+                    </p>
 
-                <div class="mt-4">
+                    <p>
+                        <strong>Role: </strong>
+                        <span
+                            :class="[
+                                selectedUser.role === 'admin'
+                                    ? 'bg-green-200 text-green-600'
+                                    : 'bg-yellow-100 text-yellow-800',
+                                'py-1 px-3 rounded-full text-xs',
+                            ]"
+                        >
+                            {{ selectedUser.role === 'admin' ? 'Quản lý' : 'Người dùng' }}
+                        </span>
+                    </p>
+                    <!-- <p>
+                        <strong>Role:</strong>
+                        <span :class="selectedUser.role === 'admin' ? 'text-blue-500' : 'text-yellow-500'">
+                            {{ selectedUser.role === 'admin' ? 'Quản lý' : 'Người dùng' }}
+                        </span>
+                    </p> -->
+
+                    <p><strong>Created Date:</strong> {{ formatDate(selectedUser.createdAt) }}</p>
+                    <p><strong>Updated Date:</strong> {{ formatDate(selectedUser.updatedAt) }}</p>
+                </div>
+                <div class="mt-6 flex justify-end">
                     <button
                         @click="closeModal"
-                        class="cursor-pointer hover:opacity-95 text-white bg-blue-500 rounded-md px-4 py-2"
+                        class="cursor-pointer hover:opacity-95 text-white bg-blue-600 rounded-md px-4 py-2 transition duration-300 ease-in-out transform hover:scale-105"
                     >
                         Đóng
                     </button>
