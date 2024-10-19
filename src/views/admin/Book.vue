@@ -132,7 +132,7 @@
                         <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
                         <input
                             v-model="newProduct.price"
-                            type="text"
+                            type="number"
                             id="price"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
@@ -141,7 +141,7 @@
                         <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
                         <input
                             v-model="newProduct.quantity"
-                            type="text"
+                            type="number"
                             id="quantity"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
@@ -277,7 +277,7 @@
                         <label for="editPrice" class="block text-sm font-medium text-gray-700">Price</label>
                         <input
                             v-model="productToEdit.price"
-                            type="text"
+                            type="number"
                             id="editPrice"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
@@ -286,7 +286,7 @@
                         <label for="editQuantity" class="block text-sm font-medium text-gray-700">Quantity</label>
                         <input
                             v-model="productToEdit.quantity"
-                            type="text"
+                            type="number"
                             id="editQuantity"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
@@ -319,13 +319,45 @@
                             v-model="productToEdit.publisherId"
                             id="publisher"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                            required
                         >
                             <option disabled value="">Chọn nhà xuất bản</option>
                             <option v-for="publisher in publishers" :key="publisher._id" :value="publisher._id">
                                 {{ publisher.name }}
                             </option>
                         </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Ảnh hiện tại</label>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div v-for="(image, index) in currentImages" :key="index" class="relative">
+                                <img :src="image" alt="Current Image" class="w-full h-32 object-cover rounded-md" />
+                                <button
+                                    @click="removeCurrentImage(index)"
+                                    type="button"
+                                    class="absolute top-1 right-1 bg-red-500 text-white p-1 rounded"
+                                >
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Thêm ảnh mới</label>
+                        <input
+                            type="file"
+                            id="newImages"
+                            multiple
+                            @change="handleNewFileChange"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                        />
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        <div v-for="(image, index) in previewNewImages" :key="index" class="relative">
+                            <img :src="image" alt="New Image Preview" class="w-full h-32 object-cover rounded-md" />
+                        </div>
                     </div>
 
                     <div class="flex justify-end mt-6">
@@ -338,9 +370,15 @@
                         </button>
                         <button
                             type="submit"
-                            class="cursor-pointer hover:opacity-95 px-4 py-2 bg-blue-500 text-white rounded-md"
+                            :disabled="loading"
+                            class="cursor-pointer hover:opacity-95 px-4 py-2 bg-blue-500 text-white rounded-md relative flex items-center justify-center"
                         >
-                            Cập nhật
+                            <div v-if="loading" class="flex justify-center items-center absolute">
+                                <div class="loader"></div>
+                            </div>
+                            <span :class="{ 'opacity-0': loading, 'transition-opacity duration-200': loading }"
+                                >Cập nhật</span
+                            >
                         </button>
                     </div>
                 </form>
@@ -391,11 +429,18 @@ export default {
                 yearOfPublication: null,
                 publisher: '',
             },
+            // Create images
             uploadImages: [],
             previewImages: [],
+            // Edit images
+            currentImages: [], // Ảnh hiện tại của sản phẩm
+            previewNewImages: [], // Preview ảnh mới
+            newImages: [], // Danh sách file ảnh mới
+            deletedImages: [], // Danh sách ảnh bị xóa
             publishers: [],
             isAddProductModalVisible: false,
             loading: false,
+            loadingEdit: false,
             currentPage: 1, // Bắt đầu với trang đầu tiên
             pageSize: 10, // Hiển thị 10 sách mỗi trang
             selectedProduct: null,
@@ -422,6 +467,13 @@ export default {
         previousPage() {
             if (this.currentPage > 1) {
                 this.currentPage--;
+            }
+        },
+        validateNumber(event) {
+            const inputValue = event.target.value;
+            // Chỉ cho phép nhập số hoặc chuỗi rỗng
+            if (!/^\d*$/.test(inputValue)) {
+                event.target.value = inputValue.replace(/[^\d]/g, ''); // Loại bỏ ký tự không phải số
             }
         },
         formatDate(date) {
@@ -611,30 +663,71 @@ export default {
                 this.loading = false;
             }
         },
+        // Edit product
+        handleNewFileChange(event) {
+            const files = event.target.files;
+            this.previewNewImages = [...files].map((file) => URL.createObjectURL(file));
+            this.newImages = Array.from(files);
+            console.log('filesEditImgNew: ', files);
+        },
+        async removeCurrentImage(index) {
+            if (!window.confirm('Bạn chắc chắn xoá ảnh này chứ?')) return;
+            const deletedImage = this.currentImages[index]; // Lấy ảnh từ currentImages
+            this.deletedImages.push(deletedImage); // Thêm ảnh vào mảng deletedImages
+
+            // Xóa ảnh khỏi currentImages (chỉ xóa trên giao diện)
+            this.currentImages.splice(index, 1);
+        },
 
         editProduct(product) {
             this.productToEdit = { ...product }; // Make a copy of the publisher object to avoid directly modifying the array
-            console.log('this.productToEdit: ', this.productToEdit);
+            this.currentImages = [...product.images];
+            this.deletedImages = [];
+            this.newImages = [];
             this.isEditProductModalVisible = true;
         },
         closeEditProductModal() {
             this.isEditProductModalVisible = false;
             this.productToEdit = null; // Clear the productToEdit data after closing the modal
+            this.deletedImages = [];
+            this.newImages = [];
+            this.currentImages = [];
+            this.previewNewImages = [];
         },
         async saveEditedProduct() {
+            this.loading = true;
             try {
                 const user = JSON.parse(localStorage.getItem('user'));
                 const userToken = user.accessToken;
 
                 // Lấy productId từ productToEdit
                 const productId = this.productToEdit._id;
+
+                const formData = new FormData();
+                // Gán các thông tin sản phẩm từ productToEdit vào FormData
+                formData.append('name', this.productToEdit.name);
+                formData.append('author', this.productToEdit.author);
+                formData.append('price', this.productToEdit.price);
+                formData.append('quantity', this.productToEdit.quantity);
+                formData.append('yearOfPublication', this.productToEdit.yearOfPublication);
+                formData.append('publisher', this.productToEdit.publisher);
+                // Gửi đường dẫn hình ảnh đã xóa
+                if (this.deletedImages.length > 0) {
+                    formData.append('deleteImage', JSON.stringify(this.deletedImages));
+                }
+                // Thêm hình ảnh mới (là các file, không phải link text)
+                if (this.newImages.length > 0) {
+                    for (const file of this.newImages) {
+                        formData.append('images', file); // Chỉ thêm file, không thêm link
+                    }
+                }
+
                 const res = await fetch(`http://localhost:3001/api/book/${productId}`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
                         Authorization: `Bearer ${userToken}`,
                     },
-                    body: JSON.stringify(this.productToEdit),
+                    body: formData, // Gửi FormData
                 });
 
                 const data = await res.json();
@@ -645,18 +738,24 @@ export default {
                     toast.error(data.message);
                     return;
                 }
-                // Cập nhật danh sách users sau khi chỉnh sửa
+
+                // Cập nhật danh sách sản phẩm sau khi chỉnh sửa
                 const index = this.products.findIndex((product) => product._id === productId);
                 if (index !== -1) {
                     this.products[index] = data.updatedProduct;
                 }
+
                 toast.success('Cập nhật thông tin sách thành công');
                 this.closeEditProductModal();
             } catch (error) {
                 console.error('Error adding product:', error);
+                const toast = useToast();
                 toast.error(error.message);
+            } finally {
+                this.loading = false;
             }
         },
+
         viewProduct(product) {
             // Logic xem chi tiết sách
             this.selectedProduct = product;
