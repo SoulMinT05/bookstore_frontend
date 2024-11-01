@@ -30,7 +30,7 @@ export default defineConfig(({ mode }) => {
             outDir: path.resolve(rootDir, '..', 'dist'),
         },
         server: {
-            port: 3000, // Thiết lập cổng chạy cho máy chủ Vite (frontend)
+            port: 5731, // Thiết lập cổng chạy cho máy chủ Vite (frontend)
             proxy: {
                 '/api': {
                     // Đường dẫn bắt đầu bằng "/api" sẽ được chuyển tiếp qua proxy
