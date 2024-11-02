@@ -17,7 +17,6 @@ const fetchData = async () => {
             },
         });
         const data = await res.json();
-        console.log('dataChart: ', data);
 
         // Khởi tạo mảng monthlyData với 12 tháng
         const monthlyData: Data[] = Array(12)
@@ -36,7 +35,6 @@ const fetchData = async () => {
         }
 
         dataOrders.value = monthlyData; // Lưu dữ liệu vào biến reactive
-        console.log('dataOrdersCharttttt: ', dataOrders.value);
     } catch (error) {
         console.error('Error fetching data:', error);
     }

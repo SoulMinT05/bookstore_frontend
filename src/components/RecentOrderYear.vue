@@ -4,13 +4,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from 'vue-toastification';
 
 const statistics = ref({
-    currentMonth: {
+    currentYear: {
         users: 0,
         products: 0,
         orders: 0,
         publishers: 0,
     },
-    growthRates: {
+    growthRatesYear: {
         users: 0,
         products: 0,
         orders: 0,
@@ -22,7 +22,7 @@ const fetchData = async () => {
         const user = JSON.parse(localStorage.getItem('user') || '{}'); // Xử lý khi không có user
         const userToken = user.accessToken;
 
-        const res = await fetch('http://localhost:3001/api/statistic/month', {
+        const res = await fetch('http://localhost:3001/api/statistic/year', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,13 +39,13 @@ const fetchData = async () => {
         }
 
         statistics.value = {
-            currentMonth: {
+            currentYear: {
                 users: data.users,
                 products: data.products,
                 orders: data.orders,
                 publishers: data.publishers,
             },
-            growthRates: {
+            growthRatesYear: {
                 users: data.users.growthRate,
                 products: data.products.growthRate,
                 orders: data.orders.growthRate,
@@ -78,7 +78,7 @@ onMounted(() => {
 <template>
     <div class="space-y-8">
         <div
-            v-for="(order, index) in statistics.currentMonth.orders.populateOrders"
+            v-for="(order, index) in statistics.currentYear.orders.populateOrders"
             :key="index"
             class="flex items-center"
         >
