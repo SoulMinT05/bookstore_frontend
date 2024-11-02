@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-// import { ChartContainer, BarChart, CartesianGrid, XAxis, Bar, ChartTooltip } from '@shadcn/ui';
-import { ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { BarChart } from '@/components/ui/chart-bar';
 
 type Data = { month: string; total: number };
 const dataOrders = ref<Data[]>([]);
@@ -18,44 +17,36 @@ const fetchData = async () => {
             },
         });
         const data = await res.json();
+        console.log('dataChart: ', data);
+
+        // Khởi tạo mảng monthlyData với 12 tháng
         const monthlyData: Data[] = Array(12)
             .fill(0)
             .map((_, index) => ({
-                month: new Date(0, index).toLocaleString('default', { month: 'short' }),
+                month: new Date(0, index).toLocaleString('default', { month: 'short' }), // Tên tháng viết tắt
                 total: 0,
             }));
 
+        // Cập nhật số liệu từ API
         if (Array.isArray(data.orders.populateOrders)) {
             data.orders.populateOrders.forEach((order) => {
                 const monthIndex = new Date(order.createdAt).getMonth();
-                monthlyData[monthIndex].total += 1;
+                monthlyData[monthIndex].total += 1; // Tăng tổng số đơn hàng theo tháng
             });
         }
-        dataOrders.value = monthlyData;
+
+        dataOrders.value = monthlyData; // Lưu dữ liệu vào biến reactive
+        console.log('dataOrdersCharttttt: ', dataOrders.value);
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 };
 
 onMounted(() => {
-    fetchData();
+    fetchData(); // Gọi hàm fetchData khi component được mounted
 });
 </script>
 
 <template>
-    <ChartContainer class="h-[200px] w-full">
-        <BarChart accessibilityLayer :data="dataOrders">
-            <CartesianGrid vertical="{false}" />
-            <XAxis
-                dataKey="month"
-                :tickLine="false"
-                :tickMargin="10"
-                :axisLine="false"
-                :tickFormatter="(value) => (typeof value === 'string' ? value.slice(0, 3) : '')"
-            />
-
-            <ChartTooltip :content="{ total: d.total, month: d.month }" />
-            <Bar dataKey="total" fill="var(--color-desktop)" radius="{4}" />
-        </BarChart>
-    </ChartContainer>
+    <BarChart :data="dataOrders" :categories="['total']" :index="'month'" :rounded-corners="0" />
 </template>

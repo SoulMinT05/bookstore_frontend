@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DateRangePicker } from '@/components/ui/daterange-picker';
 import RecentSales from '@/components/examples/RecentSales.vue';
-import Overview from '@/components/examples/Overview.vue';
+import ChartMonth from '@/components/ChartMonth.vue';
 
 import { ref, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
@@ -161,10 +161,10 @@ console.log(statistics.value.currentMonth);
                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                     <Card class="col-span-4">
                         <CardHeader>
-                            <CardTitle>Overview</CardTitle>
+                            <CardTitle>Đơn mượn các tháng</CardTitle>
                         </CardHeader>
                         <CardContent class="pl-2">
-                            <Overview />
+                            <ChartMonth />
                         </CardContent>
                     </Card>
                     <Card class="col-span-3">
