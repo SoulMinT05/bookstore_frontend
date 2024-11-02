@@ -6,7 +6,7 @@ import { DateRangePicker } from '@/components/ui/daterange-picker';
 import RecentSales from '@/components/examples/RecentSales.vue';
 import ChartMonth from '@/components/ChartMonth.vue';
 
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useToast } from 'vue-toastification';
 
 const statistics = ref({
@@ -39,27 +39,6 @@ const fetchStatistics = async () => {
         const toast = useToast();
         console.log('dataMonth: ', data);
 
-        if (data.success) {
-            statistics.value = {
-                currentMonth: {
-                    users: data.users,
-                    products: data.products,
-                    orders: data.orders,
-                    publishers: data.publishers,
-                },
-                growthRates: {
-                    users: data.users.growthRate,
-                    products: data.products.growthRate,
-                    orders: data.orders.growthRate,
-                    publishers: data.publishers.growthRate,
-                },
-            };
-        }
-        // else {
-        //     const toast = useToast();
-        //     toast.error(data.message);
-        // }
-
         if (!data.success) {
             toast.error(data.message);
             return;
@@ -82,9 +61,13 @@ const fetchStatistics = async () => {
         console.error('Failed to fetch statistics:', error);
     }
 };
+const currentMonthYear = computed(() => {
+    const now = new Date();
+    const options = { month: 'long', year: 'numeric' }; // Định dạng tháng và năm
+    return now.toLocaleDateString('vi-VN', options); // Định dạng theo ngôn ngữ Việt Nam
+});
 
 onMounted(fetchStatistics);
-console.log(statistics.value.currentMonth);
 </script>
 
 <template>
@@ -136,7 +119,6 @@ console.log(statistics.value.currentMonth);
                                         </svg>
                                     </template>
                                     <template v-else>
-                                        <!-- SVG màu đỏ -->
                                         <svg
                                             class="w-3 h-3"
                                             aria-hidden="true"
@@ -169,8 +151,8 @@ console.log(statistics.value.currentMonth);
                     </Card>
                     <Card class="col-span-3">
                         <CardHeader>
-                            <CardTitle>Recent Sales</CardTitle>
-                            <CardDescription> You made 265 sales this month. </CardDescription>
+                            <CardTitle>Những đơn gần nhất</CardTitle>
+                            <CardDescription> Tính theo {{ currentMonthYear }} </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <RecentSales />
