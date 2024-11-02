@@ -52,22 +52,31 @@
                             <span>{{ order?.quantity }}</span>
                         </td>
                         <td class="py-4 px-6 text-center">
-                            <select
+                            <Select
                                 v-model="order.status"
-                                @change="updateOrderStatus(order._id, order.status)"
-                                class="py-1 px-3 rounded-full text-sm focus:outline-none focus:ring-0 focus:border-transparent"
-                                :class="[
-                                    order?.status === 'pending'
-                                        ? ' bg-blue-500 text-white '
-                                        : order?.status === 'accepted'
-                                          ? ' text-white bg-green-500'
-                                          : ' text-white bg-red-600',
-                                ]"
+                                @update:modelValue="(newStatus) => updateOrderStatus(order._id, newStatus)"
+                                class="w-full"
                             >
-                                <option value="pending">Pending</option>
-                                <option value="accepted">Accepted</option>
-                                <option value="rejected">Rejected</option>
-                            </select>
+                                <SelectTrigger
+                                    className="flex items-center justify-start  h-10 px-3 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                    <SelectValue placeholder="Chọn trạng thái" />
+                                </SelectTrigger>
+                                <SelectContent class="-ml-4">
+                                    <SelectGroup>
+                                        <SelectLabel class="pl-4">Trạng thái đơn hàng</SelectLabel>
+                                        <SelectItem value="pending">
+                                            <span class="text-blue-600">Pending</span>
+                                        </SelectItem>
+                                        <SelectItem value="accepted">
+                                            <span class="text-green-600">Accepted</span>
+                                        </SelectItem>
+                                        <SelectItem value="rejected">
+                                            <span class="text-red-600">Rejected</span>
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                         </td>
                         <td class="py-4 px-6 text-center">
                             <span>{{ formatDate(order?.startDate) }}</span>
@@ -264,184 +273,163 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import * as XLSX from 'xlsx';
 import { Download } from 'lucide-vue-next';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
-export default {
-    data() {
-        return {
-            orders: [], // Dữ liệu đơn hàng
-            newOrder: {
-                name: '',
-                address: '',
+const orders = ref([]);
+const newOrder = ref({
+    name: '',
+    address: '',
+});
+const isAddOrderModalVisible = ref(false);
+const currentPage = ref(1);
+const pageSize = ref(10);
+const selectedOrder = ref(null);
+const orderToEdit = ref(null);
+const isEditOrderModalVisible = ref(false);
+const isLoading = ref(false);
+
+const totalPages = computed(() => Math.ceil(orders.value.length / pageSize.value));
+const paginatedOrders = computed(() => {
+    const start = (currentPage.value - 1) * pageSize.value;
+    return orders.value.slice(start, start + pageSize.value);
+});
+
+const toast = useToast();
+
+function nextPage() {
+    if (currentPage.value < totalPages.value) {
+        currentPage.value++;
+    }
+}
+
+function previousPage() {
+    if (currentPage.value > 1) {
+        currentPage.value--;
+    }
+}
+
+function formatDate(date) {
+    const d = new Date(date);
+    const year = d.getUTCFullYear();
+    const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(d.getUTCDate()).padStart(2, '0');
+    return `${day}/${month}/${year}`;
+}
+
+function exportToExcel() {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(orders.value);
+    XLSX.utils.book_append_sheet(wb, ws, 'Orders');
+    const fileName = `orders_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+}
+
+async function fetchOrders() {
+    isLoading.value = true;
+    try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const userToken = user.accessToken;
+        const res = await fetch('http://localhost:3001/api/order/getAllOrders', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userToken}`,
             },
-            isAddOrderModalVisible: false,
-            currentPage: 1, // Bắt đầu với trang đầu tiên
-            pageSize: 10, // Hiển thị 10 đơn hàng mỗi trang
-            selectedOrder: null,
-            orderToEdit: null,
-            isEditOrderModalVisible: false, // For Edit Order modal
-            isLoading: false,
-        };
-    },
-    computed: {
-        totalPages() {
-            return Math.ceil(this.orders.length / this.pageSize);
-        },
-        paginatedOrders() {
-            const start = (this.currentPage - 1) * this.pageSize;
-            return this.orders.slice(start, start + this.pageSize);
-        },
-    },
-    methods: {
-        nextPage() {
-            if (this.currentPage < this.totalPages) {
-                this.currentPage++;
-            }
-        },
-        previousPage() {
-            if (this.currentPage > 1) {
-                this.currentPage--;
-            }
-        },
-        formatDate(date) {
-            // const createdAtDate = new Date(date); // Tạo đối tượng Date
-            // return createdAtDate.toGMTString(); // Chuyển đổi thành chuỗi GMT
-            const d = new Date(date);
-            const year = d.getUTCFullYear();
-            const month = String(d.getUTCMonth() + 1).padStart(2, '0');
-            const day = String(d.getUTCDate()).padStart(2, '0');
+        });
+        const data = await res.json();
+        console.log('dataOrders: ', data);
 
-            return `${day}/${month}/${year}`;
-        },
-        exportToExcel() {
-            // Tạo một workbook mới
-            const wb = XLSX.utils.book_new();
+        if (!data.success) {
+            toast.error(data.message);
+            return;
+        }
+        orders.value = data.orders;
+    } catch (error) {
+        console.log('error: ', error);
+        toast.error(error.message);
+    } finally {
+        isLoading.value = false;
+    }
+}
 
-            // Chuyển đổi dữ liệu đơn hàng thành bảng
-            const ws = XLSX.utils.json_to_sheet(this.orders);
+async function updateOrderStatus(orderId, newStatus) {
+    try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const userToken = user.accessToken;
+        const res = await fetch(`http://localhost:3001/api/order/updateStatus/${orderId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userToken}`,
+            },
+            body: JSON.stringify({ status: newStatus }),
+        });
+        const data = await res.json();
+        console.log('dataUpdateStatus: ', data);
 
-            // Thêm bảng vào workbook
-            XLSX.utils.book_append_sheet(wb, ws, 'Orders');
+        if (!data.success) {
+            toast.error(data.message);
+            return;
+        }
+        toast.success('Cập nhật tình trạng đơn hàng thành công');
+    } catch (error) {
+        console.error('Error adding order:', error);
+        toast.error(error.message);
+    }
+}
 
-            // Tạo tên file
-            const fileName = `orders_${new Date().toISOString().split('T')[0]}.xlsx`;
+function viewOrder(order) {
+    selectedOrder.value = order;
+}
 
-            // Xuất file
-            XLSX.writeFile(wb, fileName);
-        },
-        async fetchOrders() {
-            this.isLoading = true;
-            try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const userToken = user.accessToken;
-                const res = await fetch('http://localhost:3001/api/order/getAllOrders', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
-                    },
-                });
-                const data = await res.json();
-                const toast = useToast();
-                console.log('dataOrders: ', data);
+function closeModal() {
+    selectedOrder.value = null;
+}
 
-                if (!data.success) {
-                    toast.error(data.message);
-                    return;
-                }
-                this.orders = data.orders;
-            } catch (error) {
-                console.log('error: ', error);
-                toast.error(error.message);
-            } finally {
-                this.isLoading = false;
-            }
-        },
+async function deleteOrder(order) {
+    if (!confirm('Bạn chắc chắn xoá đơn hàng này không?')) return;
+    try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const userToken = user.accessToken;
+        const res = await fetch(`http://localhost:3001/api/order/${order._id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userToken}`,
+            },
+        });
+        const data = await res.json();
+        console.log('dataDeleteOrders: ', data);
 
-        async updateOrderStatus(orderId, newStatus) {
-            try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const userToken = user.accessToken;
+        if (!data.success) {
+            toast.error(data.message);
+            return;
+        }
+        orders.value.splice(
+            orders.value.findIndex((o) => o._id === order._id),
+            1,
+        );
+        toast.success('Xoá đơn hàng thành công');
+    } catch (error) {
+        console.error('Error deleting user:', error.message);
+        toast.error(error.message);
+    }
+}
 
-                const res = await fetch(`http://localhost:3001/api/order/updateStatus/${orderId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
-                    },
-                    body: JSON.stringify({ status: newStatus }),
-                });
-
-                const data = await res.json();
-                const toast = useToast();
-                console.log('dataUpdateStatus: ', data);
-
-                if (!data.success) {
-                    toast.error(data.message);
-                    return;
-                }
-                toast.success('Cập nhật tình trạng đơn hàng thành công');
-            } catch (error) {
-                console.error('Error adding order:', error);
-                toast.error(error.message);
-            }
-        },
-        viewOrder(order) {
-            // Logic xem chi tiết đơn hàng
-            this.selectedOrder = order;
-        },
-        closeModal() {
-            this.selectedOrder = null;
-        },
-
-        async deleteOrder(order) {
-            if (!confirm('Bạn chắc chắn xoá đơn hàng này không?')) return;
-            try {
-                const userLocalStorage = JSON.parse(localStorage.getItem('user'));
-                const userToken = userLocalStorage.accessToken;
-
-                const res = await fetch(`http://localhost:3001/api/order/${order._id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
-                    },
-                });
-
-                const data = await res.json();
-                const toast = useToast();
-                console.log('dataDeleteOrders: ', data);
-
-                if (!data.success) {
-                    toast.error(data.message);
-                    return;
-                }
-                this.orders.splice(
-                    this.orders.findIndex((o) => o._id === order._id),
-                    1,
-                );
-                toast.success('Xoá đơn hàng thành công');
-            } catch (error) {
-                console.error('Error deleting user:', error.message);
-                toast.error('Error deleting user: ', error.message);
-            }
-        },
-
-        showToast(message) {
-            this.toastMessage = message;
-            setTimeout(() => {
-                this.toastMessage = '';
-            }, 3000);
-        },
-    },
-
-    mounted() {
-        this.fetchOrders();
-    },
-};
+onMounted(fetchOrders);
 </script>
 
 <style scoped>

@@ -53,8 +53,6 @@ const fetchData = async () => {
                 publishers: data.publishers.growthRate,
             },
         };
-
-        // dataOrders.value = monthlyData; // Lưu dữ liệu vào biến reactive
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -64,8 +62,8 @@ const getStatusMessage = (status) => {
     switch (status) {
         case 'pending':
             return 'Đang xử lý';
-        case 'success':
-            return 'Thành công';
+        case 'accepted':
+            return 'Chấp nhận';
         case 'rejected':
             return 'Từ chối';
         default:
@@ -101,7 +99,7 @@ onMounted(() => {
                 <span
                     :class="{
                         'bg-blue-500 text-white': order.status === 'pending',
-                        'bg-green-500 text-white': order.status === 'success',
+                        'bg-green-500 text-white': order.status === 'accepted',
                         'bg-red-500 text-white': order.status === 'rejected',
                     }"
                     class="px-3 py-1 rounded-full text-sm font-medium"

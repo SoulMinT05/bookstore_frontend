@@ -3,8 +3,8 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DateRangePicker } from '@/components/ui/daterange-picker';
-import RecentSales from '@/components/examples/RecentSales.vue';
 import ChartMonth from '@/components/ChartMonth.vue';
+import RecentOrderMonth from '@/components/RecentOrderMonth.vue';
 
 import { ref, onMounted, computed } from 'vue';
 import { useToast } from 'vue-toastification';
@@ -101,7 +101,6 @@ onMounted(fetchStatistics);
                                 {{ Math.abs(statistics.growthRates[key]).toFixed(2) }}%
                                 <span class="ms-1">
                                     <template v-if="statistics.growthRates[key] > 0">
-                                        <!-- SVG màu xanh -->
                                         <svg
                                             class="w-3 h-3"
                                             aria-hidden="true"
@@ -155,7 +154,7 @@ onMounted(fetchStatistics);
                             <CardDescription> Tính theo {{ currentMonthYear }} </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <RecentSales />
+                            <RecentOrderMonth />
                         </CardContent>
                     </Card>
                 </div>
