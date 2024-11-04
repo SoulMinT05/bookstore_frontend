@@ -3,8 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DateRangePicker } from '@/components/ui/daterange-picker';
-import ChartMonth from '@/components/ChartMonth.vue';
-import RecentOrderMonth from '@/components/RecentOrderMonth.vue';
+import StatisticWeek from './StatisticWeek.vue';
 import StatisticMonth from './StatisticMonth.vue';
 import StatisticYear from '@/views/admin/StatisticYear.vue';
 
@@ -12,6 +11,19 @@ import { ref, onMounted, computed } from 'vue';
 import { useToast } from 'vue-toastification';
 
 const statistics = ref({
+    // Week
+    currentWeek: {
+        users: 0,
+        products: 0,
+        orders: 0,
+        publishers: 0,
+    },
+    growthRatesWeek: {
+        users: 0,
+        products: 0,
+        orders: 0,
+        publishers: 0,
+    },
     // Month
     currentMonth: {
         users: 0,
@@ -38,7 +50,44 @@ const statistics = ref({
         orders: 0,
         publishers: 0,
     },
+    statisticsMonth: [],
 });
+
+const fetchStatisticsWeek = async () => {
+    try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const userToken = user.accessToken;
+        const res = await fetch('http://localhost:3001/api/statistic/week', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userToken}`,
+            },
+        });
+        const data = await res.json();
+        const toast = useToast();
+        console.log('dataWeek: ', data);
+
+        if (!data.success) {
+            toast.error(data.message);
+            return;
+        }
+        statistics.value.currentWeek = {
+            users: data.users,
+            products: data.products,
+            orders: data.orders,
+            publishers: data.publishers,
+        };
+        statistics.value.growthRatesWeek = {
+            users: data.users.growthRate,
+            products: data.products.growthRate,
+            orders: data.orders.growthRate,
+            publishers: data.publishers.growthRate,
+        };
+    } catch (error) {
+        console.error('Failed to fetch statistics:', error);
+    }
+};
 
 const fetchStatisticsMonth = async () => {
     try {
@@ -59,18 +108,30 @@ const fetchStatisticsMonth = async () => {
             toast.error(data.message);
             return;
         }
-        statistics.value.currentMonth = {
-            users: data.users,
-            products: data.products,
-            orders: data.orders,
-            publishers: data.publishers,
-        };
-        statistics.value.growthRatesMonth = {
-            users: data.users.growthRate,
-            products: data.products.growthRate,
-            orders: data.orders.growthRate,
-            publishers: data.publishers.growthRate,
-        };
+        statistics.value.statisticsMonth = data.statisticsMonth.map((monthData) => ({
+            month: monthData.month,
+            users: {
+                title: monthData.users.title,
+                count: monthData.users.count,
+                growthRate: monthData.users.growthRate,
+            },
+            products: {
+                title: monthData.products.title,
+                count: monthData.products.count,
+                growthRate: monthData.products.growthRate,
+            },
+            orders: {
+                title: monthData.orders.title,
+                count: monthData.orders.count,
+                growthRate: monthData.orders.growthRate,
+            },
+            publishers: {
+                title: monthData.publishers.title,
+                count: monthData.publishers.count,
+                growthRate: monthData.publishers.growthRate,
+            },
+        }));
+        console.log('statistics.value.statisticsMonth: ', statistics.value.statisticsMonth);
     } catch (error) {
         console.error('Failed to fetch statistics:', error);
     }
@@ -113,6 +174,7 @@ const fetchStatisticsYear = async () => {
 };
 
 onMounted(() => {
+    fetchStatisticsWeek();
     fetchStatisticsMonth();
     fetchStatisticsYear();
 });
@@ -133,6 +195,9 @@ onMounted(() => {
                 <TabsTrigger value="monthly">Tháng </TabsTrigger>
                 <TabsTrigger value="yearly">Năm </TabsTrigger>
             </TabsList>
+            <TabsContent value="weekly" class="space-y-4">
+                <StatisticWeek :statistics="statistics" />
+            </TabsContent>
             <TabsContent value="monthly" class="space-y-4">
                 <StatisticMonth :statistics="statistics" />
             </TabsContent>

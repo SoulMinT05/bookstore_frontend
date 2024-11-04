@@ -4,27 +4,25 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from 'vue-toastification';
 
 const statistics = ref({
-    currentMonth: {
+    currentWeek: {
         users: 0,
         products: 0,
         orders: 0,
         publishers: 0,
-        populateOrders: [], // Thêm trường này để lưu đơn hàng
     },
-    growthRates: {
+    growthRatesWeek: {
         users: 0,
         products: 0,
         orders: 0,
         publishers: 0,
     },
 });
-
 const fetchData = async () => {
     try {
         const user = JSON.parse(localStorage.getItem('user') || '{}'); // Xử lý khi không có user
         const userToken = user.accessToken;
 
-        const res = await fetch('http://localhost:3001/api/statistic/month', {
+        const res = await fetch('http://localhost:3001/api/statistic/week', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -40,25 +38,20 @@ const fetchData = async () => {
             return;
         }
 
-        // Lấy số liệu từ tháng đầu tiên
-        const firstMonthData = data.statisticsMonth[0];
-
         statistics.value = {
-            currentMonth: {
-                users: firstMonthData.users.count,
-                products: firstMonthData.products.count,
-                orders: firstMonthData.orders.count,
-                publishers: firstMonthData.publishers.count,
-                populateOrders: firstMonthData.orders.populateOrders || [], // Giả định rằng `populateOrders` nằm trong `orders`
+            currentWeek: {
+                users: data.users,
+                products: data.products,
+                orders: data.orders,
+                publishers: data.publishers,
             },
-            growthRates: {
-                users: firstMonthData.users.growthRate,
-                products: firstMonthData.products.growthRate,
-                orders: firstMonthData.orders.growthRate,
-                publishers: firstMonthData.publishers.growthRate,
+            growthRatesWeek: {
+                users: data.users.growthRate,
+                products: data.products.growthRate,
+                orders: data.orders.growthRate,
+                publishers: data.publishers.growthRate,
             },
         };
-        console.log('statistics.value.currentMonth: ', statistics.value.currentMonth);
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -84,12 +77,16 @@ onMounted(() => {
 
 <template>
     <div class="space-y-8">
-        <div v-for="(order, index) in statistics.currentMonth.populateOrders" :key="index" class="flex items-center">
+        <div
+            v-for="(order, index) in statistics.currentWeek.orders.populateOrders"
+            :key="index"
+            class="flex items-center"
+        >
             <Avatar class="h-9 w-9">
                 <AvatarImage :src="order.orderBy.avatarUrl || '/avatars/default.png'" alt="Avatar" />
-                <AvatarFallback>
-                    {{ order.orderBy.firstName.charAt(0) }}{{ order.orderBy.lastName.charAt(0) }}
-                </AvatarFallback>
+                <AvatarFallback
+                    >{{ order.orderBy.firstName.charAt(0) }}{{ order.orderBy.lastName.charAt(0) }}</AvatarFallback
+                >
             </Avatar>
             <div class="ml-4 space-y-1">
                 <p class="text-sm font-medium leading-none">

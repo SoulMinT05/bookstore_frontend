@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { BarChart } from '@/components/ui/chart-bar';
-
+import { useToast } from 'vue-toastification';
 type Data = { month: string; total: number };
 const dataOrders = ref<Data[]>([]);
 
 const fetchData = async () => {
     try {
         const user = JSON.parse(localStorage.getItem('user'));
-        const userToken = user.accessToken;
+        const userToken = user?.accessToken;
+
+        if (!userToken) {
+            throw new Error('Access token is missing');
+        }
+
         const res = await fetch('http://localhost:3001/api/statistic/month', {
             method: 'GET',
             headers: {
@@ -16,27 +21,33 @@ const fetchData = async () => {
                 Authorization: `Bearer ${userToken}`,
             },
         });
+
         const data = await res.json();
+        const toast = useToast();
 
-        // Khởi tạo mảng monthlyData với 12 tháng
-        const monthlyData: Data[] = Array(12)
-            .fill(0)
-            .map((_, index) => ({
-                month: new Date(0, index).toLocaleString('default', { month: 'short' }), // Tên tháng viết tắt
-                total: 0,
-            }));
+        if (!data.success) {
+            toast.error(data.message);
+            return;
+        }
+        // Tạo mảng monthlyData với 12 tháng, ban đầu tổng là 0 cho mỗi tháng
+        const monthlyData: Data[] = Array.from({ length: 12 }, (_, index) => ({
+            month: new Date(0, index).toLocaleString('default', { month: 'short' }),
+            total: 0,
+        }));
 
-        // Cập nhật số liệu từ API
-        if (Array.isArray(data.orders.populateOrders)) {
-            data.orders.populateOrders.forEach((order) => {
-                const monthIndex = new Date(order.createdAt).getMonth();
-                monthlyData[monthIndex].total += 1; // Tăng tổng số đơn hàng theo tháng
+        if (Array.isArray(data.statisticsMonth)) {
+            data.statisticsMonth.forEach((monthData) => {
+                const date = new Date(`${monthData.month}`);
+                const monthIndex = date.getMonth();
+
+                if (monthIndex >= 0 && monthIndex < 12) {
+                    monthlyData[monthIndex].total = monthData.orders.count;
+                }
             });
         }
-
-        dataOrders.value = monthlyData; // Lưu dữ liệu vào biến reactive
+        dataOrders.value = monthlyData; // Lưu dữ liệu đã xử lý vào biến reactive
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data:', error.message);
     }
 };
 

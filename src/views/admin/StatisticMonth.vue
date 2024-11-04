@@ -1,7 +1,8 @@
 <template>
     <TabsContent value="monthly" class="space-y-4">
         <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card v-for="(item, key) in statistics.currentMonth" :key="key">
+            <!-- Hiển thị thống kê của tháng hiện tại từ statisticsMonth -->
+            <Card v-for="(item, key) in currentMonthStatistics" :key="key">
                 <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle class="text-sm font-medium">{{ item.title }}</CardTitle>
                 </CardHeader>
@@ -9,12 +10,12 @@
                     <div class="text-2xl font-bold">{{ item.count }}</div>
                     <p
                         class="text-sm flex items-center"
-                        :class="statistics.growthRatesMonth[key] >= 0 ? 'text-green-500' : 'text-red-500'"
+                        :class="item.growthRate >= 0 ? 'text-green-500' : 'text-red-500'"
                     >
-                        {{ statistics.growthRatesMonth[key] >= 0 ? '+' : '-' }}
-                        {{ Math.abs(statistics.growthRatesMonth[key]).toFixed(2) }}%
+                        {{ item.growthRate >= 0 ? '+' : '-' }}
+                        {{ Math.abs(item.growthRate).toFixed(2) }}%
                         <span class="ms-1">
-                            <template v-if="statistics.growthRatesMonth[key] >= 0">
+                            <template v-if="item.growthRate >= 0">
                                 <svg
                                     class="w-3 h-3"
                                     aria-hidden="true"
@@ -86,6 +87,17 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+});
+
+// Chọn dữ liệu thống kê của tháng hiện tại
+const currentMonthStatistics = computed(() => {
+    const data = props.statistics.statisticsMonth?.[0] || {};
+    return [
+        { title: 'Người dùng', count: data.users?.count || 0, growthRate: data.users?.growthRate || 0 },
+        { title: 'Sản phẩm', count: data.products?.count || 0, growthRate: data.products?.growthRate || 0 },
+        { title: 'Đơn mượn', count: data.orders?.count || 0, growthRate: data.orders?.growthRate || 0 },
+        { title: 'Nhà xuất bản', count: data.publishers?.count || 0, growthRate: data.publishers?.growthRate || 0 },
+    ];
 });
 
 const currentMonthYear = computed(() => {
