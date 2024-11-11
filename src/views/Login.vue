@@ -1,21 +1,16 @@
 <template>
     <section class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center">
         <div class="w-full max-w-md p-6 bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <h1 class="text-xl font-bold text-gray-900 md:text-2xl dark:text-white text-center">
-                Login to your account
-            </h1>
+            <h1 class="text-xl font-bold text-gray-900 md:text-2xl dark:text-white text-center">Login</h1>
             <form class="mt-6 space-y-6" @submit.prevent="onLogin">
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-900 dark:text-white">
-                        Your email
-                    </label>
+                    <label for="email" class="block text-sm font-medium text-gray-900 dark:text-white"> Email </label>
                     <input
                         v-model="email"
                         type="email"
                         name="email"
                         id="email"
                         class="w-full p-2.5 mt-1 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        placeholder="name@gmail.com"
                         required
                     />
                 </div>
@@ -29,7 +24,6 @@
                         name="password"
                         id="password"
                         class="w-full p-2.5 mt-1 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        placeholder="password"
                         required
                     />
                 </div>

@@ -9,6 +9,7 @@ import { useRoute } from 'vue-router';
 import { APP_MENU } from '@/config/app';
 import { ArrowLeftToLine } from 'lucide-vue-next';
 import { useAppStore } from '@/stores/app';
+import { useToast } from 'vue-toastification';
 
 const route = useRoute();
 
@@ -27,6 +28,41 @@ const handleNavigate = (path: string) => {
     router.push(path);
     if (window.innerWidth < 1025) {
         store.toggleSidebar();
+    }
+};
+
+const handleLogout = async () => {
+    const toast = useToast();
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userToken = user.accessToken;
+    try {
+        const res = await fetch('http://localhost:3001/api/user/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userToken}`,
+            },
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+            toast.error('Đăng xuất thất bại');
+            return;
+        }
+        localStorage.removeItem('user');
+        toast.success('Đăng xuất thành công');
+        router.push('/login');
+    } catch (error) {
+        toast.error('Đăng xuất thất bại');
+        return;
+    }
+};
+
+const handleClick = (child) => {
+    if (child.title === 'Đăng xuất' || child.title.toLowerCase() === 'Đăng xuất') {
+        handleLogout();
+    } else {
+        handleNavigate(child.path);
     }
 };
 
@@ -54,7 +90,7 @@ const toggleSidebar = () => {
                                 <span class="text-foreground"
                                     ><span class="mr-2 flex items-center"><Icon name="Boxes" /></span
                                 ></span>
-                                TamaBookStore
+                                TamLibrary
                             </h2>
                         </transition>
                         <Button
@@ -96,16 +132,16 @@ const toggleSidebar = () => {
                                             <Toggle
                                                 class="w-full overflow-x-hidden justify-start duration-150"
                                                 :pressed="child.active"
-                                                @click="handleNavigate(child.path)"
+                                                @click="handleClick(child)"
                                             >
                                                 <span
                                                     class="flex items-center"
                                                     :class="store.sidebarExpanded ? 'mr-4' : 'm-0'"
                                                 >
-                                                    <Icon :name="child.icon" />
+                                                    <Icon :name="child.icon" :class="child.class" />
                                                 </span>
                                                 <transition name="fade" :duration="300">
-                                                    <span v-show="store.sidebarExpand">
+                                                    <span v-show="store.sidebarExpand" :class="child.class">
                                                         {{ child.title }}
                                                     </span>
                                                 </transition>
@@ -113,7 +149,7 @@ const toggleSidebar = () => {
                                         </TooltipTrigger>
                                         <template v-if="!store.sidebarExpanded">
                                             <TooltipContent side="right">
-                                                <p class="text-sm">
+                                                <p class="text-sm" :class="child.class">
                                                     {{ child.title }}
                                                 </p>
                                             </TooltipContent>
@@ -123,13 +159,13 @@ const toggleSidebar = () => {
                             </li>
                         </ul>
                     </div>
-                    <div class="border-b-[1px] transition-all" :class="store.sidebarExpanded ? 'p-4' : 'p-2'">
+                    <!-- <div class="border-b-[1px] transition-all" :class="store.sidebarExpanded ? 'p-4' : 'p-2'">
                         <p
                             v-show="store.sidebarExpanded"
                             class="uppercase text-xs font-light text-gray-400 mb-2 tracking-widest transition-all duration-300 delay-100"
                             :class="store.sidebarExpanded ? 'visible opacity-100' : 'invisible opacity-0'"
                         >
-                            Misc
+                            Khác
                         </p>
                         <ul>
                             <li class="flex items-center mb-1 rounded-md">
@@ -187,7 +223,7 @@ const toggleSidebar = () => {
                                 </TooltipProvider>
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
                 </ScrollArea>
             </div>
 
@@ -195,7 +231,7 @@ const toggleSidebar = () => {
                 class="border-t-[1px] transition-all duration-400 py-4"
                 :class="store.sidebarExpanded ? 'opacity-100' : 'opacity-0'"
             >
-                <p class="text-xs text-foreground/50 text-center">&copy; 2024 TamaBookStore</p>
+                <p class="text-xs text-foreground/50 text-center">&copy; 2024 TamLibrary</p>
             </div>
         </div>
     </div>

@@ -58,7 +58,6 @@ const fetchData = async () => {
                 publishers: firstMonthData.publishers.growthRate,
             },
         };
-        console.log('statistics.value.currentMonth: ', statistics.value.currentMonth);
     } catch (error) {
         console.error('Error fetching data:', error);
     }

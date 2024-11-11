@@ -89,7 +89,6 @@ const props = defineProps({
     },
 });
 
-// Chọn dữ liệu thống kê của tháng hiện tại
 const currentMonthStatistics = computed(() => {
     const data = props.statistics.statisticsMonth?.[0] || {};
     return [

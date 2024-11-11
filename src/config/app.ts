@@ -4,65 +4,67 @@ interface IDashboardMenus {
     path: string;
     description?: string;
     hidden?: boolean;
+    class?: string;
 }
 
 export const SIDEBAR_EXPAND_WIDTH = 280;
 export const SIDEBAR_COLLAPSED_WIDTH = 72;
 export const APP_MENU: Record<string, { name: string; routes: IDashboardMenus[] }> = {
     main: {
-        name: 'General',
+        name: 'Chung',
         routes: [
             {
                 title: 'Dashboard',
                 icon: 'LayoutDashboard',
                 path: 'dashboard',
             },
-            {
-                title: 'Tasks',
-                icon: 'ClipboardCheck',
-                path: 'task',
-                description: 'Manage Tasks',
-            },
         ],
     },
     settings: {
-        name: 'Manage system',
+        name: 'Quản lý',
         routes: [
             {
                 path: 'user',
-                title: 'User',
+                title: 'Người dùng',
                 icon: 'User',
                 description: 'Manage User',
             },
             {
                 path: 'book',
-                title: 'Book',
+                title: 'Sách',
                 icon: 'BookOpenText',
                 description: 'Manage Book',
             },
             {
                 path: 'publisher',
-                title: 'Publisher',
+                title: 'Nhà xuất bản',
                 icon: 'Book',
                 description: 'Manage publisher',
             },
             {
                 path: 'order',
-                title: 'Order',
+                title: 'Đơn mượn',
                 icon: 'ShoppingCart',
                 description: 'Manage Order',
             },
             {
                 path: 'post',
-                title: 'Post',
+                title: 'Bài viết',
                 icon: 'Upload',
                 description: 'Manage post',
             },
             {
                 path: 'settings',
-                title: 'Settings',
+                title: 'Cài đặt',
                 icon: 'Settings2',
                 description: 'Settings',
+            },
+            {
+                path: '',
+                title: 'Đăng xuất',
+                icon: 'LogOut',
+                description: 'LogOut',
+                class: 'text-red-500',
             },
         ],
     },

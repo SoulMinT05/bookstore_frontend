@@ -10,10 +10,6 @@ const fetchData = async () => {
         const user = JSON.parse(localStorage.getItem('user'));
         const userToken = user?.accessToken;
 
-        if (!userToken) {
-            throw new Error('Access token is missing');
-        }
-
         const res = await fetch('http://localhost:3001/api/statistic/month', {
             method: 'GET',
             headers: {
@@ -45,7 +41,17 @@ const fetchData = async () => {
                 }
             });
         }
-        dataOrders.value = monthlyData; // Lưu dữ liệu đã xử lý vào biến reactive
+        // const monthlyData: Data[] = [];
+        // if (Array.isArray(data.statisticsMonth)) {
+        //     data.statisticsMonth.forEach((monthData) => {
+        //         // Thêm dữ liệu vào monthlyData từ backend
+        //         monthlyData.push({
+        //             month: monthData.week,
+        //             total: monthData.orders.count,
+        //         });
+        //     });
+        // }
+        dataOrders.value = monthlyData;
     } catch (error) {
         console.error('Error fetching data:', error.message);
     }

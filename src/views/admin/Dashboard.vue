@@ -50,6 +50,7 @@ const statistics = ref({
         orders: 0,
         publishers: 0,
     },
+    statisticsWeek: [],
     statisticsMonth: [],
 });
 
@@ -72,18 +73,30 @@ const fetchStatisticsWeek = async () => {
             toast.error(data.message);
             return;
         }
-        statistics.value.currentWeek = {
-            users: data.users,
-            products: data.products,
-            orders: data.orders,
-            publishers: data.publishers,
-        };
-        statistics.value.growthRatesWeek = {
-            users: data.users.growthRate,
-            products: data.products.growthRate,
-            orders: data.orders.growthRate,
-            publishers: data.publishers.growthRate,
-        };
+        statistics.value.statisticsWeek = data.statisticsWeek.map((weekData) => ({
+            week: weekData.week,
+            users: {
+                title: weekData.users.title,
+                count: weekData.users.count,
+                growthRate: weekData.users.growthRate,
+            },
+            products: {
+                title: weekData.products.title,
+                count: weekData.products.count,
+                growthRate: weekData.products.growthRate,
+            },
+            orders: {
+                title: weekData.orders.title,
+                count: weekData.orders.count,
+                growthRate: weekData.orders.growthRate,
+            },
+            publishers: {
+                title: weekData.publishers.title,
+                count: weekData.publishers.count,
+                growthRate: weekData.publishers.growthRate,
+            },
+        }));
+        console.log('statistics.value.statisticsWeek: ', statistics.value.statisticsWeek);
     } catch (error) {
         console.error('Failed to fetch statistics:', error);
     }
@@ -131,7 +144,6 @@ const fetchStatisticsMonth = async () => {
                 growthRate: monthData.publishers.growthRate,
             },
         }));
-        console.log('statistics.value.statisticsMonth: ', statistics.value.statisticsMonth);
     } catch (error) {
         console.error('Failed to fetch statistics:', error);
     }
