@@ -124,10 +124,16 @@ router.beforeEach((to, from, next) => {
     // Get the user data from localStorage
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const userData = user?.userData;
+    if (to.path === '/login' && (userData?.role === 'admin' || userData?.role === 'staff')) {
+        return next('/admin'); // Điều hướng tới /admin nếu role là admin hoặc staff
+    }
+    if (to.path === '/login' && userData?.role === 'staff') {
+        return next('/admin'); // Điều hướng tới /admin nếu role là admin hoặc staff
+    }
     // Check if the route is under `/dashboard`, meaning it's an admin route
     if (to.path.startsWith('/admin')) {
         // If the user doesn't have the 'admin' role, redirect to login
-        if (userData?.role !== 'admin') {
+        if (userData?.role !== 'admin' && userData?.role !== 'staff') {
             return next({ path: '/' });
         }
     }

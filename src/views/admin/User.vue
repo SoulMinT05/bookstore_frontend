@@ -1,7 +1,6 @@
 <template>
     <div class="container">
         <h1 class="text-3xl font-bold mb-6">Quản lý người dùng</h1>
-        <!-- <button @click="addUser" class="mb-4 px-4 py-2 bg-green-500 text-white rounded-md">Add User</button> -->
         <div class="flex justify-between items-center">
             <button
                 @click="showAddUserModal"
@@ -26,22 +25,17 @@
             <table v-else class="w-full table-auto">
                 <thead>
                     <tr class="text-gray-600 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left">First Name</th>
-                        <th class="py-3 px-6 text-left">Last Name</th>
-                        <th class="py-3 px-6 text-left">Email</th>
-                        <th class="py-3 px-6 text-center">Status</th>
-                        <th class="py-3 px-6 text-center">Role</th>
-                        <th class="py-3 px-6 text-center">Created Date</th>
-                        <th class="py-3 px-6 text-center">Updated Date</th>
-                        <th class="py-3 px-6 text-center">Actions</th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('firstName')">First Name</th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('lastName')">Last Name</th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('email')">Email</th>
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('isLocked')">Status</th>
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('role')">Role</th>
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('createdAt')">Created Date</th>
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('updatedAt')">Updated Date</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 text-sm font-light">
-                    <tr
-                        v-for="user in paginatedUsers"
-                        :key="user.id"
-                        class="border-b border-gray-200 hover:bg-gray-100"
-                    >
+                    <tr v-for="user in sortedUsers" :key="user.id" class="border-b border-gray-200 hover:bg-gray-100">
                         <td class="py-3 px-6 text-left">
                             <span class="font-medium">{{ user.firstName }}</span>
                         </td>
@@ -66,16 +60,23 @@
                         </td>
 
                         <td class="py-3 px-6 text-center">
-                            <span
-                                :class="[
-                                    user.role === 'admin'
-                                        ? 'bg-green-200 text-green-600'
-                                        : 'bg-yellow-100 text-yellow-800',
-                                    'py-1 px-3 rounded-full text-xs',
-                                ]"
+                            <Badge
+                                v-if="user.role === 'admin'"
+                                class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs"
+                                >Quản lý</Badge
                             >
-                                {{ user.role === 'admin' ? 'Quản lý' : 'Người dùng' }}
-                            </span>
+
+                            <Badge
+                                v-else-if="user.role === 'staff'"
+                                class="bg-blue-200 text-blue-600 py-1 px-3 rounded-full text-xs"
+                                >Nhân viên</Badge
+                            >
+
+                            <Badge
+                                v-else-if="user.role === 'user'"
+                                class="bg-yellow-100 text-yellow-800 py-1 px-3 rounded-full text-xs"
+                                >Người dùng</Badge
+                            >
                         </td>
                         <td class="py-3 px-6 text-center">
                             <span>{{ formatDate(user.createdAt) }}</span>
@@ -176,7 +177,6 @@
                             aria-describedby="helper-text-explanation"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             pattern="[0-9]{10}"
-                            placeholder="123-456-7890"
                             required
                         />
                     </div>
@@ -193,6 +193,33 @@
                             <option value="other">Other</option>
                         </select>
                     </div>
+
+                    <div class="mb-4">
+                        <label for="role" class="block text-sm font-medium text-gray-700">Chức vụ</label>
+                        <select
+                            v-model="newUser.role"
+                            id="role"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        >
+                            <option value="" disabled selected>Chức vụ</option>
+                            <option v-if="currentRole === 'admin'" value="user">Người dùng</option>
+                            <option v-if="currentRole === 'admin'" value="staff">Nhân viên</option>
+                            <option v-if="currentRole === 'staff'" value="user">Người dùng</option>
+                        </select>
+                        <!-- <Select v-model="newUser.role">
+                            <SelectTrigger
+                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                            >
+                                <SelectValue placeholder="Chức vụ" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem v-if="currentRole === 'admin'" value="user">Người dùng</SelectItem>
+                                <SelectItem v-if="currentRole === 'admin'" value="staff">Nhân viên</SelectItem>
+                                <SelectItem v-if="currentRole === 'staff'" value="user">Người dùng</SelectItem>
+                            </SelectContent>
+                        </Select> -->
+                    </div>
+
                     <div class="mb-4">
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                         <input
@@ -256,12 +283,20 @@
                         <span
                             :class="[
                                 selectedUser.role === 'admin'
-                                    ? 'bg-green-200 text-green-600'
-                                    : 'bg-yellow-100 text-yellow-800',
+                                    ? 'bg-green-200 text-green-600' // Màu cho admin
+                                    : selectedUser.role === 'staff'
+                                      ? 'bg-blue-100 text-blue-800' // Màu cho staff
+                                      : 'bg-yellow-100 text-yellow-800', // Màu cho người dùng
                                 'py-1 px-3 rounded-full text-xs',
                             ]"
                         >
-                            {{ selectedUser.role === 'admin' ? 'Quản lý' : 'Người dùng' }}
+                            {{
+                                selectedUser.role === 'admin'
+                                    ? 'Quản lý'
+                                    : selectedUser.role === 'staff'
+                                      ? 'Nhân viên'
+                                      : 'Người dùng'
+                            }}
                         </span>
                     </p>
                     <!-- <p>
@@ -353,21 +388,67 @@
                             aria-describedby="helper-text-explanation"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             pattern="[0-9]{10}"
-                            placeholder="123-456-7890"
                         />
                     </div>
                     <div class="mb-4">
                         <label for="editGender" class="block text-sm font-medium text-gray-700">Select gender</label>
                         <select
                             v-model="userToEdit.gender"
-                            id="editGender"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            id="gender"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                             <option value="" disabled selected>Choose a gender</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                             <option value="other">Other</option>
                         </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="role" class="block text-sm font-medium text-gray-700">Chọn Role</label>
+                        <template v-if="currentRole === 'staff'">
+                            <span
+                                class="block p-2.5 bg-gray-50 text-gray-900 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            >
+                                {{
+                                    userToEdit.role === 'staff'
+                                        ? 'Nhân viên'
+                                        : userToEdit.role === 'admin'
+                                          ? 'Quản lý'
+                                          : 'Người dùng'
+                                }}
+                            </span>
+                        </template>
+                        <!-- <template v-else>
+
+                            <select
+                                v-model="userToEdit.role"
+                                id="role"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            >
+                                <option value="" disabled selected>Chọn role</option>
+                                <option value="user">Người dùng</option>
+                                <option value="staff">Nhân viên</option>
+                            </select>
+                        </template> -->
+                        <template v-if="userToEdit.role === 'admin'">
+                            <span
+                                class="block p-2.5 bg-gray-50 text-gray-900 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            >
+                                Quản lý
+                            </span>
+                        </template>
+                        <template v-else>
+                            <!-- Nếu là admin và không phải là admin đang được chỉnh sửa, cho phép chọn role -->
+                            <select
+                                v-model="userToEdit.role"
+                                id="role"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            >
+                                <option value="" disabled selected>Chọn role</option>
+                                <option value="user">Người dùng</option>
+                                <option value="staff">Nhân viên</option>
+                            </select>
+                        </template>
                     </div>
 
                     <div class="flex justify-end mt-6">
@@ -422,10 +503,15 @@ import { useToast } from 'vue-toastification';
 import * as XLSX from 'xlsx';
 import { Download } from 'lucide-vue-next';
 
+import { Badge } from '@/components/ui/badge';
+// import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 export default {
     data() {
         return {
             users: [], // Dữ liệu người dùng
+            currentSort: '', // Cột hiện tại để sắp xếp
+            currentSortDir: 'asc',
             newUser: {
                 firstName: '',
                 lastName: '',
@@ -435,7 +521,9 @@ export default {
                 phoneNumber: '',
                 gender: '',
                 password: '',
+                role: '',
             },
+            currentRole: 'staff',
             isAddUserModalVisible: false,
             currentPage: 1, // Bắt đầu với trang đầu tiên
             pageSize: 10, // Hiển thị 10 người dùng mỗi trang
@@ -453,8 +541,34 @@ export default {
             const start = (this.currentPage - 1) * this.pageSize;
             return this.users.slice(start, start + this.pageSize);
         },
+        sortedUsers() {
+            // If no sort column is specified, return the users array as is
+            if (!this.currentSort) {
+                return this.users;
+            }
+
+            const direction = this.currentSortDir === 'asc' ? 1 : -1;
+            return [...this.users].sort((a, b) => {
+                const valueA = a[this.currentSort];
+                const valueB = b[this.currentSort];
+
+                if (valueA < valueB) return -1 * direction;
+                if (valueA > valueB) return 1 * direction;
+                return 0;
+            });
+        },
     },
     methods: {
+        sortBy(column) {
+            if (this.currentSort === column) {
+                // Nếu đã sắp xếp theo cột này, đổi chiều
+                this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                // Nếu chưa sắp xếp theo cột này, sắp xếp tăng dần
+                this.currentSort = column;
+                this.currentSortDir = 'asc';
+            }
+        },
         nextPage() {
             if (this.currentPage < this.totalPages) {
                 this.currentPage++;
@@ -553,6 +667,7 @@ export default {
                 phoneNumber: '',
                 gender: '',
                 password: '',
+                role: '',
             };
         },
         async addUser() {
@@ -713,6 +828,13 @@ export default {
 
     mounted() {
         this.fetchUsers();
+        const userLocalStorage = JSON.parse(localStorage.getItem('user'));
+        console.log('userLocalStorage: ', userLocalStorage);
+        // const currentUserRole = userLocalStorage.userData.role;
+        const currentUserRole =
+            userLocalStorage && userLocalStorage.userData ? userLocalStorage.userData.role : 'staff';
+        console.log('currentUserRole: ', currentUserRole);
+        this.currentRole = currentUserRole;
     },
 };
 </script>
@@ -757,7 +879,6 @@ export default {
     visibility: visible;
     opacity: 1;
 }
-
 @keyframes spin {
     to {
         transform: rotate(360deg);
