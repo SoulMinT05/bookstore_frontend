@@ -89,7 +89,11 @@ onMounted(() => {
             Chưa có đơn hàng
         </div>
         <div v-else>
-            <div v-for="(order, index) in statistics.currentWeek.populateOrders" :key="index" class="flex items-center">
+            <div
+                v-for="(order, index) in statistics.currentWeek.populateOrders"
+                :key="index"
+                class="flex items-center mt-4"
+            >
                 <Avatar class="h-9 w-9">
                     <AvatarImage :src="order.orderBy.avatarUrl || '/avatars/default.png'" alt="Avatar" />
                     <AvatarFallback>

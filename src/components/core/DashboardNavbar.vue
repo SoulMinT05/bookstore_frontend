@@ -50,6 +50,32 @@ const getEmail = computed(() => {
         return 'Người dùng không tồn tại'; // Trả về giá trị mặc định khi có lỗi
     }
 });
+const handleLogout = async () => {
+    const toast = useToast();
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userToken = user.accessToken;
+    try {
+        const res = await fetch('http://localhost:3001/api/user/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userToken}`,
+            },
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+            toast.error('Đăng xuất thất bại');
+            return;
+        }
+        localStorage.removeItem('user');
+        toast.success('Đăng xuất thành công');
+        router.push('/login');
+    } catch (error) {
+        toast.error('Đăng xuất thất bại');
+        return;
+    }
+};
 </script>
 
 <template>

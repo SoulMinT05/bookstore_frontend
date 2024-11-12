@@ -83,30 +83,39 @@ onMounted(() => {
 
 <template>
     <div class="space-y-8">
-        <div v-for="(order, index) in statistics.currentMonth.populateOrders" :key="index" class="flex items-center">
-            <Avatar class="h-9 w-9">
-                <AvatarImage :src="order.orderBy.avatarUrl || '/avatars/default.png'" alt="Avatar" />
-                <AvatarFallback>
-                    {{ order.orderBy.firstName.charAt(0) }}{{ order.orderBy.lastName.charAt(0) }}
-                </AvatarFallback>
-            </Avatar>
-            <div class="ml-4 space-y-1">
-                <p class="text-sm font-medium leading-none">
-                    {{ order.orderBy.firstName }} {{ order.orderBy.lastName }}
-                </p>
-                <p class="text-sm text-muted-foreground">{{ order.orderBy.email }}</p>
-            </div>
-            <div class="ml-auto">
-                <span
-                    :class="{
-                        'bg-blue-500 text-white': order.status === 'pending',
-                        'bg-green-500 text-white': order.status === 'accepted',
-                        'bg-red-500 text-white': order.status === 'rejected',
-                    }"
-                    class="px-3 py-1 rounded-full text-sm font-medium"
-                >
-                    {{ getStatusMessage(order.status) }}
-                </span>
+        <div v-if="statistics.currentMonth.populateOrders.length === 0" class="text-center text-gray-500">
+            Chưa có đơn hàng
+        </div>
+        <div v-else>
+            <div
+                v-for="(order, index) in statistics.currentMonth.populateOrders"
+                :key="index"
+                class="flex items-center mt-4"
+            >
+                <Avatar class="h-9 w-9">
+                    <AvatarImage :src="order.orderBy.avatarUrl || '/avatars/default.png'" alt="Avatar" />
+                    <AvatarFallback>
+                        {{ order.orderBy.firstName.charAt(0) || '' }}{{ order.orderBy.lastName.charAt(0) || '' }}
+                    </AvatarFallback>
+                </Avatar>
+                <div class="ml-4 space-y-1">
+                    <p class="text-sm font-medium leading-none">
+                        {{ order.orderBy.firstName || '' }} {{ order.orderBy.lastName || '' }}
+                    </p>
+                    <p class="text-sm text-muted-foreground">{{ order.orderBy.email || '' }}</p>
+                </div>
+                <div class="ml-auto">
+                    <span
+                        :class="{
+                            'bg-blue-500 text-white': order.status === 'pending',
+                            'bg-green-500 text-white': order.status === 'accepted',
+                            'bg-red-500 text-white': order.status === 'rejected',
+                        }"
+                        class="px-3 py-1 rounded-full text-sm font-medium"
+                    >
+                        {{ getStatusMessage(order.status) || '' }}
+                    </span>
+                </div>
             </div>
         </div>
     </div>

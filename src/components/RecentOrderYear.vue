@@ -77,6 +77,10 @@ onMounted(() => {
 
 <template>
     <div class="space-y-8">
+        <!-- <div v-if="statistics.currentYear.populateOrders.length === 0" class="text-center text-gray-500">
+            Chưa có đơn hàng
+        </div>
+        <div v-else> -->
         <div
             v-for="(order, index) in statistics.currentYear.orders.populateOrders"
             :key="index"
@@ -107,5 +111,6 @@ onMounted(() => {
                 </span>
             </div>
         </div>
+        <!-- </div> -->
     </div>
 </template>

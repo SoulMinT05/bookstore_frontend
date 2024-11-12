@@ -14,18 +14,27 @@
                         required
                     />
                 </div>
-                <div>
+                <div class="relative">
                     <label for="password" class="block text-sm font-medium text-gray-900 dark:text-white">
                         Password
                     </label>
                     <input
                         v-model="password"
-                        type="text"
+                        :type="showPassword ? 'text' : 'password'"
                         name="password"
                         id="password"
                         class="w-full p-2.5 mt-1 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         required
                     />
+                    <button
+                        type="button"
+                        @click="showPassword = !showPassword"
+                        style="margin-top: 12px"
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-300"
+                    >
+                        <i v-if="showPassword" class="fas fa-eye text-gray-600 dark:text-white"></i>
+                        <i v-else class="fas fa-eye-slash text-gray-600 dark:text-white"></i>
+                    </button>
                 </div>
                 <div class="flex justify-between items-center">
                     <label class="flex items-center text-sm text-gray-500 dark:text-gray-300">
@@ -62,6 +71,7 @@ export default {
         return {
             email: '',
             password: '',
+            showPassword: false, // Flag to toggle password visibility
         };
     },
     methods: {
