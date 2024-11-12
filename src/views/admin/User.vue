@@ -16,6 +16,14 @@
                 Xuất excel
             </button>
         </div>
+        <div class="mb-4">
+            <input
+                type="text"
+                v-model="searchQuery"
+                placeholder="Tìm kiếm người dùng..."
+                class="p-2 border rounded-lg text-sm"
+            />
+        </div>
 
         <div class="overflow-x-auto bg-white shadow-md rounded-lg">
             <div v-if="isLoading" class="flex justify-center items-center py-10">
@@ -25,17 +33,99 @@
             <table v-else class="w-full table-auto">
                 <thead>
                     <tr class="text-gray-600 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('firstName')">First Name</th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('lastName')">Last Name</th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('email')">Email</th>
-                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('isLocked')">Status</th>
-                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('role')">Role</th>
-                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('createdAt')">Created Date</th>
-                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('updatedAt')">Updated Date</th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('firstName')">
+                            Họ
+                            <span v-if="currentSort !== 'firstName'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'firstName' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'firstName' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('lastName')">
+                            Tên
+                            <span v-if="currentSort !== 'lastName'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'lastName' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'lastName' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('email')">
+                            Email
+                            <span v-if="currentSort !== 'email'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'email' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'email' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('isLocked')">
+                            Trạng thái
+                            <span v-if="currentSort !== 'isLocked'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'isLocked' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'isLocked' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('role')">
+                            Chức vụ
+                            <span v-if="currentSort !== 'role'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'role' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'role' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('createdAt')">
+                            Ngày tạo
+                            <span v-if="currentSort !== 'createdAt'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'createdAt' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'createdAt' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('updatedAt')">
+                            Ngày cập nhật
+                            <span v-if="currentSort !== 'updatedAt'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'updatedAt' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'updatedAt' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('updatedAt')">Hành động</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 text-sm font-light">
-                    <tr v-for="user in sortedUsers" :key="user.id" class="border-b border-gray-200 hover:bg-gray-100">
+                    <tr
+                        v-for="user in sortedAndPaginatedUsers"
+                        :key="user.id"
+                        class="border-b border-gray-200 hover:bg-gray-100"
+                    >
                         <td class="py-3 px-6 text-left">
                             <span class="font-medium">{{ user.firstName }}</span>
                         </td>
@@ -472,7 +562,7 @@
 
         <div class="mt-4 flex justify-between">
             <button
-                @click="previousPage"
+                @click="goToPage(currentPage - 1)"
                 :disabled="currentPage === 1"
                 class="px-4 py-2 rounded-md cursor-pointer hover:opacity-95 transition duration-150 ease-in-out"
                 :class="{
@@ -484,8 +574,8 @@
             </button>
             <span class="self-center">Trang {{ currentPage }}/{{ totalPages }}</span>
             <button
-                @click="nextPage"
-                :disabled="currentPage === totalPages"
+                @click="goToPage(currentPage + 1)"
+                :disabled="currentPage * pageSize >= users.length"
                 class="px-4 py-2 rounded-md cursor-pointer hover:opacity-95 transition duration-150 ease-in-out"
                 :class="{
                     'bg-blue-500 text-white': currentPage < totalPages,
@@ -495,6 +585,11 @@
                 Sau
             </button>
         </div>
+        <!-- <div class="pagination">
+            <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">Previous</button>
+            <span>Page {{ currentPage }}</span>
+            <button @click="goToPage(currentPage + 1)" :disabled="currentPage * pageSize >= users.length">Next</button>
+        </div> -->
     </div>
 </template>
 
@@ -504,8 +599,9 @@ import * as XLSX from 'xlsx';
 import { Download } from 'lucide-vue-next';
 
 import { Badge } from '@/components/ui/badge';
-// import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { LucideArrowUp, LucideArrowDown, MoveUp, MoveDown } from 'lucide-vue-next';
+
 export default {
     data() {
         return {
@@ -540,6 +636,17 @@ export default {
         paginatedUsers() {
             const start = (this.currentPage - 1) * this.pageSize;
             return this.users.slice(start, start + this.pageSize);
+        },
+        sortedAndPaginatedUsers() {
+            // Sắp xếp dữ liệu
+            const sortedUsers = this.sortedUsers;
+
+            // Tính toán các chỉ số phân trang
+            const start = (this.currentPage - 1) * this.pageSize;
+            const end = start + this.pageSize;
+
+            // Trả về dữ liệu phân trang sau khi đã sắp xếp
+            return sortedUsers.slice(start, end);
         },
         sortedUsers() {
             // If no sort column is specified, return the users array as is
@@ -578,6 +685,9 @@ export default {
             if (this.currentPage > 1) {
                 this.currentPage--;
             }
+        },
+        goToPage(page) {
+            this.currentPage = page;
         },
         formatDate(date) {
             // const createdAtDate = new Date(date); // Tạo đối tượng Date
