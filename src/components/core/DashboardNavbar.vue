@@ -11,6 +11,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
+import { computed } from 'vue';
 import { LogOut, User, Bell, Sun, MoonStar, Menu, KeyRound, UsersRound } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/stores/app';
@@ -21,6 +22,34 @@ const store = useAppStore();
 const toggleMode = () => {
     store.toggleTheme();
 };
+const getName = computed(() => {
+    try {
+        const user = localStorage.getItem('user');
+        console.log('userLocalstoraege: ', user);
+        if (!user) {
+            return 'Người dùng không tồn tại'; // Không có thông tin người dùng trong localStorage
+        }
+        const userObj = JSON.parse(user); // Chuyển đổi chuỗi JSON thành đối tượng
+        return userObj.userData.firstName + userObj.userData.lastName; // Trả về tên người dùng
+    } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu người dùng từ localStorage:', error);
+        return 'Người dùng không tồn tại'; // Trả về giá trị mặc định khi có lỗi
+    }
+});
+const getEmail = computed(() => {
+    try {
+        const user = localStorage.getItem('user');
+        console.log('userLocalstoraege: ', user);
+        if (!user) {
+            return 'Người dùng không tồn tại'; // Không có thông tin người dùng trong localStorage
+        }
+        const userObj = JSON.parse(user); // Chuyển đổi chuỗi JSON thành đối tượng
+        return userObj.userData.email; // Trả về tên người dùng
+    } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu người dùng từ localStorage:', error);
+        return 'Người dùng không tồn tại'; // Trả về giá trị mặc định khi có lỗi
+    }
+});
 </script>
 
 <template>
@@ -58,13 +87,13 @@ const toggleMode = () => {
                             <AvatarImage src="https://github.com/radix-vue.png"></AvatarImage>
                         </Avatar>
                         <span class="ml-2 hidden md:flex justify-start flex-col items-start">
-                            <p class="mb-0">John Doe</p>
-                            <small class="text-xs text-slate-400 font-light">john_doe@email.com</small>
+                            <p class="mb-0">{{ getName }}</p>
+                            <small class="text-xs text-slate-400 font-light">{{ getEmail }}</small>
                         </span>
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent class="w-56 relative mr-4">
-                    <DropdownMenuLabel>John Doe</DropdownMenuLabel>
+                    <DropdownMenuLabel>{{ getName }}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <router-link to="/admin/profile" class="flex items-center">
                         <DropdownMenuItem class="w-full">
