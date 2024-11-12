@@ -210,7 +210,7 @@
                 <h2 class="text-lg font-bold mb-4">Thêm người dùng</h2>
                 <form @submit.prevent="addUser">
                     <div class="mb-4">
-                        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700">Họ</label>
                         <input
                             v-model="newUser.firstName"
                             type="text"
@@ -220,7 +220,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700">Tên</label>
                         <input
                             v-model="newUser.lastName"
                             type="text"
@@ -240,7 +240,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="birthday" class="block text-sm font-medium text-gray-700">Birthday</label>
+                        <label for="birthday" class="block text-sm font-medium text-gray-700">Sinh nhật</label>
                         <input
                             type="date"
                             id="birthday"
@@ -249,7 +249,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                        <label for="address" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
                         <input
                             v-model="newUser.address"
                             type="text"
@@ -259,7 +259,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone number</label>
+                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Số điện thoại</label>
                         <input
                             v-model="newUser.phoneNumber"
                             type="text"
@@ -271,7 +271,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="gender" class="block text-sm font-medium text-gray-700">Select gender</label>
+                        <label for="gender" class="block text-sm font-medium text-gray-700">Giới tính</label>
                         <select
                             v-model="newUser.gender"
                             id="gender"
@@ -296,22 +296,10 @@
                             <option v-if="currentRole === 'admin'" value="staff">Nhân viên</option>
                             <option v-if="currentRole === 'staff'" value="user">Người dùng</option>
                         </select>
-                        <!-- <Select v-model="newUser.role">
-                            <SelectTrigger
-                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                            >
-                                <SelectValue placeholder="Chức vụ" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem v-if="currentRole === 'admin'" value="user">Người dùng</SelectItem>
-                                <SelectItem v-if="currentRole === 'admin'" value="staff">Nhân viên</SelectItem>
-                                <SelectItem v-if="currentRole === 'staff'" value="user">Người dùng</SelectItem>
-                            </SelectContent>
-                        </Select> -->
                     </div>
 
                     <div class="mb-4">
-                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
                         <input
                             v-model="newUser.password"
                             type="text"
@@ -419,7 +407,7 @@
                 <h2 class="text-lg font-bold mb-4">Chỉnh sửa thông tin người dùng</h2>
                 <form @submit.prevent="saveEditedUser">
                     <div class="mb-4">
-                        <label for="editFirstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <label for="editFirstName" class="block text-sm font-medium text-gray-700">Họ</label>
                         <input
                             v-model="userToEdit.firstName"
                             type="text"
@@ -429,7 +417,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editLastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <label for="editLastName" class="block text-sm font-medium text-gray-700">Tên</label>
                         <input
                             v-model="userToEdit.lastName"
                             type="text"
@@ -449,7 +437,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editBirthday" class="block text-sm font-medium text-gray-700">Birthday</label>
+                        <label for="editBirthday" class="block text-sm font-medium text-gray-700">Sinh nhật</label>
                         <input
                             v-model="userToEdit.birthday"
                             type="date"
@@ -459,7 +447,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="editAddress" class="block text-sm font-medium text-gray-700">Address</label>
+                        <label for="editAddress" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
                         <input
                             v-model="userToEdit.address"
                             type="text"
@@ -469,7 +457,7 @@
                     </div>
                     <div class="mb-4">
                         <label for="editPhoneNumber" class="block text-sm font-medium text-gray-700"
-                            >Phone number</label
+                            >Số điện thoại</label
                         >
                         <input
                             v-model="userToEdit.phoneNumber"
@@ -481,7 +469,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editGender" class="block text-sm font-medium text-gray-700">Select gender</label>
+                        <label for="editGender" class="block text-sm font-medium text-gray-700">Giới tính</label>
                         <select
                             v-model="userToEdit.gender"
                             id="gender"
@@ -494,7 +482,7 @@
                         </select>
                     </div>
                     <div class="mb-4">
-                        <label for="role" class="block text-sm font-medium text-gray-700">Chọn Role</label>
+                        <label for="role" class="block text-sm font-medium text-gray-700">Chức vụ</label>
                         <template v-if="currentRole === 'staff'">
                             <span
                                 class="block p-2.5 bg-gray-50 text-gray-900 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
