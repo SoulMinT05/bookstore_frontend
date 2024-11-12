@@ -16,6 +16,14 @@
                 Xuất excel
             </button>
         </div>
+        <div class="mb-6">
+            <input
+                type="text"
+                v-model="searchQuery"
+                placeholder="Tìm kiếm sách..."
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+        </div>
 
         <div class="overflow-x-auto bg-white shadow-md rounded-lg">
             <div v-if="isLoading" class="flex justify-center items-center py-10">
@@ -25,16 +33,60 @@
             <table v-else class="w-full table-auto">
                 <thead>
                     <tr class="text-gray-600 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left">Name</th>
-                        <th class="py-3 px-6 text-left">Address</th>
-                        <th class="py-3 px-6 text-center">Created Date</th>
-                        <th class="py-3 px-6 text-center">Updated Date</th>
-                        <th class="py-3 px-6 text-center">Actions</th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('name')">
+                            Tên
+                            <span v-if="currentSort !== 'name'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'name' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'name' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('address')">
+                            Địa chỉ
+                            <span v-if="currentSort !== 'address'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'address' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'address' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('createdAt')">
+                            Ngày tạo
+                            <span v-if="currentSort !== 'createdAt'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'createdAt' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'createdAt' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('updatedAt')">
+                            Ngày cập nhật
+                            <span v-if="currentSort !== 'updatedAt'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'updatedAt' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'updatedAt' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-center">Hành động</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 text-sm font-light">
                     <tr
-                        v-for="publisher in paginatedPublishers"
+                        v-for="publisher in sortedAndPaginatedPublishers"
                         :key="publisher?.id"
                         class="border-b border-gray-200 hover:bg-gray-100"
                     >
@@ -86,7 +138,7 @@
                 <h2 class="text-lg font-bold mb-4">Thêm nhà xuất bản</h2>
                 <form @submit.prevent="addPublisher">
                     <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Tên</label>
                         <input
                             v-model="newPublisher.name"
                             type="text"
@@ -96,7 +148,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                        <label for="address" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
                         <input
                             v-model="newPublisher.address"
                             type="text"
@@ -132,10 +184,10 @@
             <div @click.stop class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-1/3">
                 <h2 class="text-xl font-bold text-center mb-4">Thông tin nhà xuất bản</h2>
                 <div class="space-y-2">
-                    <p><strong>Name:</strong> {{ selectedPublisher.name }}</p>
-                    <p><strong>Address:</strong> {{ selectedPublisher.address }}</p>
-                    <p><strong>Created Date:</strong> {{ formatDate(selectedPublisher.createdAt) }}</p>
-                    <p><strong>Updated Date:</strong> {{ formatDate(selectedPublisher.updatedAt) }}</p>
+                    <p><strong>Tên:</strong> {{ selectedPublisher.name }}</p>
+                    <p><strong>Địa chỉ:</strong> {{ selectedPublisher.address }}</p>
+                    <p><strong>Ngày tạo:</strong> {{ formatDate(selectedPublisher.createdAt) }}</p>
+                    <p><strong>Ngày cập nhật:</strong> {{ formatDate(selectedPublisher.updatedAt) }}</p>
                 </div>
                 <div class="mt-6 flex justify-end">
                     <button
@@ -157,7 +209,7 @@
                 <h2 class="text-lg font-bold mb-4">Chỉnh sửa thông tin nhà xuất bản</h2>
                 <form @submit.prevent="saveEditedPublisher">
                     <div class="mb-4">
-                        <label for="editName" class="block text-sm font-medium text-gray-700">Name</label>
+                        <label for="editName" class="block text-sm font-medium text-gray-700">Tên</label>
                         <input
                             v-model="publisherToEdit.name"
                             type="text"
@@ -168,7 +220,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="editAddress" class="block text-sm font-medium text-gray-700">Address</label>
+                        <label for="editAddress" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
                         <input
                             v-model="publisherToEdit.address"
                             type="text"
@@ -198,7 +250,7 @@
 
         <div class="mt-4 flex justify-between">
             <button
-                @click="previousPage"
+                @click="goToPage(currentPage - 1)"
                 :disabled="currentPage === 1"
                 class="px-4 py-2 rounded-md cursor-pointer hover:opacity-95 transition duration-150 ease-in-out"
                 :class="{
@@ -210,7 +262,7 @@
             </button>
             <span class="self-center">Trang {{ currentPage }}/{{ totalPages }}</span>
             <button
-                @click="nextPage"
+                @click="goToPage(currentPage + 1)"
                 :disabled="currentPage === totalPages"
                 class="px-4 py-2 rounded-md cursor-pointer hover:opacity-95 transition duration-150 ease-in-out"
                 :class="{
@@ -233,6 +285,9 @@ export default {
     data() {
         return {
             publishers: [], // Dữ liệu nhà xuất bản
+            currentSort: '', // Cột hiện tại để sắp xếp
+            currentSortDir: 'asc',
+            searchQuery: '',
             newPublisher: {
                 name: '',
                 address: '',
@@ -248,14 +303,91 @@ export default {
     },
     computed: {
         totalPages() {
-            return Math.ceil(this.publishers.length / this.pageSize);
+            return Math.ceil(this.filteredPublishers.length / this.pageSize);
         },
         paginatedPublishers() {
             const start = (this.currentPage - 1) * this.pageSize;
-            return this.publishers.slice(start, start + this.pageSize);
+            return this.filteredPublishers.slice(start, start + this.pageSize);
+        },
+        sortedAndPaginatedPublishers() {
+            // Sắp xếp dữ liệu
+            const sortedPublishers = this.sortedPublishers;
+
+            // Tính toán các chỉ số phân trang
+            const start = (this.currentPage - 1) * this.pageSize;
+            const end = start + this.pageSize;
+
+            // Trả về dữ liệu phân trang sau khi đã sắp xếp
+            return sortedPublishers.slice(start, end);
+        },
+        sortedPublishers() {
+            // If no sort column is specified, return the publishers array as is
+            const publishersToSort = this.filteredPublishers;
+            if (!this.currentSort) {
+                return publishersToSort;
+            }
+
+            const direction = this.currentSortDir === 'asc' ? 1 : -1;
+            return [...publishersToSort].sort((a, b) => {
+                const valueA = a[this.currentSort];
+                const valueB = b[this.currentSort];
+
+                if (valueA < valueB) return -1 * direction;
+                if (valueA > valueB) return 1 * direction;
+                return 0;
+            });
+        },
+        filteredPublishers() {
+            // return this.publishers.filter((publisher) => {
+            //     const name = publisher.name ? String(publisher.name).toLowerCase() : '';
+            //     const address = publisher.address ? String(publisher.address).toLowerCase() : '';
+            //     const createdAt = publisher.createdAt ? new Date(publisher.createdAt).toLocaleDateString() : '';
+
+            //     return (
+            //         name.includes(this.searchQuery.toLowerCase()) ||
+            //         address.includes(this.searchQuery.toLowerCase()) ||
+            //         createdAt.includes(this.searchQuery)
+            //     );
+            // });
+            const searchQuery = this.searchQuery.toLowerCase().replace(/\//g, ''); // Loại bỏ dấu "/"
+            return this.publishers.filter((publisher) => {
+                const name = publisher.name ? String(publisher.name).toLowerCase() : '';
+                const address = publisher.address ? String(publisher.address).toLowerCase() : '';
+                const createdAt = publisher.createdAt ? new Date(publisher.createdAt) : null;
+                const updatedAt = publisher.updatedAt ? new Date(publisher.updatedAt) : null;
+
+                // Chuyển createdAt thành dạng "DDMMYYYY" để so sánh
+                const formattedCreatedAt = createdAt
+                    ? createdAt.getDate().toString().padStart(2, '0') +
+                      (createdAt.getMonth() + 1).toString().padStart(2, '0') +
+                      createdAt.getFullYear()
+                    : '';
+                const formattedUpdatedAt = updatedAt
+                    ? updatedAt.getDate().toString().padStart(2, '0') +
+                      (updatedAt.getMonth() + 1).toString().padStart(2, '0') +
+                      updatedAt.getFullYear()
+                    : '';
+
+                return (
+                    name.includes(searchQuery) ||
+                    address.includes(searchQuery) ||
+                    formattedCreatedAt.includes(searchQuery) || // So sánh chuỗi ngày tháng
+                    formattedUpdatedAt.includes(searchQuery) // So sánh chuỗi ngày tháng
+                );
+            });
         },
     },
     methods: {
+        sortBy(column) {
+            if (this.currentSort === column) {
+                // Nếu đã sắp xếp theo cột này, đổi chiều
+                this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                // Nếu chưa sắp xếp theo cột này, sắp xếp tăng dần
+                this.currentSort = column;
+                this.currentSortDir = 'asc';
+            }
+        },
         nextPage() {
             if (this.currentPage < this.totalPages) {
                 this.currentPage++;
@@ -265,6 +397,12 @@ export default {
             if (this.currentPage > 1) {
                 this.currentPage--;
             }
+        },
+        goToPage(page) {
+            this.currentPage = page;
+        },
+        resetToFirstPage() {
+            this.currentPage = 1;
         },
         formatDate(date) {
             // const createdAtDate = new Date(date); // Tạo đối tượng Date
@@ -453,6 +591,11 @@ export default {
             setTimeout(() => {
                 this.toastMessage = '';
             }, 3000);
+        },
+    },
+    watch: {
+        searchQuery() {
+            this.resetToFirstPage();
         },
     },
 
