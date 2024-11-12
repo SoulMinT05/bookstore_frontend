@@ -662,12 +662,44 @@ export default {
             });
         },
         filteredUsers() {
-            return this.users.filter(
-                (user) =>
-                    user.firstName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    user.lastName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    user.email.toLowerCase().includes(this.searchQuery.toLowerCase()),
-            );
+            const searchQuery = this.searchQuery.toLowerCase().trim().replace(/\//g, '');
+
+            const roleMap = {
+                'nhân viên': 'staff',
+                'quản lý': 'admin',
+                'người dùng': 'user',
+            };
+
+            const normalizedSearchQuery = roleMap[searchQuery] || searchQuery;
+            return this.users.filter((user) => {
+                const firstName = user.firstName ? user.firstName.toLowerCase() : '';
+                const lastName = user.lastName ? user.lastName.toLowerCase() : '';
+                const email = user.email ? user.email?.toLowerCase() : '';
+                const role = user.role ? user.role?.toLowerCase() : '';
+
+                const createdAt = user.createdAt ? new Date(user.createdAt) : null;
+                const updatedAt = user.updatedAt ? new Date(user.updatedAt) : null;
+
+                const formattedCreatedAt = createdAt
+                    ? createdAt.getDate().toString().padStart(2, '0') +
+                      (createdAt.getMonth() + 1).toString().padStart(2, '0') +
+                      createdAt.getFullYear()
+                    : '';
+                const formattedUpdatedAt = updatedAt
+                    ? updatedAt.getDate().toString().padStart(2, '0') +
+                      (updatedAt.getMonth() + 1).toString().padStart(2, '0') +
+                      updatedAt.getFullYear()
+                    : '';
+
+                return (
+                    firstName.includes(searchQuery.toLowerCase()) ||
+                    lastName.includes(searchQuery.toLowerCase()) ||
+                    email.includes(searchQuery.toLowerCase()) ||
+                    role.includes(normalizedSearchQuery) ||
+                    formattedCreatedAt.includes(searchQuery) ||
+                    formattedUpdatedAt.includes(searchQuery)
+                );
+            });
         },
     },
     methods: {
