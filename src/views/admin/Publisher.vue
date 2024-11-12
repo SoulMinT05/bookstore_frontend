@@ -338,17 +338,6 @@ export default {
             });
         },
         filteredPublishers() {
-            // return this.publishers.filter((publisher) => {
-            //     const name = publisher.name ? String(publisher.name).toLowerCase() : '';
-            //     const address = publisher.address ? String(publisher.address).toLowerCase() : '';
-            //     const createdAt = publisher.createdAt ? new Date(publisher.createdAt).toLocaleDateString() : '';
-
-            //     return (
-            //         name.includes(this.searchQuery.toLowerCase()) ||
-            //         address.includes(this.searchQuery.toLowerCase()) ||
-            //         createdAt.includes(this.searchQuery)
-            //     );
-            // });
             const searchQuery = this.searchQuery.toLowerCase().replace(/\//g, ''); // Loại bỏ dấu "/"
             return this.publishers.filter((publisher) => {
                 const name = publisher.name ? String(publisher.name).toLowerCase() : '';

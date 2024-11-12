@@ -585,15 +585,43 @@ export default {
             });
         },
         filteredBooks() {
+            const searchQuery = this.searchQuery.toLowerCase().replace(/\//g, '');
             return this.products.filter((book) => {
                 const name = book.name ? book.name.toLowerCase() : '';
                 const author = book.author ? book.author.toLowerCase() : '';
                 const publisher = book.publisherId?.name ? book.publisherId?.name.toLowerCase() : '';
+                const createdAt = book.createdAt ? new Date(book.createdAt) : null;
+                const updatedAt = book.updatedAt ? new Date(book.updatedAt) : null;
+
+                const formattedCreatedAt = createdAt
+                    ? createdAt.getDate().toString().padStart(2, '0') +
+                      (createdAt.getMonth() + 1).toString().padStart(2, '0') +
+                      createdAt.getFullYear()
+                    : '';
+                const formattedUpdatedAt = updatedAt
+                    ? updatedAt.getDate().toString().padStart(2, '0') +
+                      (updatedAt.getMonth() + 1).toString().padStart(2, '0') +
+                      updatedAt.getFullYear()
+                    : '';
+
+                const searchQueryNumber = Number(searchQuery);
+                const isSearchQueryNumber = !isNaN(searchQueryNumber);
+
+                const matchNumber = (value) => {
+                    if (isSearchQueryNumber && value != null) {
+                        return value.toString().includes(searchQuery); // Tìm kiếm theo chuỗi số
+                    }
+                    return false;
+                };
 
                 return (
-                    name.includes(this.searchQuery.toLowerCase()) ||
-                    author.includes(this.searchQuery.toLowerCase()) ||
-                    publisher.includes(this.searchQuery.toLowerCase())
+                    name.includes(searchQuery.toLowerCase()) ||
+                    author.includes(searchQuery.toLowerCase()) ||
+                    publisher.includes(searchQuery.toLowerCase()) ||
+                    matchNumber(book.quantity) ||
+                    matchNumber(book.yearOfPublication) ||
+                    formattedCreatedAt.includes(searchQuery) // So sánh chuỗi ngày tháng
+                    // formattedUpdatedAt.includes(searchQuery)
                 );
             });
         },
