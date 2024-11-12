@@ -60,6 +60,19 @@ export const APP_MENU: Record<string, { name: string; routes: IDashboardMenus[] 
                 description: 'Settings',
             },
             {
+                path: 'profile',
+                title: 'Hồ sơ',
+                icon: 'UsersRound',
+                description: 'Profile',
+            },
+            {
+                path: 'changePassword',
+                title: 'Đổi mật khẩu',
+                icon: 'KeyRound',
+                description: 'ChangePassword',
+            },
+
+            {
                 path: '',
                 title: 'Đăng xuất',
                 icon: 'LogOut',

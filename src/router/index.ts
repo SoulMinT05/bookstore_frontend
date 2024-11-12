@@ -101,8 +101,32 @@ const router = createRouter({
                         title: 'Settings',
                     } as RouteMeta & IRouteMeta,
                 },
+                {
+                    path: 'profile',
+                    name: 'profile',
+                    component: () => import('@/views/admin/Profile.vue'),
+                    meta: {
+                        title: 'Profile',
+                    } as RouteMeta & IRouteMeta,
+                },
+                {
+                    path: 'changePassword',
+                    name: 'changePassword',
+                    component: () => import('@/views/admin/ChangePassword.vue'),
+                    meta: {
+                        title: 'ChangePassword',
+                    } as RouteMeta & IRouteMeta,
+                },
             ],
         },
+        // {
+        //     path: '/changePassword',
+        //     name: 'changePassword',
+        //     component: () => import('@/views/ChangePassword.vue'),
+        //     meta: {
+        //         title: 'ChangePassword',
+        //     } as RouteMeta & IRouteMeta,
+        // },
         {
             path: '/:pathMatch(.*)',
             name: 'not-found',

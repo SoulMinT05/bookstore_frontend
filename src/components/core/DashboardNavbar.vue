@@ -11,7 +11,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
-import { LogOut, User, Bell, Sun, MoonStar, Menu, KeyRound } from 'lucide-vue-next';
+import { LogOut, User, Bell, Sun, MoonStar, Menu, KeyRound, UsersRound } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/stores/app';
 import { useToast } from 'vue-toastification';
@@ -66,14 +66,18 @@ const toggleMode = () => {
                 <DropdownMenuContent class="w-56 relative mr-4">
                     <DropdownMenuLabel>John Doe</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                        <User class="mr-2 h-4 w-4" />
-                        <span>Trang cá nhân</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <KeyRound class="mr-2 h-4 w-4" />
-                        <span>Đổi mật khẩu</span>
-                    </DropdownMenuItem>
+                    <router-link to="/admin/profile" class="flex items-center">
+                        <DropdownMenuItem class="w-full">
+                            <UsersRound class="mr-2 h-4 w-4" />
+                            <span>Hồ sơ</span>
+                        </DropdownMenuItem>
+                    </router-link>
+                    <router-link to="/admin/changePassword" class="flex items-center">
+                        <DropdownMenuItem class="w-full">
+                            <KeyRound class="mr-2 h-4 w-4" />
+                            <span>Đổi mật khẩu</span>
+                        </DropdownMenuItem>
+                    </router-link>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
                         <LogOut class="mr-2 h-4 w-4 text-red-500" />
