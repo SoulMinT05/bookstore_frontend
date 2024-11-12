@@ -17,6 +17,15 @@
             </button>
         </div>
 
+        <div class="mb-6">
+            <input
+                type="text"
+                v-model="searchQuery"
+                placeholder="Tìm kiếm sách..."
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+        </div>
+
         <div class="overflow-x-auto bg-white shadow-md rounded-lg">
             <div v-if="isLoading" class="flex justify-center items-center py-10">
                 <div class="loader"></div>
@@ -25,21 +34,87 @@
             <table v-else class="w-full table-auto">
                 <thead>
                     <tr class="text-gray-600 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left">Hình ảnh</th>
-                        <th class="py-3 px-6 text-left">Name</th>
-                        <th class="py-3 px-6 text-left">Address</th>
+                        <th class="py-3 px-6 text-left cursor-pointer">Hình ảnh</th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('name')">
+                            Tên
+                            <span v-if="currentSort !== 'name'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'name' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'name' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('author')">
+                            Tác giả
+                            <span v-if="currentSort !== 'author'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'author' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'author' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
                         <!-- <th class="py-3 px-6 text-left">Price</th> -->
-                        <th class="py-3 px-6 text-left">Quantity</th>
-                        <th class="py-3 px-6 text-left">Year publication</th>
-                        <th class="py-3 px-6 text-left">Publisher</th>
-                        <th class="py-3 px-6 text-center">Created Date</th>
-                        <th class="py-3 px-6 text-center">Updated Date</th>
-                        <th class="py-3 px-6 text-center">Actions</th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('quantity')">
+                            Số lượng
+                            <span v-if="currentSort !== 'quantity'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'quantity' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'quantity' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('yearOfPublication')">
+                            Năm XB
+                            <span v-if="currentSort !== 'yearOfPublication'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'yearOfPublication' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'yearOfPublication' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('publisherId.name')">
+                            Nhà XB
+                            <span v-if="currentSort !== 'publisherId.name'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'publisherId.name' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'publisherId.name' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('createdAt')">
+                            Ngày tạo
+                            <span v-if="currentSort !== 'createdAt'" class="ml-2">
+                                <i class="fas fa-sort"></i>
+                            </span>
+                            <span v-if="currentSort === 'createdAt' && currentSortDir === 'asc'" class="ml-2">
+                                <i class="fas fa-sort-up"></i>
+                            </span>
+                            <span v-if="currentSort === 'createdAt' && currentSortDir === 'desc'" class="ml-2">
+                                <i class="fas fa-sort-down"></i>
+                            </span>
+                        </th>
+                        <!-- <th class="py-3 px-6 text-center">Updated Date</th> -->
+                        <th class="py-3 px-6 text-center">Hành động</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 text-sm font-light">
                     <tr
-                        v-for="product in paginatedProducts"
+                        v-for="product in sortedAndPaginatedBooks"
                         :key="product?.id"
                         class="border-b border-gray-200 hover:bg-gray-100"
                     >
@@ -70,9 +145,9 @@
                         <td class="py-4 px-6 text-center">
                             <span>{{ formatDate(product?.createdAt) }}</span>
                         </td>
-                        <td class="py-4 px-6 text-center">
+                        <!-- <td class="py-4 px-6 text-center">
                             <span>{{ formatDate(product?.updatedAt) }}</span>
-                        </td>
+                        </td> -->
                         <td class="py-4 px-6 text-center">
                             <div class="flex item-center justify-center">
                                 <button
@@ -109,7 +184,7 @@
                 <h2 class="text-lg font-bold mb-4">Thêm sách</h2>
                 <form @submit.prevent="addProduct">
                     <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Tên</label>
                         <input
                             v-model="newProduct.name"
                             type="text"
@@ -119,7 +194,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="author" class="block text-sm font-medium text-gray-700">Author</label>
+                        <label for="author" class="block text-sm font-medium text-gray-700">Tác giả</label>
                         <input
                             v-model="newProduct.author"
                             type="text"
@@ -129,7 +204,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+                        <label for="price" class="block text-sm font-medium text-gray-700">Giá</label>
                         <input
                             v-model="newProduct.price"
                             type="number"
@@ -138,7 +213,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                        <label for="quantity" class="block text-sm font-medium text-gray-700">Số lượng</label>
                         <input
                             v-model="newProduct.quantity"
                             type="number"
@@ -147,9 +222,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="yearOfPublication" class="block text-sm font-medium text-gray-700"
-                            >Year publication</label
-                        >
+                        <label for="yearOfPublication" class="block text-sm font-medium text-gray-700">Năm XB</label>
                         <input
                             v-model="newProduct.yearOfPublication"
                             type="number"
@@ -166,7 +239,7 @@
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         /> -->
-                        <label for="publisher" class="block text-sm font-medium text-gray-700">Publisher</label>
+                        <label for="publisher" class="block text-sm font-medium text-gray-700">Nhà XB</label>
                         <select
                             v-model="newProduct.publisher"
                             id="publisher"
@@ -265,7 +338,7 @@
                 <h2 class="text-lg font-bold mb-4">Chỉnh sửa thông tin sách</h2>
                 <form @submit.prevent="saveEditedProduct">
                     <div class="mb-4">
-                        <label for="editName" class="block text-sm font-medium text-gray-700">Name</label>
+                        <label for="editName" class="block text-sm font-medium text-gray-700">Tên</label>
                         <input
                             v-model="productToEdit.name"
                             type="text"
@@ -276,7 +349,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="editAuthor" class="block text-sm font-medium text-gray-700">Author</label>
+                        <label for="editAuthor" class="block text-sm font-medium text-gray-700">Tác giả</label>
                         <input
                             v-model="productToEdit.author"
                             type="text"
@@ -285,7 +358,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editPrice" class="block text-sm font-medium text-gray-700">Price</label>
+                        <label for="editPrice" class="block text-sm font-medium text-gray-700">Gía</label>
                         <input
                             v-model="productToEdit.price"
                             type="number"
@@ -294,7 +367,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editQuantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                        <label for="editQuantity" class="block text-sm font-medium text-gray-700">Số lượng</label>
                         <input
                             v-model="productToEdit.quantity"
                             type="number"
@@ -304,7 +377,7 @@
                     </div>
                     <div class="mb-4">
                         <label for="editYearOfPublication" class="block text-sm font-medium text-gray-700"
-                            >Year publication</label
+                            >Năm XB</label
                         >
                         <input
                             v-model="productToEdit.yearOfPublication"
@@ -314,7 +387,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="publisher" class="block text-sm font-medium text-gray-700">Publisher</label>
+                        <label for="publisher" class="block text-sm font-medium text-gray-700">Nhà XB</label>
                         <!-- <select
                             v-model="productToEdit.publisherId.name"
                             id="publisher"
@@ -405,7 +478,7 @@
 
         <div class="mt-4 flex justify-between">
             <button
-                @click="previousPage"
+                @click="goToPage(currentPage - 1)"
                 :disabled="currentPage === 1"
                 class="px-4 py-2 rounded-md cursor-pointer hover:opacity-95 transition duration-150 ease-in-out"
                 :class="{
@@ -417,7 +490,7 @@
             </button>
             <span class="self-center">Trang {{ currentPage }}/{{ totalPages }}</span>
             <button
-                @click="nextPage"
+                @click="goToPage(currentPage + 1)"
                 :disabled="currentPage === totalPages"
                 class="px-4 py-2 rounded-md cursor-pointer hover:opacity-95 transition duration-150 ease-in-out"
                 :class="{
@@ -439,6 +512,9 @@ export default {
     data() {
         return {
             products: [], // Dữ liệu sách
+            currentSort: '', // Cột hiện tại để sắp xếp
+            currentSortDir: 'asc',
+            searchQuery: '',
             newProduct: {
                 name: '',
                 author: '',
@@ -469,14 +545,70 @@ export default {
     },
     computed: {
         totalPages() {
-            return Math.ceil(this.products.length / this.pageSize);
+            return Math.ceil(this.filteredBooks.length / this.pageSize);
         },
-        paginatedProducts() {
+        paginatedBooks() {
             const start = (this.currentPage - 1) * this.pageSize;
-            return this.products.slice(start, start + this.pageSize);
+            return this.filteredBooks.slice(start, start + this.pageSize);
+        },
+        sortedAndPaginatedBooks() {
+            // Sắp xếp dữ liệu
+            const sortedBooks = this.sortedBooks;
+
+            // Tính toán các chỉ số phân trang
+            const start = (this.currentPage - 1) * this.pageSize;
+            const end = start + this.pageSize;
+
+            // Trả về dữ liệu phân trang sau khi đã sắp xếp
+            return sortedBooks.slice(start, end);
+        },
+        sortedBooks() {
+            // If no sort column is specified, return the Books array as is
+            const booksToSort = this.filteredBooks;
+            if (!this.currentSort) {
+                return booksToSort;
+            }
+
+            const direction = this.currentSortDir === 'asc' ? 1 : -1;
+            return [...booksToSort].sort((a, b) => {
+                let valueA = a[this.currentSort];
+                let valueB = b[this.currentSort];
+
+                if (this.currentSort === 'publisher') {
+                    valueA = a.publisherId ? a.publisherId.name : '';
+                    valueB = b.publisherId ? b.publisherId.name : '';
+                }
+
+                if (valueA < valueB) return -1 * direction;
+                if (valueA > valueB) return 1 * direction;
+                return 0;
+            });
+        },
+        filteredBooks() {
+            return this.products.filter((book) => {
+                const name = book.name ? book.name.toLowerCase() : '';
+                const author = book.author ? book.author.toLowerCase() : '';
+                const publisher = book.publisherId?.name ? book.publisherId?.name.toLowerCase() : '';
+
+                return (
+                    name.includes(this.searchQuery.toLowerCase()) ||
+                    author.includes(this.searchQuery.toLowerCase()) ||
+                    publisher.includes(this.searchQuery.toLowerCase())
+                );
+            });
         },
     },
     methods: {
+        sortBy(column) {
+            if (this.currentSort === column) {
+                // Nếu đã sắp xếp theo cột này, đổi chiều
+                this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                // Nếu chưa sắp xếp theo cột này, sắp xếp tăng dần
+                this.currentSort = column;
+                this.currentSortDir = 'asc';
+            }
+        },
         nextPage() {
             if (this.currentPage < this.totalPages) {
                 this.currentPage++;
@@ -486,6 +618,12 @@ export default {
             if (this.currentPage > 1) {
                 this.currentPage--;
             }
+        },
+        goToPage(page) {
+            this.currentPage = page;
+        },
+        resetToFirstPage() {
+            this.currentPage = 1;
         },
         validateNumber(event) {
             const inputValue = event.target.value;
@@ -850,6 +988,11 @@ export default {
             setTimeout(() => {
                 this.toastMessage = '';
             }, 3000);
+        },
+    },
+    watch: {
+        searchQuery() {
+            this.resetToFirstPage();
         },
     },
 
