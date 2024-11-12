@@ -16,12 +16,12 @@
                 Xuất excel
             </button>
         </div>
-        <div class="mb-4">
+        <div class="mb-6">
             <input
                 type="text"
                 v-model="searchQuery"
                 placeholder="Tìm kiếm người dùng..."
-                class="p-2 border rounded-lg text-sm"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
         </div>
 
@@ -206,7 +206,7 @@
             v-if="isAddUserModalVisible"
             class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
-            <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3 modal-content">
+            <div class="bg-white rounded-lg p-6 w-11/12 md:w-2/3 lg:w-1/2 modal-content">
                 <h2 class="text-lg font-bold mb-4">Thêm người dùng</h2>
                 <form @submit.prevent="addUser">
                     <div class="mb-4">
@@ -344,7 +344,7 @@
             v-if="selectedUser"
             class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 overflow-y-scroll"
         >
-            <div @click.stop class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-1/3">
+            <div @click.stop class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-2/3 lg:w-1/2">
                 <h2 class="text-xl font-bold text-center mb-4">Thông tin người dùng</h2>
                 <div class="space-y-2">
                     <p><strong>First Name:</strong> {{ selectedUser.firstName }}</p>
@@ -415,7 +415,7 @@
             v-if="isEditUserModalVisible"
             class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
-            <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3 modal-content">
+            <div class="bg-white rounded-lg p-6 w-11/12 md:w-2/3 lg:w-1/2 modal-content">
                 <h2 class="text-lg font-bold mb-4">Chỉnh sửa thông tin người dùng</h2>
                 <form @submit.prevent="saveEditedUser">
                     <div class="mb-4">
@@ -575,7 +575,7 @@
             <span class="self-center">Trang {{ currentPage }}/{{ totalPages }}</span>
             <button
                 @click="goToPage(currentPage + 1)"
-                :disabled="currentPage * pageSize >= users.length"
+                :disabled="currentPage === totalPages"
                 class="px-4 py-2 rounded-md cursor-pointer hover:opacity-95 transition duration-150 ease-in-out"
                 :class="{
                     'bg-blue-500 text-white': currentPage < totalPages,
@@ -585,11 +585,6 @@
                 Sau
             </button>
         </div>
-        <!-- <div class="pagination">
-            <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">Previous</button>
-            <span>Page {{ currentPage }}</span>
-            <button @click="goToPage(currentPage + 1)" :disabled="currentPage * pageSize >= users.length">Next</button>
-        </div> -->
     </div>
 </template>
 
@@ -620,6 +615,7 @@ export default {
                 role: '',
             },
             currentRole: 'staff',
+            searchQuery: '',
             isAddUserModalVisible: false,
             currentPage: 1, // Bắt đầu với trang đầu tiên
             pageSize: 10, // Hiển thị 10 người dùng mỗi trang
@@ -631,11 +627,11 @@ export default {
     },
     computed: {
         totalPages() {
-            return Math.ceil(this.users.length / this.pageSize);
+            return Math.ceil(this.filteredUsers.length / this.pageSize);
         },
         paginatedUsers() {
             const start = (this.currentPage - 1) * this.pageSize;
-            return this.users.slice(start, start + this.pageSize);
+            return this.filteredUsers.slice(start, start + this.pageSize);
         },
         sortedAndPaginatedUsers() {
             // Sắp xếp dữ liệu
@@ -650,12 +646,13 @@ export default {
         },
         sortedUsers() {
             // If no sort column is specified, return the users array as is
+            const usersToSort = this.filteredUsers;
             if (!this.currentSort) {
-                return this.users;
+                return usersToSort;
             }
 
             const direction = this.currentSortDir === 'asc' ? 1 : -1;
-            return [...this.users].sort((a, b) => {
+            return [...usersToSort].sort((a, b) => {
                 const valueA = a[this.currentSort];
                 const valueB = b[this.currentSort];
 
@@ -663,6 +660,14 @@ export default {
                 if (valueA > valueB) return 1 * direction;
                 return 0;
             });
+        },
+        filteredUsers() {
+            return this.users.filter(
+                (user) =>
+                    user.firstName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                    user.lastName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                    user.email.toLowerCase().includes(this.searchQuery.toLowerCase()),
+            );
         },
     },
     methods: {
@@ -688,6 +693,9 @@ export default {
         },
         goToPage(page) {
             this.currentPage = page;
+        },
+        resetToFirstPage() {
+            this.currentPage = 1;
         },
         formatDate(date) {
             // const createdAtDate = new Date(date); // Tạo đối tượng Date
@@ -933,6 +941,11 @@ export default {
             setTimeout(() => {
                 this.toastMessage = '';
             }, 3000);
+        },
+    },
+    watch: {
+        searchQuery() {
+            this.resetToFirstPage();
         },
     },
 
