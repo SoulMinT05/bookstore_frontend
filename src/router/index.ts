@@ -119,14 +119,30 @@ const router = createRouter({
                 },
             ],
         },
-        // {
-        //     path: '/changePassword',
-        //     name: 'changePassword',
-        //     component: () => import('@/views/ChangePassword.vue'),
-        //     meta: {
-        //         title: 'ChangePassword',
-        //     } as RouteMeta & IRouteMeta,
-        // },
+        {
+            path: '/changePasswordUser',
+            name: 'changePasswordUser',
+            component: () => import('@/views/ChangePasswordUser.vue'),
+            meta: {
+                title: 'ChangePassword',
+            } as RouteMeta & IRouteMeta,
+        },
+        {
+            path: '/profileUser',
+            name: 'profileUser',
+            component: () => import('@/views/ProfileUser.vue'),
+            meta: {
+                title: 'ProfileUser',
+            } as RouteMeta & IRouteMeta,
+        },
+        {
+            path: '/orderHistoryUser',
+            name: 'orderHistoryUser',
+            component: () => import('@/views/OrderHistoryUser.vue'),
+            meta: {
+                title: 'OrderHistoryUser',
+            } as RouteMeta & IRouteMeta,
+        },
         {
             path: '/:pathMatch(.*)',
             name: 'not-found',
@@ -138,14 +154,11 @@ const router = createRouter({
     ],
 });
 
-// document.title (tiêu đề của trang) sẽ được thay đổi dựa trên giá trị của loc.meta.title (meta tag của route hiện tại).
 router.beforeEach((to, from, next) => {
-    // Update document title
     if (to.meta.title) {
         document.title = to.meta.title as string;
     }
 
-    // Get the user data from localStorage
     // const user = JSON.parse(localStorage.getItem('user') || '{}');
     // const userData = user?.userData;
     const user = localStorage.getItem('user');
@@ -153,21 +166,18 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login' && (userData?.role === 'admin' || userData?.role === 'staff')) {
         return next('/admin'); // Điều hướng tới /admin nếu role là admin hoặc staff
     }
-    // if (to.path === '/login' && userData?.role === 'staff') {
-    //     return next('/admin'); // Điều hướng tới /admin nếu role là admin hoặc staff
-    // }
-    // Check if the route is under `/dashboard`, meaning it's an admin route
-    if (to.path.startsWith('/admin')) {
-        // If the user doesn't have the 'admin' role, redirect to login
-        if (userData?.role !== 'admin' && userData?.role !== 'staff') {
-            return next({ path: '/' });
-        }
-    }
-    // if (!userData && to.path !== '/login') {
-    //     return next('/login'); // Điều hướng về trang login nếu người dùng chưa đăng nhập
-    // }
 
-    // Proceed to the route if everything is okay
+    if (to.path.startsWith('/admin') && userData?.role !== 'admin' && userData?.role !== 'staff') {
+        return next({ path: '/' });
+    }
+    if (!userData && to.path !== '/login') {
+        return next('/login'); // Điều hướng về trang login nếu người dùng chưa đăng nhập
+    }
+
+    if (userData?.role === 'user' && to.path.startsWith('/admin')) {
+        return next('/'); // Điều hướng về trang chủ nếu user cố gắng vào các route không phải /admin
+    }
+
     next();
 });
 

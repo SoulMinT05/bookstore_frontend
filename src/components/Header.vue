@@ -12,7 +12,18 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
 import { computed, ref } from 'vue';
-import { LogOut, User, Bell, Sun, MoonStar, Menu, KeyRound, UsersRound } from 'lucide-vue-next';
+import {
+    LogOut,
+    User,
+    Bell,
+    Sun,
+    MoonStar,
+    Menu,
+    KeyRound,
+    UsersRound,
+    ShoppingCart,
+    ShoppingBag,
+} from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/stores/app';
 import { useToast } from 'vue-toastification';
@@ -103,6 +114,9 @@ const navigateToLogin = () => {
             <Button variant="outline" class="border-0 p-[6px] w-8 h-8">
                 <Bell />
             </Button>
+            <Button variant="outline" class="border-0 p-[6px] ml-2 w-8 h-8">
+                <ShoppingCart />
+            </Button>
             <Button variant="outline" class="border-0 p-[6px] ml-2 w-8 h-8" @click="toggleMode">
                 <Sun v-if="store.isDark" />
                 <MoonStar v-else />
@@ -131,19 +145,26 @@ const navigateToLogin = () => {
                     <DropdownMenuContent class="w-56 relative mr-4">
                         <DropdownMenuLabel>{{ getName }}</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <router-link to="/admin/profile" class="flex items-center">
+                        <router-link to="/profileUser" class="flex items-center">
                             <DropdownMenuItem class="w-full">
                                 <UsersRound class="mr-2 h-4 w-4" />
                                 <span>Hồ sơ</span>
                             </DropdownMenuItem>
                         </router-link>
-                        <router-link to="/admin/changePassword" class="flex items-center">
+                        <router-link to="/changePasswordUser" class="flex items-center">
                             <DropdownMenuItem class="w-full">
                                 <KeyRound class="mr-2 h-4 w-4" />
                                 <span>Đổi mật khẩu</span>
                             </DropdownMenuItem>
                         </router-link>
-                        <DropdownMenuSeparator />
+                        <router-link to="/orderHistoryUser" class="flex items-center">
+                            <DropdownMenuItem class="w-full">
+                                <ShoppingBag class="mr-2 h-4 w-4" />
+                                <span>Lịch sử đơn hàng</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                        </router-link>
+
                         <DropdownMenuItem @click="handleLogout">
                             <LogOut class="mr-2 h-4 w-4 text-red-500" />
                             <span class="text-red-500">Đăng xuất</span>
