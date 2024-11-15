@@ -11,7 +11,7 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: () => import('@/views/HomeView.vue'),
+            component: () => import('@/views/Home.vue'),
             meta: {
                 title: 'Home',
             } as RouteMeta & IRouteMeta,
@@ -146,14 +146,16 @@ router.beforeEach((to, from, next) => {
     }
 
     // Get the user data from localStorage
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    const userData = user?.userData;
+    // const user = JSON.parse(localStorage.getItem('user') || '{}');
+    // const userData = user?.userData;
+    const user = localStorage.getItem('user');
+    const userData = user ? JSON.parse(user)?.userData : null;
     if (to.path === '/login' && (userData?.role === 'admin' || userData?.role === 'staff')) {
         return next('/admin'); // Điều hướng tới /admin nếu role là admin hoặc staff
     }
-    if (to.path === '/login' && userData?.role === 'staff') {
-        return next('/admin'); // Điều hướng tới /admin nếu role là admin hoặc staff
-    }
+    // if (to.path === '/login' && userData?.role === 'staff') {
+    //     return next('/admin'); // Điều hướng tới /admin nếu role là admin hoặc staff
+    // }
     // Check if the route is under `/dashboard`, meaning it's an admin route
     if (to.path.startsWith('/admin')) {
         // If the user doesn't have the 'admin' role, redirect to login
@@ -161,6 +163,9 @@ router.beforeEach((to, from, next) => {
             return next({ path: '/' });
         }
     }
+    // if (!userData && to.path !== '/login') {
+    //     return next('/login'); // Điều hướng về trang login nếu người dùng chưa đăng nhập
+    // }
 
     // Proceed to the route if everything is okay
     next();

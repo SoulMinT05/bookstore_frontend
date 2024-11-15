@@ -85,14 +85,16 @@ const toggleSidebar = () => {
                         class="px-4 h-[64px] flex fixed z-10 items-center justify-between border-b-[1px]"
                         :style="{ width: `${store.sidebarExpanded ? 280 : 64}px` }"
                     >
-                        <transition name="fade">
-                            <h2 v-show="store.sidebarExpanded" class="text-2xl font-semibold flex items-center">
-                                <span class="text-foreground"
-                                    ><span class="mr-2 flex items-center"><Icon name="Boxes" /></span
-                                ></span>
-                                TamLibrary
-                            </h2>
-                        </transition>
+                        <router-link to="/">
+                            <transition name="fade">
+                                <h2 v-show="store.sidebarExpanded" class="text-2xl font-semibold flex items-center">
+                                    <span class="text-foreground"
+                                        ><span class="mr-2 flex items-center"><Icon name="Boxes" /></span
+                                    ></span>
+                                    TamLibrary
+                                </h2>
+                            </transition>
+                        </router-link>
                         <Button
                             variant="outline"
                             class="p-[6px] w-8 h-8 transition-all duration-200"
