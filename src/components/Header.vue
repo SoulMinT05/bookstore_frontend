@@ -11,7 +11,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import {
     LogOut,
     User,
@@ -28,10 +28,13 @@ import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/stores/app';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
+import axios from '@/utils/axios';
 
 const store = useAppStore();
 const router = useRouter();
 const isLoggedIn = ref(!!localStorage.getItem('user'));
+const carts = ref([]);
+const cartCount = ref(0);
 
 const toggleMode = () => {
     store.toggleTheme();
@@ -90,15 +93,29 @@ const navigateToLogin = () => {
     router.push('/login'); // Điều hướng đến trang đăng nhập
     console.log('login');
 };
+
+const getCart = async () => {
+    try {
+        const res = await axios.get('/user/getCart');
+        console.log('res.data.user: ', res.data.user);
+        carts.value = res.data.user.cart;
+        cartCount.value = carts.value.length;
+        console.log('carts.valueHeader: ', carts.value);
+        console.log('cartCount.valueHeader: ', cartCount.value);
+    } catch (error) {
+        console.error('Error fetching get cart: ', error.message);
+    }
+};
+onMounted(() => {
+    getCart();
+});
 </script>
 
 <template>
     <nav
         class="flex items-center justify-between h-[64px] border-b-[1px] px-4 fixed z-40 top-0 bg-background/80 backdrop-blur-lg border-b border-border w-full"
     >
-        <div class="w-24 hidden lg:block">
-            <Breadcrumb />
-        </div>
+        <div class="w-24 hidden lg:block">Logo</div>
         <div class="w-2/5 hidden lg:block">
             <GlobalSearchPopover />
         </div>
@@ -114,9 +131,17 @@ const navigateToLogin = () => {
             <Button variant="outline" class="border-0 p-[6px] w-8 h-8">
                 <Bell />
             </Button>
-            <Button variant="outline" class="border-0 p-[6px] ml-2 w-8 h-8">
-                <ShoppingCart />
-            </Button>
+            <router-link to="/cart">
+                <Button variant="outline" class="border-0 p-[6px] ml-2 w-8 h-8">
+                    <ShoppingCart />
+                </Button>
+                <span
+                    class="absolute bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                    :style="{ top: '9px', right: '268px' }"
+                >
+                    {{ cartCount }}
+                </span>
+            </router-link>
             <Button variant="outline" class="border-0 p-[6px] ml-2 w-8 h-8" @click="toggleMode">
                 <Sun v-if="store.isDark" />
                 <MoonStar v-else />

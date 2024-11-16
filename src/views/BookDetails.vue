@@ -4,11 +4,11 @@
 
         <div class="flex flex-col min-h-[100dvh]">
             <main class="flex-1 relative">
-                <Breadcrumb :style="{ marginLeft: '222px', marginTop: '20px' }">
+                <Breadcrumb :style="{ marginLeft: '124px', marginTop: '20px', marginBottom: '20px' }">
                     <BreadcrumbList>
                         <BreadcrumbItem>
                             <BreadcrumbLink as-child>
-                                <RouterLink class="text-xl" to="/">Home</RouterLink>
+                                <RouterLink class="text-xl" to="/">Trang chủ</RouterLink>
                             </BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator>/</BreadcrumbSeparator>
@@ -36,7 +36,7 @@
                                         :src="image"
                                         alt="Thumbnail Image"
                                         :style="{ width: '153px', height: '153px' }"
-                                        class="rounded-lg object-cover cursor-pointer"
+                                        class="rounded-lg object-cover cursor-pointer transition-all duration-200 hover:scale-105 hover:ring-2 hover:ring-blue-500"
                                     />
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                                     <h2 className="text-4xl font-bold text-red-600" v-if="bookDetails.price">
                                         {{ formatCurrency(bookDetails.price) }}
                                     </h2>
-                                    <Button size="lg">Thêm vào giỏ hàng</Button>
+                                    <Button size="lg" @click="addToCart">Thêm vào giỏ hàng</Button>
                                 </div>
                             </div>
                         </div>
@@ -130,7 +130,11 @@
                                                             alt="product"
                                                             class="w-full h-48 object-cover rounded-t-lg"
                                                         />
-                                                        <h3 class="mt-4 text-xl font-semibold">{{ product.name }}</h3>
+                                                        <h3
+                                                            class="mt-4 text-xl font-semibold line-clamp-2 custom-min-height"
+                                                        >
+                                                            {{ product.name }}
+                                                        </h3>
 
                                                         <div class="mt-4 flex justify-between items-center">
                                                             <p class="text-gray-500">{{ product.author }}</p>
@@ -181,67 +185,16 @@ import { RouterLink } from 'vue-router';
 import { Button } from '@/components/ui/button';
 import { onMounted, ref, watch } from 'vue';
 import { Heart, ShoppingCart } from 'lucide-vue-next';
+import { useToast } from 'vue-toastification';
 
 // Lấy route để truy cập tham số URL
 const route = useRoute();
 
 // Lấy slug từ URL params
 const slug = route.params.slug;
+const toast = useToast();
 const bookDetails = ref({});
 const relatedProducts = ref([]);
-
-interface Product {
-    name: string;
-    description: string;
-    price: string;
-    image: string;
-}
-
-const productsByPublisher = [
-    {
-        name: 'Classic Leather Shoes',
-        author: 'John Doe',
-        price: '$59.99',
-        images: ['https://shopee-reactjs-orpin.vercel.app/static/media/ava-12.ada9151bf5452b1e51e8.jpg'],
-        slug: 'classic-leather-shoes',
-    },
-    {
-        name: 'Designer Handbag',
-        author: 'Jane Smith',
-        price: '$89.99',
-        images: ['https://shopee-reactjs-orpin.vercel.app/static/media/ava-12.ada9151bf5452b1e51e8.jpg'],
-        slug: 'designer-handbag',
-    },
-    {
-        name: 'Wireless Earbuds',
-        author: 'Alice Johnson',
-        price: '$69.99',
-        images: ['https://shopee-reactjs-orpin.vercel.app/static/media/ava-12.ada9151bf5452b1e51e8.jpg'],
-        slug: 'wireless-earbuds',
-    },
-];
-
-// Products data
-const products: Product[] = [
-    {
-        name: 'Classic Leather Shoes',
-        description: 'Elegant and comfortable',
-        price: '$59.99',
-        image: 'https://shopee-reactjs-orpin.vercel.app/static/media/ava-12.ada9151bf5452b1e51e8.jpg',
-    },
-    {
-        name: 'Designer Handbag',
-        description: 'Fashion statement',
-        price: '$89.99',
-        image: 'https://shopee-reactjs-orpin.vercel.app/static/media/ava-12.ada9151bf5452b1e51e8.jpg',
-    },
-    {
-        name: 'Wireless Earbuds',
-        description: 'Crystal clear audio',
-        price: '$69.99',
-        image: 'https://shopee-reactjs-orpin.vercel.app/static/media/ava-12.ada9151bf5452b1e51e8.jpg',
-    },
-];
 
 function formatCurrency(value: number | null | undefined): string {
     if (value == null || isNaN(value)) return '0 ₫'; // Xử lý trường hợp giá trị không hợp lệ
@@ -284,14 +237,34 @@ const fetchProductSimilarPublisher = async () => {
         console.error('Error fetching related products:', error);
     }
 };
-// route.beforeRouteUpdate((to, from, next) => {
-//     if (to.params.slug !== from.params.slug) {
-//         fetchProductDetails(); // Gọi lại fetchProductDetails khi slug thay đổi
-//     }
-//     next(); // Tiếp tục quá trình chuyển route
-// });
+
+const addToCart = async () => {
+    try {
+        const res = await axios.post('/user/addToCart', {
+            productId: bookDetails.value,
+        });
+        console.log('res.data: ', res.data);
+        toast.success('Thêm vào giỏ hàng thành công');
+    } catch (error) {
+        console.error('Error fetching add to cart: ', error.message);
+        toast.success('Thêm vào giỏ hàng thất bại');
+    }
+};
 onMounted(() => {
     fetchProductDetails();
 });
 console.log('Slug from URL:', slug); // Log slug ra console
 </script>
+
+<style scoped>
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Hiển thị tối đa 2 dòng */
+    -webkit-box-orient: vertical;
+    overflow: hidden; /* Ẩn nội dung dư */
+    text-overflow: ellipsis; /* Thêm dấu "..." */
+}
+.custom-min-height {
+    min-height: 56px;
+}
+</style>

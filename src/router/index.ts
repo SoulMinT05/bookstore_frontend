@@ -128,6 +128,14 @@ const router = createRouter({
             } as RouteMeta & IRouteMeta,
         },
         {
+            path: '/cart',
+            name: 'cart',
+            component: () => import('@/views/Cart.vue'),
+            meta: {
+                title: 'cart',
+            } as RouteMeta & IRouteMeta,
+        },
+        {
             path: '/changePasswordUser',
             name: 'changePasswordUser',
             component: () => import('@/views/ChangePasswordUser.vue'),
