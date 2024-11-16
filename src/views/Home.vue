@@ -4,47 +4,51 @@ import Footer from '@/components/Footer.vue';
 
 import axios from '@/utils/axios';
 
-import { ref, onMounted } from 'vue';
-import { SlickCarousel } from 'vue-slick-carousel';
+import { ref, onMounted, watch } from 'vue';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
 
 import { Heart, ShoppingCart } from 'lucide-vue-next';
-const slides = ref([
-    { image: 'https://via.placeholder.com/800x400?text=Slide+1' },
-    { image: 'https://via.placeholder.com/800x400?text=Slide+2' },
-    { image: 'https://via.placeholder.com/800x400?text=Slide+3' },
-]);
-
 const productsByPublisher = ref([]);
-
-// const fetchProducts = async () => {
-//     try {
-//         const res = await axios.get('/book/getAllProducts'); // Access token đã được thêm tự động nếu có interceptor
-//         products.value = res.data.products; // Gán dữ liệu trả về vào `products`
-//         console.log('products.value: ', products.value);
-//     } catch (error) {
-//         console.error('Error fetching products:', error);
-//     }
-// };
 
 const fetchProductsByPublisher = async () => {
     try {
-        const res = await axios.get('/book/publisher/66c459aedad7de9f848ba263'); // Access token đã được thêm tự động nếu có interceptor
-        productsByPublisher.value = res.data.products; // Gán dữ liệu trả về vào `productsByPublisher`
+        const res = await axios.get('/book/publisher/66c459aedad7de9f848ba263');
+        productsByPublisher.value = res.data.products;
         console.log('productsByPublisher.value: ', productsByPublisher.value);
     } catch (error) {
         console.error('Error fetching products:', error);
     }
 };
 
-// Pipe formatting currency
-const formatCurrentcy = (value: number) => {
+const fetchProductsByAllPublishers = async () => {
+    try {
+        const res = await axios.get('/publisher/getAllPublishers');
+        const publishers = res.data.publishers;
+
+        const productPromises = publishers.map((publisher) =>
+            axios.get(`/book/publisher/${publisher._id}`).then((productRes) => productRes.data.products),
+        );
+
+        const allProducts = await Promise.all(productPromises);
+        productsByPublisher.value = allProducts.flat();
+        console.log('All products by all publishers: ', productsByPublisher.value);
+    } catch (error) {
+        console.error('Error fetching products:', error.response ? error.response.data : error.message);
+        if (error.response) {
+            console.log('Error status:', error.response.status);
+            console.log('Error data:', error.response.data);
+        }
+    }
+};
+
+const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
 };
 onMounted(() => {
     fetchProductsByPublisher();
+    fetchProductsByAllPublishers();
 });
 </script>
 
@@ -77,33 +81,35 @@ onMounted(() => {
                     <CarouselItem
                         v-for="(product, index) in productsByPublisher"
                         :key="index"
-                        class="basis-1/5 flex-shrink-0"
+                        class="basis-1/5 flex-shrink-0 relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-lg group hover:shadow-xl hover:-translate-y-2"
                     >
-                        <div class="p-1">
-                            <Card>
-                                <CardContent class="p-4">
-                                    <img
-                                        :src="product.images[0]"
-                                        alt="product"
-                                        class="w-full h-48 object-cover rounded-t-lg"
-                                    />
-                                    <h3 class="mt-4 text-xl font-semibold">{{ product.name }}</h3>
+                        <router-link v-if="product.slug" :to="`/bookDetails/${product.slug}`">
+                            <div class="p-1">
+                                <Card>
+                                    <CardContent class="p-4">
+                                        <img
+                                            :src="product.images[0]"
+                                            alt="product"
+                                            class="w-full h-48 object-cover rounded-t-lg"
+                                        />
+                                        <h3 class="mt-4 text-xl font-semibold">{{ product.name }}</h3>
 
-                                    <div class="mt-4 flex justify-between items-center">
-                                        <p class="text-gray-500 whitespace-normal dark:text-gray-400">
-                                            {{ product.author }}
-                                        </p>
-                                        <span class="text-lg font-medium text-red-600 dark:text-white">{{
-                                            formatCurrentcy(product.price | currency)
-                                        }}</span>
-                                    </div>
-                                    <div class="mt-4 flex justify-between items-center">
-                                        <Heart class="cursor-pointer" />
-                                        <ShoppingCart class="cursor-pointer" />
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </div>
+                                        <div class="mt-4 flex justify-between items-center">
+                                            <p class="text-gray-500 whitespace-normal dark:text-gray-400">
+                                                {{ product.author }}
+                                            </p>
+                                            <span class="text-lg font-medium text-red-600 dark:text-white">{{
+                                                formatCurrency(product.price | currency)
+                                            }}</span>
+                                        </div>
+                                        <div class="mt-4 flex justify-between items-center">
+                                            <Heart class="cursor-pointer" />
+                                            <ShoppingCart class="cursor-pointer" />
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </router-link>
                     </CarouselItem>
                 </CarouselContent>
                 <CarouselPrevious />
@@ -114,22 +120,4 @@ onMounted(() => {
     </div>
 </template>
 
-<style scoped>
-/* Customize the slide and product styles */
-.slider-wrapper {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.slick-prev,
-.slick-next {
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    z-index: 10;
-}
-
-.slick-dots li button:before {
-    font-size: 12px;
-    color: white;
-}
-</style>
+<style scoped></style>

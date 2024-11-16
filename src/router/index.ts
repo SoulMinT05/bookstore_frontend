@@ -120,11 +120,19 @@ const router = createRouter({
             ],
         },
         {
+            path: '/bookDetails/:slug',
+            name: 'bookDetails',
+            component: () => import('@/views/BookDetails.vue'),
+            meta: {
+                title: 'BookDetails',
+            } as RouteMeta & IRouteMeta,
+        },
+        {
             path: '/changePasswordUser',
             name: 'changePasswordUser',
             component: () => import('@/views/ChangePasswordUser.vue'),
             meta: {
-                title: 'ChangePassword',
+                title: 'ChangePasswordUser',
             } as RouteMeta & IRouteMeta,
         },
         {
