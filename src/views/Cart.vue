@@ -25,6 +25,10 @@
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    <!-- <Checkbox /> -->
+                                    <Checkbox v-model="selectAll" @change="toggleSelectAll" />
+                                </th>
                                 <th scope="col" class="px-6 py-3">Hình ảnh</th>
                                 <th scope="col" class="px-6 py-3">Tên</th>
                                 <th scope="col" class="px-6 py-3">Số lượng</th>
@@ -38,6 +42,11 @@
                                 :key="item.product._id"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                             >
+                                <td class="px-6 py-4">
+                                    <!-- <Checkbox /> -->
+                                    <Checkbox v-model="item.selected" @change="updateSelectAll" />
+                                </td>
+
                                 <td class="p-4">
                                     <img
                                         :src="item.product.images[0]"
@@ -83,19 +92,6 @@
             </div>
 
             <div class="space-y-4">
-                <!-- <Card>
-                    <CardHeader>
-                        <CardTitle>Đơn mượn</CardTitle>
-                    </CardHeader>
-                    <CardContent class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <span>Tổng số lượng</span>
-                            <span>28</span>
-                        </div>
-
-                        <Separator />
-                    </CardContent>
-                </Card> -->
                 <Card>
                     <CardHeader>
                         <CardTitle>Thông tin người mượn</CardTitle>
@@ -104,20 +100,29 @@
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div class="space-y-2">
                                 <Label for="firstName">Họ</Label>
-                                <Input id="firstName" placeholder="Lý" />
+                                <Input v-model="currentUser.firstName" id="firstName" placeholder="Lý" />
                             </div>
                             <div class="space-y-2">
                                 <Label for="lastName">Tên</Label>
-                                <Input id="lastName" placeholder="Lệ Hoa" />
+                                <Input v-model="currentUser.lastName" id="lastName" placeholder="Lệ Hoa" />
                             </div>
                         </div>
                         <div class="space-y-2">
                             <Label for="email">Email</Label>
-                            <Input id="email" type="email" placeholder="lehoa@example.com" />
+                            <Input
+                                v-model="currentUser.email"
+                                id="email"
+                                type="email"
+                                placeholder="lehoa@example.com"
+                            />
                         </div>
                         <div class="space-y-2">
                             <Label for="address">Địa chỉ</Label>
-                            <Textarea id="address" placeholder="123 Hai Bà Trưng, TP HCM" />
+                            <Textarea
+                                v-model="currentUser.address"
+                                id="address"
+                                placeholder="123 Hai Bà Trưng, TP HCM"
+                            />
                         </div>
                         <div class="flex items-center space-x-2 mt-4">
                             <Popover v-model:open="isPopoverOpen">
@@ -158,6 +163,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'; // Import Popover
 import {
@@ -173,10 +179,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
+
 function formatCurrency(value: number | null | undefined): string {
     if (value == null || isNaN(value)) return '0 ₫'; // Xử lý trường hợp giá trị không hợp lệ
     return new Intl.NumberFormat('vi-VN', {
@@ -199,9 +206,32 @@ const formatDate = (date: Date | string | null) => {
     return `${year}-${month}-${day}`;
 };
 
+const selectAll = ref(true);
+const currentUser = ref({});
 const carts = ref([]);
 const startDate = ref(null);
 const isPopoverOpen = ref(false);
+
+const toggleSelectAll = () => {
+    console.log('selectAll: ', selectAll.value);
+    carts.value.forEach((item) => {
+        item.selected = selectAll.value;
+    });
+    console.log(' carts.value: ', carts.value);
+};
+
+const updateSelectAll = () => {
+    selectAll.value = carts.value.every((item) => item.selected);
+};
+
+watch(
+    carts,
+    (newCarts) => {
+        selectAll.value = newCarts.every((item) => item.selected);
+    },
+    { deep: true },
+);
+
 const borrowBooks = async () => {
     const formattedStartDate = formatDate(startDate.value);
     console.log('formattedStartDate: ', formattedStartDate);
@@ -209,7 +239,8 @@ const borrowBooks = async () => {
 const getCart = async () => {
     try {
         const res = await axios.get('/user/getCart');
-        console.log('res.data.user: ', res.data.user);
+        currentUser.value = res.data.user;
+        console.log('currentUser.value: ', currentUser.value);
         carts.value = res.data.user.cart;
         console.log('carts.value11: ', carts.value);
     } catch (error) {
