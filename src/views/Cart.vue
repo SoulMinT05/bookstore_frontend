@@ -5,24 +5,23 @@
 
         <!-- Main -->
 
-        <main class="container mx-auto my-8 grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr] mt-20">
+        <Breadcrumb class="mt-20" :style="{ marginLeft: '130px' }">
+            <BreadcrumbList>
+                <BreadcrumbItem>
+                    <BreadcrumbLink as-child>
+                        <RouterLink class="text-xl" to="/">Trang chủ</RouterLink>
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator> / </BreadcrumbSeparator>
+                <BreadcrumbItem>
+                    <BreadcrumbPage class="text-xl">Giỏ hàng</BreadcrumbPage>
+                </BreadcrumbItem>
+            </BreadcrumbList>
+        </Breadcrumb>
+        <main class="container mx-auto my-8 grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr]">
             <div>
                 <!-- <h1 className="text-2xl font-bold mb-4">Giỏ hàng</h1> -->
-                <Breadcrumb>
-                    <BreadcrumbList>
-                        <BreadcrumbItem>
-                            <BreadcrumbLink as-child>
-                                <RouterLink class="text-xl" to="/">Trang chủ</RouterLink>
-                            </BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator> / </BreadcrumbSeparator>
-                        <BreadcrumbItem>
-                            <BreadcrumbPage class="text-xl">Giỏ hàng</BreadcrumbPage>
-                        </BreadcrumbItem>
-                    </BreadcrumbList>
-                </Breadcrumb>
-
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg my-4">
+                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -51,60 +50,22 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
-                                        <button
-                                            class="inline-flex items-center justify-center p-1 me-3 text-sm font-medium h-6 w-6 text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                                            type="button"
-                                            @click="decreaseQuantityCart(item.product._id)"
+                                        <NumberField
+                                            id="quantityCart"
+                                            :default-value="item.quantityCart"
+                                            :min="0"
+                                            class="w-28"
+                                            @change="handleQuantityChange(item.product._id, $event)"
                                         >
-                                            <span class="sr-only">Decrease quantity</span>
-                                            <svg
-                                                class="w-3 h-3"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 18 2"
-                                            >
-                                                <path
-                                                    stroke="currentColor"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M1 1h16"
+                                            <NumberFieldContent>
+                                                <NumberFieldDecrement
+                                                    class="mx-2"
+                                                    @click="decreaseQuantityCart(item.product._id)"
                                                 />
-                                            </svg>
-                                        </button>
-                                        <div>
-                                            <input
-                                                type="number"
-                                                :value="item.quantityCart"
-                                                id="first_product"
-                                                class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                required
-                                                readonly
-                                            />
-                                        </div>
-                                        <button
-                                            class="inline-flex items-center justify-center h-6 w-6 p-1 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                                            type="button"
-                                            @click="increaseQuantityCart(item.product._id)"
-                                        >
-                                            <span class="sr-only">Increase quantity</span>
-                                            <svg
-                                                class="w-3 h-3"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 18 18"
-                                            >
-                                                <path
-                                                    stroke="currentColor"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M9 1v16M1 9h16"
-                                                />
-                                            </svg>
-                                        </button>
+                                                <NumberFieldInput readonly />
+                                                <NumberFieldIncrement @click="increaseQuantityCart(item.product._id)" />
+                                            </NumberFieldContent>
+                                        </NumberField>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
@@ -122,7 +83,7 @@
             </div>
 
             <div class="space-y-4">
-                <Card>
+                <!-- <Card>
                     <CardHeader>
                         <CardTitle>Đơn mượn</CardTitle>
                     </CardHeader>
@@ -134,7 +95,7 @@
 
                         <Separator />
                     </CardContent>
-                </Card>
+                </Card> -->
                 <Card>
                     <CardHeader>
                         <CardTitle>Thông tin người mượn</CardTitle>
@@ -158,9 +119,23 @@
                             <Label for="address">Địa chỉ</Label>
                             <Textarea id="address" placeholder="123 Hai Bà Trưng, TP HCM" />
                         </div>
+                        <div class="flex items-center space-x-2 mt-4">
+                            <Popover v-model:open="isPopoverOpen">
+                                <PopoverTrigger as-child>
+                                    <Button variant="outline" class="w-full justify-start text-left font-normal">
+                                        {{ startDate ? formatDate(startDate) : 'Chọn ngày bắt đầu' }}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent class="w-full p-2">
+                                    <Calendar v-model="startDate" placeholder="Chọn ngày bắt đầu" />
+                                </PopoverContent>
+                            </Popover>
+
+                            <!-- <Button @click="selectDate">Thống kê</Button> -->
+                        </div>
                     </CardContent>
                     <CardFooter>
-                        <Button class="w-full">Mượn sách</Button>
+                        <Button @click="borrowBooks" class="w-full">Mượn sách</Button>
                     </CardFooter>
                 </Card>
             </div>
@@ -184,6 +159,15 @@ import {
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'; // Import Popover
+import {
+    NumberField,
+    NumberFieldContent,
+    NumberFieldDecrement,
+    NumberFieldIncrement,
+    NumberFieldInput,
+} from '@/components/ui/number-field';
+import { Calendar } from '@/components/ui/calendar'; // Import Calendar từ ShadCN
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -202,7 +186,26 @@ function formatCurrency(value: number | null | undefined): string {
     }).format(value);
 }
 
+const formatDate = (date: Date | string | null) => {
+    if (!date) return '';
+    const d = new Date(date);
+
+    // Đảm bảo ngày và tháng có 2 chữ số nếu cần
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Tháng bắt đầu từ 0, cần +1
+    const day = d.getDate().toString().padStart(2, '0');
+
+    // Trả về định dạng yyyy/mm/dd
+    return `${year}-${month}-${day}`;
+};
+
 const carts = ref([]);
+const startDate = ref(null);
+const isPopoverOpen = ref(false);
+const borrowBooks = async () => {
+    const formattedStartDate = formatDate(startDate.value);
+    console.log('formattedStartDate: ', formattedStartDate);
+};
 const getCart = async () => {
     try {
         const res = await axios.get('/user/getCart');
@@ -219,11 +222,11 @@ const increaseQuantityCart = async (productId) => {
             productId,
         });
         console.log('res.dataIncrease: ', res.data);
-        toast.success('Thêm vào giỏ hàng thành công');
+        toast.success('Tăng số lượng thành công');
         getCart();
     } catch (error) {
         console.error('Error fetching add to cart: ', error.message);
-        toast.success('Thêm vào giỏ hàng thất bại');
+        toast.success('Tăng số lượng thất bại');
     }
 };
 const decreaseQuantityCart = async (productId) => {
