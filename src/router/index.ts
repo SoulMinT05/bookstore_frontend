@@ -152,6 +152,14 @@ const router = createRouter({
             } as RouteMeta & IRouteMeta,
         },
         {
+            path: '/orderSuccess',
+            name: 'orderSuccess',
+            component: () => import('@/views/OrderSuccess.vue'),
+            meta: {
+                title: 'OrderSuccess',
+            } as RouteMeta & IRouteMeta,
+        },
+        {
             path: '/orderHistoryUser',
             name: 'orderHistoryUser',
             component: () => import('@/views/OrderHistoryUser.vue'),

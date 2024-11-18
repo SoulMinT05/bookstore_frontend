@@ -27,7 +27,8 @@
                             <tr>
                                 <th scope="col" class="px-6 py-3">
                                     <!-- <Checkbox /> -->
-                                    <Checkbox v-model="selectAll" @change="toggleSelectAll" />
+                                    <!-- <Checkbox v-model="selectAll" @change="toggleSelectAll" /> -->
+                                    <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" />
                                 </th>
                                 <th scope="col" class="px-6 py-3">Hình ảnh</th>
                                 <th scope="col" class="px-6 py-3">Tên</th>
@@ -43,8 +44,17 @@
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                             >
                                 <td class="px-6 py-4">
-                                    <!-- <Checkbox /> -->
-                                    <Checkbox v-model="item.selected" @change="updateSelectAll" />
+                                    <!-- <Checkbox v-model="item.selected" @change="updateSelectAll" /> -->
+                                    <!-- <input type="checkbox"
+                                        :value="item.product._id"
+                                     v-model="item.selected"
+                                      @change="updateSelectAll" /> -->
+                                    <input
+                                        type="checkbox"
+                                        :value="item.product._id"
+                                        v-model="selectedProductIds"
+                                        @change="updateSelectAll"
+                                    />
                                 </td>
 
                                 <td class="p-4">
@@ -128,7 +138,8 @@
                             <Popover v-model:open="isPopoverOpen">
                                 <PopoverTrigger as-child>
                                     <Button variant="outline" class="w-full justify-start text-left font-normal">
-                                        {{ startDate ? formatDate(startDate) : 'Chọn ngày bắt đầu' }}
+                                        <!-- {{ startDate ? formatDate(startDate) : 'Chọn ngày bắt đầu' }} -->
+                                        {{ formatDate(startDate || new Date()) }}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent class="w-full p-2">
@@ -154,6 +165,8 @@
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import axios from '@/utils/axios';
+
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 import {
     Breadcrumb,
@@ -181,7 +194,9 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { onMounted, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const toast = useToast();
 
 function formatCurrency(value: number | null | undefined): string {
@@ -206,22 +221,25 @@ const formatDate = (date: Date | string | null) => {
     return `${year}-${month}-${day}`;
 };
 
-const selectAll = ref(true);
+const selectAll = ref(false);
 const currentUser = ref({});
 const carts = ref([]);
 const startDate = ref(null);
 const isPopoverOpen = ref(false);
+const selectedProductIds = ref([]);
 
 const toggleSelectAll = () => {
     console.log('selectAll: ', selectAll.value);
-    carts.value.forEach((item) => {
-        item.selected = selectAll.value;
-    });
-    console.log(' carts.value: ', carts.value);
+    if (selectAll.value) {
+        selectedProductIds.value = carts.value.map((item) => item.product._id);
+    } else {
+        selectedProductIds.value = [];
+    }
+    console.log(' selectedProductIds.value: ', selectedProductIds.value);
 };
 
 const updateSelectAll = () => {
-    selectAll.value = carts.value.every((item) => item.selected);
+    selectAll.value = carts.value.every((item) => selectedProductIds.value.includes(item.product._id));
 };
 
 watch(
@@ -233,8 +251,43 @@ watch(
 );
 
 const borrowBooks = async () => {
-    const formattedStartDate = formatDate(startDate.value);
-    console.log('formattedStartDate: ', formattedStartDate);
+    // Kiểm tra nếu không có sản phẩm nào được chọn
+    if (selectedProductIds._rawValue.length === 0) {
+        toast.error('Cần phải chọn sản phẩm');
+        return;
+    }
+
+    // Kiểm tra nếu thông tin cá nhân chưa đầy đủ
+    const { firstName, lastName, email, address } = currentUser.value;
+    if (!firstName || !lastName || !email || !address) {
+        toast.error('Cần nhập đầy đủ thông tin cá nhân trước khi mượn sách');
+        return;
+    }
+
+    // Xử lý ngày bắt đầu
+    let formattedStartDate = startDate.value ? formatDate(startDate.value) : formatDate(new Date());
+
+    // Chuẩn bị dữ liệu gửi tới backend
+    const orderData = {
+        startDate: formattedStartDate,
+        orderedProductIds: selectedProductIds._rawValue,
+    };
+
+    console.log('orderData: ', orderData);
+
+    try {
+        // Gửi yêu cầu POST đến backend
+        const res = await axios.post('/order/createOrder', orderData);
+        console.log('res.data: ', res.data);
+
+        // Hiển thị thông báo thành công
+        toast.success('Mượn sách thành công');
+        router.push('orderSuccess');
+    } catch (error) {
+        // Xử lý lỗi từ server
+        console.error('Error fetching borrow books: ', error.message);
+        toast.error('Mượn sách thất bại. Vui lòng thử lại sau.');
+    }
 };
 const getCart = async () => {
     try {
@@ -257,7 +310,7 @@ const increaseQuantityCart = async (productId) => {
         getCart();
     } catch (error) {
         console.error('Error fetching add to cart: ', error.message);
-        toast.success('Tăng số lượng thất bại');
+        toast.error('Tăng số lượng thất bại');
     }
 };
 const decreaseQuantityCart = async (productId) => {
