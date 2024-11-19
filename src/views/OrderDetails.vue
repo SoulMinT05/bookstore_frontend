@@ -14,14 +14,13 @@
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
-        <div class="w-full px-4 py-6 space-y-6 mt-8">
+        <div class="w-full px-4 py-6 space-y-6 mt-8" id="order-pdf">
             <Card v-if="orderDetails">
                 <CardHeader>
                     <CardTitle>Mã đơn {{ orderDetails._id }}</CardTitle>
                 </CardHeader>
             </Card>
             <Card v-if="orderDetails">
-                <!-- <CardHeader>Mã đơn {{ orderDetails._id }}</CardHeader> -->
                 <CardHeader>
                     <CardTitle>Thông tin người mượn</CardTitle>
                 </CardHeader>
@@ -71,6 +70,7 @@
                                         class="w-20 h-20 object-cover rounded"
                                         :src="product?.product?.images[0]"
                                         alt="Product Image"
+                                        crossOrigin="anonymous"
                                     />
                                 </TableCell>
                                 <TableCell class="font-medium">{{ product?.product?.name }}</TableCell>
@@ -82,7 +82,7 @@
             </Card>
             <Card class="mt-4" v-if="orderDetails">
                 <CardHeader>
-                    <CardTitle>Payment</CardTitle>
+                    <CardTitle>Tóm tắt</CardTitle>
                 </CardHeader>
                 <CardContent class="grid gap-4">
                     <div class="flex items-center">
@@ -92,19 +92,25 @@
                     <div class="flex items-center">
                         <div>Trạng thái</div>
                         <div class="ml-auto">
-                            <Badge v-if="orderDetails?.status" :class="getStatusClass(orderDetails?.status)">{{
-                                orderDetails?.status
-                            }}</Badge>
+                            <Badge
+                                v-if="orderDetails?.status"
+                                :class="`transition-none ${getStatusClass(orderDetails?.status)}`"
+                                >{{ orderDetails?.status }}</Badge
+                            >
                         </div>
                     </div>
                     <Separator />
                 </CardContent>
-                <CardFooter class="flex items-center gap-2">
-                    <Button size="sm">In PDF</Button>
+                <!-- <CardFooter class="flex items-center gap-2">
+                    <Button size="sm" @click="exportToPDF">In PDF</Button>
                     <Button variant="outline" size="sm">Huỷ đơn</Button>
-                </CardFooter>
+                </CardFooter> -->
             </Card>
         </div>
+        <CardFooter class="flex items-center gap-2">
+            <Button size="sm" @click="exportToPDF">In PDF</Button>
+            <Button variant="destructive" @click="cancelOrder" size="sm">Huỷ đơn</Button>
+        </CardFooter>
     </div>
 </template>
 
@@ -130,6 +136,8 @@ import { Button } from '@/components/ui/button';
 import { onMounted, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 
+import html2pdf from 'html2pdf.js';
+
 // Lấy route để truy cập tham số URL
 const route = useRoute();
 const orderDetails = ref({});
@@ -138,35 +146,21 @@ const orderDetails = ref({});
 const id = route.params.id;
 console.log('id: ', id);
 
-const generatePDF = () => {
-    if (!orderDetails.value) return;
+const exportToPDF = () => {
+    const element = document.getElementById('order-pdf'); // Lấy nội dung cần xuất PDF
+    if (!element) return;
 
-    const doc = new jsPDF();
+    setTimeout(() => {
+        const options = {
+            margin: 1,
+            filename: 'order-details.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+        };
 
-    doc.setFont('helvetica', 'normal');
-    doc.text(20, 20, `Mã đơn: ${orderDetails.value._id}`);
-    doc.text(20, 30, `Thông tin người mượn:`);
-    doc.text(20, 40, `Họ và tên: ${orderDetails.value?.orderBy?.firstName} ${orderDetails.value?.orderBy?.lastName}`);
-    doc.text(20, 50, `Email: ${orderDetails.value?.orderBy?.email || 'Không có'}`);
-    doc.text(20, 60, `Địa chỉ: ${orderDetails.value?.orderBy?.address || 'Không có'}`);
-    doc.text(20, 70, `Ngày bắt đầu mượn: ${formatDate(orderDetails.value?.startDate)}`);
-    doc.text(20, 80, `Ngày hết hạn mượn: ${formatDate(orderDetails.value?.endDate)}`);
-
-    let yOffset = 90;
-    doc.text(20, yOffset, `Thông tin sách mượn:`);
-    yOffset += 10;
-
-    orderDetails.value?.products.forEach((product, index) => {
-        doc.text(20, yOffset, `Sách: ${product?.product?.name}, Số lượng: ${product?.count}`);
-        yOffset += 10;
-    });
-
-    doc.text(20, yOffset, `Trạng thái: ${orderDetails.value?.status}`);
-    yOffset += 10;
-
-    doc.text(20, yOffset, `Tổng số lượng: ${orderDetails.value?.quantity}`);
-
-    doc.save('order-details.pdf');
+        html2pdf().set(options).from(element).save();
+    }, 1000);
 };
 
 const getStatusClass = (status: string): string => {
@@ -215,4 +209,8 @@ onMounted(() => {
 console.log('id from URL:', id); // Log id ra console
 </script>
 
-<style scoped></style>
+<style scoped>
+.transition-none {
+    transition: none !important;
+}
+</style>
