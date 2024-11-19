@@ -32,7 +32,7 @@
         </Card>
         <div class="mt-8 space-x-4">
             <Button asChild>
-                <router-link to="/orderDetails">Xem chi tiết đơn</router-link>
+                <router-link :to="`/orderDetails/${lastOrder._id}`">Xem chi tiết đơn</router-link>
             </Button>
             <Button asChild variant="outline">
                 <router-link to="/">Tiếp tục mượn sách</router-link>

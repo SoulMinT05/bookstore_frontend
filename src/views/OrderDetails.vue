@@ -10,6 +10,12 @@
                 </BreadcrumbItem>
                 <BreadcrumbSeparator> / </BreadcrumbSeparator>
                 <BreadcrumbItem>
+                    <BreadcrumbLink as-child>
+                        <RouterLink class="text-xl" to="/orderHistoryUser">Lịch sử đơn hàng</RouterLink>
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator> / </BreadcrumbSeparator>
+                <BreadcrumbItem>
                     <BreadcrumbPage class="text-xl">Chi tiết đơn mượn</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
@@ -141,10 +147,24 @@ import html2pdf from 'html2pdf.js';
 // Lấy route để truy cập tham số URL
 const route = useRoute();
 const orderDetails = ref({});
+const toast = useToast();
 
 // Lấy id từ URL params
 const id = route.params.id;
 console.log('id: ', id);
+
+const cancelOrder = async () => {
+    if (!window.confirm('Bạn chắc chắn huỷ đơn này không?')) return;
+    try {
+        const res = await axios.put(`/order/cancelOrderFromUser/${id}`);
+        console.log('res.data: ', res.data);
+        orderDetails.value = res.data.updatedOrder;
+        console.log('orderDetails.valueCancel : ', orderDetails.value);
+        toast.success('Huỷ đơn thành công');
+    } catch (error) {
+        console.error('Error fetching products:', error);
+    }
+};
 
 const exportToPDF = () => {
     const element = document.getElementById('order-pdf'); // Lấy nội dung cần xuất PDF
@@ -172,7 +192,7 @@ const getStatusClass = (status: string): string => {
         case 'rejected':
             return 'bg-red-100 text-red-600 hover:bg-red-100';
         case 'cancel':
-            return 'bg-gray-100 text-gray-600 hover:bg-gray-100';
+            return 'bg-black-100 text-black-600 hover:bg-black-100';
         default:
             return 'bg-gray-100 text-gray-600';
     }

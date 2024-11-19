@@ -45,7 +45,7 @@
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <router-link to="`/bookDetails/${order._id}`" class="text-blue-500 hover:underline">
+                            <router-link :to="`/orderDetails/${order._id}`" class="text-blue-500 hover:underline">
                                 Xem chi tiết
                             </router-link>
                         </CardFooter>
