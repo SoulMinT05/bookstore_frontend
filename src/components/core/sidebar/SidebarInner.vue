@@ -88,10 +88,15 @@ const toggleSidebar = () => {
                         <router-link to="/">
                             <transition name="fade">
                                 <h2 v-show="store.sidebarExpanded" class="text-2xl font-semibold flex items-center">
-                                    <span class="text-foreground"
+                                    <!-- <span class="text-foreground"
                                         ><span class="mr-2 flex items-center"><Icon name="Boxes" /></span
                                     ></span>
-                                    TamLibrary
+                                    TamLibrary -->
+                                    <img
+                                        src="../../../assets/images/book-white.png"
+                                        :style="{ width: '92px' }"
+                                        alt=""
+                                    />
                                 </h2>
                             </transition>
                         </router-link>

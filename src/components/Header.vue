@@ -35,6 +35,7 @@ const router = useRouter();
 const isLoggedIn = ref(!!localStorage.getItem('user'));
 const carts = ref([]);
 const cartCount = ref(0);
+const buttonWidth = ref(300);
 
 const toggleMode = () => {
     store.toggleTheme();
@@ -113,9 +114,14 @@ onMounted(() => {
 
 <template>
     <nav
-        class="flex items-center justify-between h-[64px] border-b-[1px] px-4 fixed z-40 top-0 bg-background/80 backdrop-blur-lg border-b border-border w-full"
+        class="flex items-center justify-between h-[64px] border-b-[1px] fixed z-40 top-0 bg-background/80 backdrop-blur-lg border-b border-border w-full"
+        :style="{ padding: '0 92px' }"
     >
-        <div class="w-24 hidden lg:block">Logo</div>
+        <div class="w-24 hidden lg:block">
+            <router-link to="/">
+                <img src="../assets/images/book-white.png" class="w-full" alt="" />
+            </router-link>
+        </div>
         <div class="w-2/5 hidden lg:block">
             <GlobalSearchPopover />
         </div>
@@ -131,13 +137,13 @@ onMounted(() => {
             <Button variant="outline" class="border-0 p-[6px] w-8 h-8">
                 <Bell />
             </Button>
-            <router-link to="/cart">
+            <router-link to="/cart" class="relative">
                 <Button variant="outline" class="border-0 p-[6px] ml-2 w-8 h-8">
                     <ShoppingCart />
                 </Button>
                 <span
                     class="absolute bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
-                    :style="{ top: '9px', right: '268px' }"
+                    :style="{ right: '-6px', top: '-8px' }"
                 >
                     {{ cartCount }}
                 </span>
