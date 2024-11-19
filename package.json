@@ -36,6 +36,8 @@
         "jspdf": "^2.5.2",
         "lucide-react": "^0.454.0",
         "lucide-vue-next": "^0.323.0",
+        "pdfjs-dist": "^4.8.69",
+        "pdfmake": "^0.2.15",
         "pinia": "^2.1.7",
         "primevue": "^4.1.0",
         "radix-vue": "^1.9.8",

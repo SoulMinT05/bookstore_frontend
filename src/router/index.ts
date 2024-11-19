@@ -168,11 +168,11 @@ const router = createRouter({
             } as RouteMeta & IRouteMeta,
         },
         {
-            path: '/viewDetailsOrder/:id',
-            name: 'viewDetailsOrder',
-            component: () => import('@/views/ViewDetailsOrder.vue'),
+            path: '/orderDetails/:id',
+            name: 'orderDetails',
+            component: () => import('@/views/OrderDetails.vue'),
             meta: {
-                title: 'ViewDetailsOrder',
+                title: 'OrderDetails',
             } as RouteMeta & IRouteMeta,
         },
         {
