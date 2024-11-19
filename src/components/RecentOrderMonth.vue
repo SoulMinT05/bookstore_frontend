@@ -71,6 +71,8 @@ const getStatusMessage = (status) => {
             return 'Chấp nhận';
         case 'rejected':
             return 'Từ chối';
+        case 'cancel':
+            return 'Huỷ đơn';
         default:
             return '';
     }
@@ -110,6 +112,7 @@ onMounted(() => {
                             'bg-blue-500 text-white': order.status === 'pending',
                             'bg-green-500 text-white': order.status === 'accepted',
                             'bg-red-500 text-white': order.status === 'rejected',
+                            'bg-gray-500 text-white': order.status === 'cancel',
                         }"
                         class="px-3 py-1 rounded-full text-sm font-medium"
                     >

@@ -153,6 +153,9 @@
                                         <SelectItem value="rejected">
                                             <span class="text-red-600">Rejected</span>
                                         </SelectItem>
+                                        <SelectItem value="cancel">
+                                            <span class="text-gray-600">Cancel</span>
+                                        </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -289,6 +292,11 @@
                             v-else-if="selectedOrder.status === 'rejected'"
                             class="bg-red-100 text-red-800 py-1 px-3 rounded-full text-xs"
                             >Rejected</Badge
+                        >
+                        <Badge
+                            v-else-if="selectedOrder.status === 'cancel'"
+                            class="bg-gray-100 text-gray-800 py-1 px-3 rounded-full text-xs"
+                            >Cancel</Badge
                         >
                     </p>
 
