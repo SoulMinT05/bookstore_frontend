@@ -1,14 +1,14 @@
 <template>
     <div class="container">
-        <h1 class="text-3xl font-bold mb-6">Quản lý người dùng</h1>
+        <h1 class="text-3xl font-bold mb-6">Quản lý độc giả</h1>
         <div class="flex justify-between items-center">
-            <button
+            <!-- <button
                 @click="showAddUserModal"
                 type="button"
                 class="cursor-pointer text-white mb-4 bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition duration-150 ease-in-out"
             >
                 Thêm người dùng
-            </button>
+            </button> -->
             <button
                 @click="exportToExcel"
                 class="cursor-pointer text-white mb-4 bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 transition duration-150 ease-in-out"
@@ -182,7 +182,7 @@
                                 >
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                <button
+                                <!-- <button
                                     @click="editUser(user)"
                                     class="cursor-pointer hover:opacity-95 w-4 mr-2 transform hover:text-yellow-500 hover:scale-110 transition-all duration-300"
                                 >
@@ -193,7 +193,7 @@
                                     class="cursor-pointer hover:opacity-95 w-4 mr-2 transform hover:text-red-500 hover:scale-110 transition-all duration-300"
                                 >
                                     <i class="fas fa-trash-alt"></i>
-                                </button>
+                                </button> -->
                             </div>
                         </td>
                     </tr>
@@ -763,13 +763,13 @@ export default {
         async fetchUsers() {
             this.isLoading = true;
             try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const userToken = user.accessToken;
+                const staff = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staff.accessToken;
                 const res = await fetch('http://localhost:3001/api/user/getAllUsers', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                 });
                 const data = await res.json();
@@ -810,13 +810,13 @@ export default {
         },
         async addUser() {
             try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const userToken = user.accessToken;
+                const staff = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staff.accessToken;
                 const res = await fetch('http://localhost:3001/api/user/createUserFromAdmin', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                     body: JSON.stringify(this.newUser),
                 });
@@ -852,8 +852,8 @@ export default {
         },
         async saveEditedUser() {
             try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const userToken = user.accessToken;
+                const staff = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staff.accessToken;
 
                 // Lấy userId từ userToEdit
                 const userId = this.userToEdit._id;
@@ -861,7 +861,7 @@ export default {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                     body: JSON.stringify(this.userToEdit),
                 });
@@ -899,14 +899,14 @@ export default {
         async deleteUser(user) {
             if (!confirm('Bạn chắc chắn xoá người dùng này không?')) return;
             try {
-                const userLocalStorage = JSON.parse(localStorage.getItem('user'));
-                const userToken = userLocalStorage.accessToken;
+                const staffLocalStorage = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staffLocalStorage.accessToken;
 
                 const res = await fetch(`http://localhost:3001/api/user/${user._id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                 });
 
@@ -931,14 +931,14 @@ export default {
 
         async toggleLockUser(user) {
             try {
-                const userLocalStorage = JSON.parse(localStorage.getItem('user'));
-                const userToken = userLocalStorage.accessToken;
+                const staffLocalStorage = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staffLocalStorage.accessToken;
 
                 const res = await fetch(`http://localhost:3001/api/user/locked/${user._id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                 });
 
@@ -971,11 +971,11 @@ export default {
 
     mounted() {
         this.fetchUsers();
-        const userLocalStorage = JSON.parse(localStorage.getItem('user'));
-        console.log('userLocalStorage: ', userLocalStorage);
-        // const currentUserRole = userLocalStorage.userData.role;
+        const staffLocalStorage = JSON.parse(localStorage.getItem('staff'));
+        console.log('staffLocalStorage: ', staffLocalStorage);
+        // const currentUserRole = staffLocalStorage.userData.role;
         const currentUserRole =
-            userLocalStorage && userLocalStorage.userData ? userLocalStorage.userData.role : 'staff';
+            staffLocalStorage && staffLocalStorage.userData ? staffLocalStorage.userData.role : 'staff';
         console.log('currentUserRole: ', currentUserRole);
         this.currentRole = currentUserRole;
     },
