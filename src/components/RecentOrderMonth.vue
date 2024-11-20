@@ -21,14 +21,14 @@ const statistics = ref({
 
 const fetchData = async () => {
     try {
-        const user = JSON.parse(localStorage.getItem('user') || '{}'); // Xử lý khi không có user
-        const userToken = user.accessToken;
+        const staff = JSON.parse(localStorage.getItem('staff'));
+        const staffToken = staff.accessToken;
 
         const res = await fetch('http://localhost:3001/api/statistic/month', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${staffToken}`,
             },
         });
 

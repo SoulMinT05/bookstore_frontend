@@ -728,13 +728,13 @@ export default {
         async fetchPublishers() {
             this.isLoading = true;
             try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const userToken = user.accessToken;
+                const staff = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staff.accessToken;
                 const res = await fetch('http://localhost:3001/api/publisher/getAllPublishers', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                 });
                 const data = await res.json();
@@ -829,8 +829,8 @@ export default {
         async addProduct() {
             this.loading = true;
             try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const userToken = user.accessToken;
+                const staff = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staff.accessToken;
 
                 this.isUploading = true;
 
@@ -850,7 +850,7 @@ export default {
                 const res = await fetch('http://localhost:3001/api/book/createProduct', {
                     method: 'POST',
                     headers: {
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                     body: formData,
                 });
@@ -911,8 +911,8 @@ export default {
         async saveEditedProduct() {
             this.loading = true;
             try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const userToken = user.accessToken;
+                const staff = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staff.accessToken;
 
                 // Lấy productId từ productToEdit
                 const productId = this.productToEdit._id;
@@ -939,7 +939,7 @@ export default {
                 const res = await fetch(`http://localhost:3001/api/book/${productId}`, {
                     method: 'PUT',
                     headers: {
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                     body: formData, // Gửi FormData
                 });
@@ -981,14 +981,14 @@ export default {
         async deleteProduct(product) {
             if (!confirm('Bạn chắc chắn xoá sách này không?')) return;
             try {
-                const userLocalStorage = JSON.parse(localStorage.getItem('user'));
-                const userToken = userLocalStorage.accessToken;
+                const staff = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staff.accessToken;
 
                 const res = await fetch(`http://localhost:3001/api/book/${product._id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                 });
 

@@ -553,13 +553,13 @@ function exportToExcel() {
 async function fetchOrders() {
     isLoading.value = true;
     try {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const userToken = user.accessToken;
+        const staff = JSON.parse(localStorage.getItem('staff'));
+        const staffToken = staff.accessToken;
         const res = await fetch('http://localhost:3001/api/order/getAllOrders', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${staffToken}`,
             },
         });
         const data = await res.json();
@@ -580,13 +580,13 @@ async function fetchOrders() {
 
 async function updateOrderStatus(orderId, newStatus) {
     try {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const userToken = user.accessToken;
+        const staff = JSON.parse(localStorage.getItem('staff'));
+        const staffToken = staff.accessToken;
         const res = await fetch(`http://localhost:3001/api/order/updateStatus/${orderId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${staffToken}`,
             },
             body: JSON.stringify({ status: newStatus }),
         });
@@ -615,13 +615,13 @@ function closeModal() {
 async function deleteOrder(order) {
     if (!confirm('Bạn chắc chắn xoá đơn hàng này không?')) return;
     try {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const userToken = user.accessToken;
+        const staff = JSON.parse(localStorage.getItem('staff'));
+        const staffToken = staff.accessToken;
         const res = await fetch(`http://localhost:3001/api/order/${order._id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${staffToken}`,
             },
         });
         const data = await res.json();

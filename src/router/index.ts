@@ -27,6 +27,16 @@ const router = createRouter({
             // IRouteMeta: có thuộc tính title --> quản lý dễ dàng
         },
         {
+            path: '/loginAdmin',
+            name: 'loginAdmin',
+            component: () => import('@/views/LoginAdmin.vue'),
+            meta: {
+                title: 'LoginAdmin',
+            } as RouteMeta & IRouteMeta,
+            // RouteMeta: mô tả cấu trúc của meta mặc định trong Vue Router
+            // IRouteMeta: có thuộc tính title --> quản lý dễ dàng
+        },
+        {
             path: '/register',
             name: 'register',
             component: () => import('@/views/Register.vue'),
@@ -195,16 +205,19 @@ router.beforeEach((to, from, next) => {
     // const userData = user?.userData;
     const user = localStorage.getItem('user');
     const userData = user ? JSON.parse(user)?.userData : null;
-    if (to.path === '/login' && (userData?.role === 'admin' || userData?.role === 'staff')) {
+    const staff = localStorage.getItem('staff');
+    const staffData = staff ? JSON.parse(staff)?.staffData : null;
+
+    if (to.path === '/loginAdmin' && (staffData?.role === 'admin' || staffData?.role === 'staff')) {
         return next('/admin'); // Điều hướng tới /admin nếu role là admin hoặc staff
     }
 
-    if (to.path.startsWith('/admin') && userData?.role !== 'admin' && userData?.role !== 'staff') {
+    if (to.path.startsWith('/admin') && userData?.role === 'user') {
         return next({ path: '/' });
     }
-    if (!userData && to.path !== '/login') {
-        return next('/login'); // Điều hướng về trang login nếu người dùng chưa đăng nhập
-    }
+    // if (!userData && to.path !== '/login') {
+    //     return next('/login'); // Điều hướng về trang login nếu người dùng chưa đăng nhập
+    // }
 
     if (userData?.role === 'user' && to.path.startsWith('/admin')) {
         return next('/'); // Điều hướng về trang chủ nếu user cố gắng vào các route không phải /admin

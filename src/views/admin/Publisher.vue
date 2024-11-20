@@ -422,13 +422,13 @@ export default {
         async fetchPublishers() {
             this.isLoading = true;
             try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const userToken = user.accessToken;
+                const staff = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staff.accessToken;
                 const res = await fetch('http://localhost:3001/api/publisher/getAllPublishers', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                 });
                 const data = await res.json();
@@ -462,13 +462,13 @@ export default {
         },
         async addPublisher() {
             try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const userToken = user.accessToken;
+                const staff = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staff.accessToken;
                 const res = await fetch('http://localhost:3001/api/publisher/createPublisher', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                     body: JSON.stringify(this.newPublisher),
                 });
@@ -500,8 +500,8 @@ export default {
         },
         async saveEditedPublisher() {
             try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const userToken = user.accessToken;
+                const staff = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staff.accessToken;
 
                 // Lấy publisherId từ publisherToEdit
                 const publisherId = this.publisherToEdit._id;
@@ -509,7 +509,7 @@ export default {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                     body: JSON.stringify(this.publisherToEdit),
                 });
@@ -545,14 +545,14 @@ export default {
         async deletePublisher(publisher) {
             if (!confirm('Bạn chắc chắn xoá nhà xuất bản này không?')) return;
             try {
-                const userLocalStorage = JSON.parse(localStorage.getItem('user'));
-                const userToken = userLocalStorage.accessToken;
+                const staff = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staff.accessToken;
 
                 const res = await fetch(`http://localhost:3001/api/publisher/${publisher._id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                 });
 

@@ -7,13 +7,13 @@ const dataOrders = ref<Data[]>([]);
 
 const fetchData = async () => {
     try {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const userToken = user.accessToken;
+        const staff = JSON.parse(localStorage.getItem('staff'));
+        const staffToken = staff.accessToken;
         const res = await fetch('http://localhost:3001/api/statistic/year', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${staffToken}`,
             },
         });
         const data = await res.json();
