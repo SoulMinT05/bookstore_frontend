@@ -25,9 +25,15 @@ export const APP_MENU: Record<string, { name: string; routes: IDashboardMenus[] 
         routes: [
             {
                 path: 'user',
-                title: 'Người dùng',
+                title: 'Độc giả',
                 icon: 'User',
                 description: 'Manage User',
+            },
+            {
+                path: 'staff',
+                title: 'Nhân viên',
+                icon: 'UserRoundCheck',
+                description: 'Manage Staff',
             },
             {
                 path: 'book',
