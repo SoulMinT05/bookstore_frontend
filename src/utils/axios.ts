@@ -13,8 +13,13 @@ instance.interceptors.request.use(
     (config) => {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         const userToken = user?.accessToken;
+        const staff = JSON.parse(localStorage.getItem('staff') || '{}');
+        const staffToken = staff?.accessToken;
         if (userToken) {
-            config.headers.Authorization = `Bearer ${userToken}`;
+            config.headers.Authorization = `Bearer ${userToken} || ''`;
+        }
+        if (staffToken) {
+            config.headers.Authorization = `Bearer ${staffToken} || ''`;
         }
         return config;
     },

@@ -84,20 +84,20 @@ export default {
             }
         },
         async changePassword() {
-            const userPassword = {
+            const staffPassword = {
                 currentPassword: this.currentPassword,
                 newPassword: this.newPassword,
             };
             try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const userToken = user.accessToken;
-                const res = await fetch('http://localhost:3001/api/user/changePassword', {
+                const staff = JSON.parse(localStorage.getItem('staff'));
+                const staffToken = staff.accessToken;
+                const res = await fetch('http://localhost:3001/api/staff/changePassword', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
-                    body: JSON.stringify(userPassword),
+                    body: JSON.stringify(staffPassword),
                 });
                 const data = await res.json();
                 console.log('dataPassword: ', data);

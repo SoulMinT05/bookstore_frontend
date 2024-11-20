@@ -16,21 +16,23 @@ import { LogOut, User, Bell, Sun, MoonStar, Menu, KeyRound, UsersRound } from 'l
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/stores/app';
 import { useToast } from 'vue-toastification';
+import { useRouter } from 'vue-router';
 
 const store = useAppStore();
-
+const router = useRouter();
 const toggleMode = () => {
     store.toggleTheme();
 };
 const getName = computed(() => {
     try {
-        const user = localStorage.getItem('user');
-        console.log('userLocalstoraege: ', user);
-        if (!user) {
+        const staff = localStorage.getItem('staff');
+        console.log('userLocalstoraege: ', staff);
+        if (!staff) {
             return 'Người dùng không tồn tại'; // Không có thông tin người dùng trong localStorage
         }
-        const userObj = JSON.parse(user); // Chuyển đổi chuỗi JSON thành đối tượng
-        return userObj.userData.firstName + userObj.userData.lastName; // Trả về tên người dùng
+        const staffObj = JSON.parse(staff); // Chuyển đổi chuỗi JSON thành đối tượng
+        console.log('staffObj: ', staffObj);
+        return staffObj.userData.firstName + staffObj.userData.lastName; // Trả về tên người dùng
     } catch (error) {
         console.error('Lỗi khi lấy dữ liệu người dùng từ localStorage:', error);
         return 'Người dùng không tồn tại'; // Trả về giá trị mặc định khi có lỗi
@@ -38,13 +40,13 @@ const getName = computed(() => {
 });
 const getEmail = computed(() => {
     try {
-        const user = localStorage.getItem('user');
-        console.log('userLocalstoraege: ', user);
-        if (!user) {
+        const staff = localStorage.getItem('staff');
+        console.log('staffLocalstoraege: ', staff);
+        if (!staff) {
             return 'Người dùng không tồn tại'; // Không có thông tin người dùng trong localStorage
         }
-        const userObj = JSON.parse(user); // Chuyển đổi chuỗi JSON thành đối tượng
-        return userObj.userData.email; // Trả về tên người dùng
+        const staffObj = JSON.parse(staff); // Chuyển đổi chuỗi JSON thành đối tượng
+        return staffObj.userData.email; // Trả về tên người dùng
     } catch (error) {
         console.error('Lỗi khi lấy dữ liệu người dùng từ localStorage:', error);
         return 'Người dùng không tồn tại'; // Trả về giá trị mặc định khi có lỗi
@@ -52,14 +54,14 @@ const getEmail = computed(() => {
 });
 const handleLogout = async () => {
     const toast = useToast();
-    const user = JSON.parse(localStorage.getItem('user'));
-    const userToken = user.accessToken;
+    const staff = JSON.parse(localStorage.getItem('staff'));
+    const staffToken = staff.accessToken;
     try {
-        const res = await fetch('http://localhost:3001/api/user/logout', {
+        const res = await fetch('http://localhost:3001/api/staff/logout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${staffToken}`,
             },
         });
         const data = await res.json();
@@ -68,9 +70,9 @@ const handleLogout = async () => {
             toast.error('Đăng xuất thất bại');
             return;
         }
-        localStorage.removeItem('user');
+        localStorage.removeItem('staff');
         toast.success('Đăng xuất thành công');
-        router.push('/login');
+        router.push('/loginAdmin');
     } catch (error) {
         toast.error('Đăng xuất thất bại');
         return;

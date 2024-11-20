@@ -33,14 +33,14 @@ const handleNavigate = (path: string) => {
 
 const handleLogout = async () => {
     const toast = useToast();
-    const user = JSON.parse(localStorage.getItem('user'));
-    const userToken = user.accessToken;
+    const staff = JSON.parse(localStorage.getItem('staff'));
+    const staffToken = staff.accessToken;
     try {
-        const res = await fetch('http://localhost:3001/api/user/logout', {
+        const res = await fetch('http://localhost:3001/api/staff/logout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${staffToken}`,
             },
         });
         const data = await res.json();
@@ -51,7 +51,7 @@ const handleLogout = async () => {
         }
         localStorage.removeItem('user');
         toast.success('Đăng xuất thành công');
-        router.push('/login');
+        router.push('/loginAdmin');
     } catch (error) {
         toast.error('Đăng xuất thất bại');
         return;
@@ -94,7 +94,7 @@ const toggleSidebar = () => {
                                     TamLibrary -->
                                     <img
                                         src="../../../assets/images/book-white.png"
-                                        :style="{ width: '92px' }"
+                                        :style="{ width: '60px' }"
                                         alt=""
                                     />
                                 </h2>

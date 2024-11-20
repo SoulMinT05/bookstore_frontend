@@ -123,8 +123,8 @@ export default {
         };
     },
     methods: {
-        fetchUser() {
-            const user = JSON.parse(localStorage.getItem('user'));
+        fetchStaff() {
+            const user = JSON.parse(localStorage.getItem('staff'));
             console.log('user.userData: ', user.userData);
             if (user && user.userData) {
                 this.userToEdit.firstName = user.userData.firstName || '';
@@ -157,14 +157,14 @@ export default {
 
         async updateInfo() {
             const updatedUserData = this.userToEdit;
-            const user = JSON.parse(localStorage.getItem('user'));
-            const userToken = user.accessToken;
+            const staff = JSON.parse(localStorage.getItem('staff'));
+            const staffToken = staff.accessToken;
             try {
-                const res = await fetch('http://localhost:3001/api/user/updateInfoFromUser', {
+                const res = await fetch('http://localhost:3001/api/staff/updateInfoFromUser', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${staffToken}`,
                     },
                     body: JSON.stringify(updatedUserData),
                 });
@@ -176,13 +176,13 @@ export default {
                     return;
                 }
                 const updatedUser = {
-                    ...user,
+                    ...staff,
                     userData: {
-                        ...user.userData,
+                        ...staff.userData,
                         ...updatedUserData,
                     },
                 };
-                localStorage.setItem('user', JSON.stringify(updatedUser));
+                localStorage.setItem('staff', JSON.stringify(updatedUser));
                 toast.success('Cập nhật thông tin thành công!');
             } catch (error) {
                 console.error('Lỗi khi cập nhật thông tin:', error);
@@ -192,7 +192,7 @@ export default {
         },
     },
     mounted() {
-        this.fetchUser();
+        this.fetchStaff();
     },
 };
 </script>
