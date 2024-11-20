@@ -1,7 +1,7 @@
 <template>
     <section class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center">
         <div class="w-full max-w-md p-6 bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <h1 class="text-xl font-bold text-gray-900 md:text-2xl dark:text-white text-center">Login</h1>
+            <h1 class="text-xl font-bold text-gray-900 md:text-2xl dark:text-white text-center">Đăng nhập</h1>
             <form class="mt-6 space-y-6" @submit.prevent="onLogin">
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-900 dark:text-white"> Email </label>
@@ -50,12 +50,12 @@
                     type="submit"
                     class="w-full py-2.5 text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
-                    Sign in
+                    Đăng nhập
                 </button>
                 <p class="text-sm text-center text-gray-500 dark:text-gray-400">
-                    Don’t have an account yet?
+                    Chưa có tài khoản?
                     <router-link to="/register" class="font-medium text-blue-600 hover:underline dark:text-blue-500">
-                        Sign up here
+                        Đăng ký
                     </router-link>
                 </p>
             </form>

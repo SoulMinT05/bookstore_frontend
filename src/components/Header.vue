@@ -90,11 +90,6 @@ const handleLogout = async () => {
     }
 };
 
-const navigateToLogin = () => {
-    router.push('/login'); // Điều hướng đến trang đăng nhập
-    console.log('login');
-};
-
 const getCart = async () => {
     try {
         const res = await axios.get('/user/getCart');

@@ -88,7 +88,7 @@ const fetchProductsByPublisher = async () => {
         productsByPublisher.value = res.data.products;
         console.log('productsByPublisher.value: ', productsByPublisher.value);
     } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching home:', error);
     }
 };
 
@@ -105,7 +105,7 @@ const fetchProductsByAllPublishers = async () => {
         productsByPublisher.value = allProducts.flat();
         console.log('All products by all publishers: ', productsByPublisher.value);
     } catch (error) {
-        console.error('Error fetching products:', error.response ? error.response.data : error.message);
+        console.error('Error fetching publisher:', error.response ? error.response.data : error.message);
         if (error.response) {
             console.log('Error status:', error.response.status);
             console.log('Error data:', error.response.data);

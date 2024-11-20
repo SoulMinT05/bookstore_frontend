@@ -49,7 +49,7 @@ const handleLogout = async () => {
             toast.error('Đăng xuất thất bại');
             return;
         }
-        localStorage.removeItem('user');
+        localStorage.removeItem('staff');
         toast.success('Đăng xuất thành công');
         router.push('/loginAdmin');
     } catch (error) {

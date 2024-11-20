@@ -12,19 +12,10 @@ const instance = axios.create({
 instance.interceptors.request.use(
     (config) => {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
+        console.log('user: ', user);
         const userToken = user?.accessToken;
-        const staff = JSON.parse(localStorage.getItem('staff') || '{}');
-        const staffToken = staff?.accessToken;
-        // if (userToken) {
-        //     config.headers.Authorization = `Bearer ${userToken} || ''`;
-        // }
-        // if (staffToken) {
-        //     config.headers.Authorization = `Bearer ${staffToken} || ''`;
-        // }
-        const token = staffToken || userToken;
-
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+        if (userToken) {
+            config.headers.Authorization = `Bearer ${userToken} || ''`;
         }
         return config;
     },

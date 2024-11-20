@@ -239,6 +239,13 @@ const fetchProductSimilarPublisher = async () => {
 };
 
 const addToCart = async () => {
+    // const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    // if (!user) {
+    //     toast.warning('Ban cần đăng nhập');
+    //     return router.push('/login');
+    // }
+
     try {
         const res = await axios.post('/user/addToCart', {
             productId: bookDetails.value,
