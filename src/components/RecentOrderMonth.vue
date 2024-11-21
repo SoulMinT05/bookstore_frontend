@@ -63,8 +63,8 @@ const fetchData = async () => {
     }
 };
 
-const getStatusMessage = (status) => {
-    switch (status) {
+const getStatusMessage = (TinhTrang) => {
+    switch (TinhTrang) {
         case 'pending':
             return 'Đang xử lý';
         case 'accepted':
@@ -95,28 +95,28 @@ onMounted(() => {
                 class="flex items-center mt-4"
             >
                 <Avatar class="h-9 w-9">
-                    <AvatarImage :src="order.orderBy.avatarUrl || '/avatars/default.png'" alt="Avatar" />
+                    <AvatarImage :src="order.MaDocGia.avatarUrl || '/avatars/default.png'" alt="Avatar" />
                     <AvatarFallback>
-                        {{ order.orderBy.Ho.charAt(0) || '' }}{{ order.orderBy.Ten.charAt(0) || '' }}
+                        {{ order.MaDocGia.Ho.charAt(0) || '' }}{{ order.MaDocGia.Ten.charAt(0) || '' }}
                     </AvatarFallback>
                 </Avatar>
                 <div class="ml-4 space-y-1">
                     <p class="text-sm font-medium leading-none">
-                        {{ order.orderBy.Ho || '' }} {{ order.orderBy.Ten || '' }}
+                        {{ order.MaDocGia.Ho || '' }} {{ order.MaDocGia.Ten || '' }}
                     </p>
-                    <p class="text-sm text-muted-foreground">{{ order.orderBy.email || '' }}</p>
+                    <p class="text-sm text-muted-foreground">{{ order.MaDocGia.email || '' }}</p>
                 </div>
                 <div class="ml-auto">
                     <span
                         :class="{
-                            'bg-blue-500 text-white': order.status === 'pending',
-                            'bg-green-500 text-white': order.status === 'accepted',
-                            'bg-red-500 text-white': order.status === 'rejected',
-                            'bg-gray-500 text-white': order.status === 'cancel',
+                            'bg-blue-500 text-white': order.TinhTrang === 'pending',
+                            'bg-green-500 text-white': order.TinhTrang === 'accepted',
+                            'bg-red-500 text-white': order.TinhTrang === 'rejected',
+                            'bg-gray-500 text-white': order.TinhTrang === 'cancel',
                         }"
                         class="px-3 py-1 rounded-full text-sm font-medium"
                     >
-                        {{ getStatusMessage(order.status) || '' }}
+                        {{ getStatusMessage(order.TinhTrang) || '' }}
                     </span>
                 </div>
             </div>

@@ -28,11 +28,11 @@
                         <CardContent>
                             <div class="flex items-center justify-between">
                                 <span class="font-medium">Ngày bắt đầu mượn </span>
-                                <span>{{ formatDate(order.startDate) }}</span>
+                                <span>{{ formatDate(order.NgayMuon) }}</span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="font-medium">Ngày hết hạn mượn </span>
-                                <span>{{ formatDate(order.endDate) }}</span>
+                                <span>{{ formatDate(order.NgayTra) }}</span>
                             </div>
 
                             <div class="flex items-center justify-between">
@@ -41,7 +41,7 @@
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="font-medium">Tình trạng </span>
-                                <Badge :class="getStatusClass(order.status)">{{ order.status }}</Badge>
+                                <Badge :class="getStatusClass(order.TinhTrang)">{{ order.TinhTrang }}</Badge>
                             </div>
                         </CardContent>
                         <CardFooter>
@@ -76,15 +76,15 @@ import { Badge } from '@/components/ui/badge';
 const orders = ref([]);
 
 const statusClass = computed(() => {
-    const status = order.value.status;
-    if (status === 'pending') return 'bg-blue-500 hover:bg-blue-500'; // Màu xanh dương, không thay đổi khi hover
-    if (status === 'accepted') return 'bg-green-500 hover:bg-green-500'; // Màu xanh lá, không thay đổi khi hover
-    if (status === 'rejected') return 'bg-red-500 hover:bg-red-500'; // Màu đỏ, không thay đổi khi hover
+    const TinhTrang = order.value.TinhTrang;
+    if (TinhTrang === 'pending') return 'bg-blue-500 hover:bg-blue-500'; // Màu xanh dương, không thay đổi khi hover
+    if (TinhTrang === 'accepted') return 'bg-green-500 hover:bg-green-500'; // Màu xanh lá, không thay đổi khi hover
+    if (TinhTrang === 'rejected') return 'bg-red-500 hover:bg-red-500'; // Màu đỏ, không thay đổi khi hover
     return 'bg-gray-500 hover:bg-gray-500'; // Màu mặc định, không thay đổi khi hover
 });
 
-const getStatusClass = (status: string): string => {
-    switch (status.toLowerCase()) {
+const getStatusClass = (TinhTrang: string): string => {
+    switch (TinhTrang.toLowerCase()) {
         case 'pending':
             return 'bg-blue-100 text-blue-600 hover:bg-blue-100';
         case 'accepted':

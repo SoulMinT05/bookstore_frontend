@@ -134,12 +134,11 @@
                             <Popover v-model:open="isPopoverOpen">
                                 <PopoverTrigger as-child>
                                     <Button variant="outline" class="w-full justify-start text-left font-normal">
-                                        <!-- {{ startDate ? formatDate(startDate) : 'Chọn ngày bắt đầu' }} -->
-                                        {{ formatDate(startDate || new Date()) }}
+                                        {{ formatDate(NgayMuon || new Date()) }}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent class="w-full p-2">
-                                    <Calendar v-model="startDate" placeholder="Chọn ngày bắt đầu" />
+                                    <Calendar v-model="NgayMuon" placeholder="Chọn ngày bắt đầu" />
                                 </PopoverContent>
                             </Popover>
 
@@ -221,7 +220,7 @@ const formatDate = (date: Date | string | null) => {
 const selectAll = ref(false);
 const currentUser = ref({});
 const carts = ref([]);
-const startDate = ref(null);
+const NgayMuon = ref(null);
 const isPopoverOpen = ref(false);
 const selectedProductIds = ref([]);
 
@@ -262,11 +261,11 @@ const borrowBooks = async () => {
     }
 
     // Xử lý ngày bắt đầu
-    let formattedStartDate = startDate.value ? formatDate(startDate.value) : formatDate(new Date());
+    let formattedNgayMuon = NgayMuon.value ? formatDate(NgayMuon.value) : formatDate(new Date());
 
     // Chuẩn bị dữ liệu gửi tới backend
     const orderData = {
-        startDate: formattedStartDate,
+        NgayMuon: formattedNgayMuon,
         orderedProductIds: selectedProductIds._rawValue,
     };
 

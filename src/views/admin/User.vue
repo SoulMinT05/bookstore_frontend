@@ -343,7 +343,7 @@
                     <p><strong>Phai:</strong> {{ selectedUser.Phai }}</p>
                     <p><strong>Phone number:</strong> {{ selectedUser.DienThoai }}</p>
                     <p>
-                        <strong>Status:</strong>
+                        <strong>Tinh Trang:</strong>
                         <span
                             :class="[
                                 selectedUser.isLocked

@@ -35,20 +35,22 @@
                         <div class="grid gap-1">
                             <div>
                                 Họ và tên:
-                                {{ orderDetails?.orderBy?.Ho + ' ' + orderDetails?.orderBy?.Ten }}
+                                {{ orderDetails?.MaDocGia?.Ho + ' ' + orderDetails?.MaDocGia?.Ten }}
                             </div>
                         </div>
-                        <div class="grid gap-1" v-if="orderDetails?.startDate">
-                            <div>Ngày bắt đầu mượn: {{ formatDate(orderDetails?.startDate) }}</div>
+                        <div class="grid gap-1" v-if="orderDetails?.NgayMuon">
+                            <div>Ngày bắt đầu mượn: {{ formatDate(orderDetails?.NgayMuon) }}</div>
                         </div>
                     </div>
                     <div class="grid gap-2 md:grid-cols-2">
                         <div class="grid gap-1">
-                            <div v-if="orderDetails?.orderBy?.email">Email: {{ orderDetails?.orderBy?.email }}</div>
-                            <div v-if="orderDetails?.orderBy?.DiaChi">Địa chỉ: {{ orderDetails?.orderBy?.DiaChi }}</div>
+                            <div v-if="orderDetails?.MaDocGia?.email">Email: {{ orderDetails?.MaDocGia?.email }}</div>
+                            <div v-if="orderDetails?.MaDocGia?.DiaChi">
+                                Địa chỉ: {{ orderDetails?.MaDocGia?.DiaChi }}
+                            </div>
                         </div>
-                        <div class="grid gap-1" v-if="orderDetails?.endDate">
-                            <div>Ngày hết hạn mượn: {{ formatDate(orderDetails?.endDate) }}</div>
+                        <div class="grid gap-1" v-if="orderDetails?.NgayTra">
+                            <div>Ngày hết hạn mượn: {{ formatDate(orderDetails?.NgayTra) }}</div>
                         </div>
                     </div>
                 </CardContent>
@@ -68,7 +70,7 @@
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            <TableRow v-for="(product, index) in orderDetails?.products" :key="index">
+                            <TableRow v-for="(product, index) in orderDetails?.MaSach" :key="index">
                                 <TableCell>
                                     <img
                                         class="w-20 h-20 object-cover rounded"
@@ -97,9 +99,9 @@
                         <div>Trạng thái</div>
                         <div class="ml-auto">
                             <Badge
-                                v-if="orderDetails?.status"
-                                :class="`transition-none ${getStatusClass(orderDetails?.status)}`"
-                                >{{ orderDetails?.status }}</Badge
+                                v-if="orderDetails?.TinhTrang"
+                                :class="`transition-none ${getStatusClass(orderDetails?.TinhTrang)}`"
+                                >{{ orderDetails?.TinhTrang }}</Badge
                             >
                         </div>
                     </div>
@@ -181,8 +183,8 @@ const exportToPDF = () => {
     }, 1000);
 };
 
-const getStatusClass = (status: string): string => {
-    switch (status.toLowerCase()) {
+const getStatusClass = (TinhTrang: string): string => {
+    switch (TinhTrang.toLowerCase()) {
         case 'pending':
             return 'bg-blue-100 text-blue-600 hover:bg-blue-100';
         case 'accepted':

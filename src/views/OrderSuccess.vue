@@ -14,11 +14,11 @@
                 </div>
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Ngày mượn</span>
-                    <span>{{ formatDate(lastOrder.startDate) }}</span>
+                    <span>{{ formatDate(lastOrder.NgayMuon) }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Ngày hết hạn</span>
-                    <span>{{ formatDate(lastOrder.endDate) }}</span>
+                    <span>{{ formatDate(lastOrder.NgayTra) }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Số lượng</span>
@@ -26,7 +26,7 @@
                 </div>
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Trạng thái</span>
-                    <Badge disabled :class="statusClass">{{ lastOrder.status }}</Badge>
+                    <Badge disabled :class="statusClass">{{ lastOrder.TinhTrang }}</Badge>
                 </div>
             </CardContent>
         </Card>
@@ -54,10 +54,10 @@ const orders = ref([]);
 const lastOrder = ref({});
 
 const statusClass = computed(() => {
-    const status = lastOrder.value.status;
-    if (status === 'pending') return 'bg-blue-500 hover:bg-blue-500'; // Màu xanh dương, không thay đổi khi hover
-    if (status === 'accepted') return 'bg-green-500 hover:bg-green-500'; // Màu xanh lá, không thay đổi khi hover
-    if (status === 'rejected') return 'bg-red-500 hover:bg-red-500'; // Màu đỏ, không thay đổi khi hover
+    const TinhTrang = lastOrder.value.TinhTrang;
+    if (TinhTrang === 'pending') return 'bg-blue-500 hover:bg-blue-500'; // Màu xanh dương, không thay đổi khi hover
+    if (TinhTrang === 'accepted') return 'bg-green-500 hover:bg-green-500'; // Màu xanh lá, không thay đổi khi hover
+    if (TinhTrang === 'rejected') return 'bg-red-500 hover:bg-red-500'; // Màu đỏ, không thay đổi khi hover
     return 'bg-gray-500 hover:bg-gray-500'; // Màu mặc định, không thay đổi khi hover
 });
 const formatDate = (date: Date | string | null) => {

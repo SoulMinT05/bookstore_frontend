@@ -63,39 +63,39 @@
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('status')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('TinhTrang')">
                             Tình trạng
-                            <span v-if="currentSort !== 'status'" class="ml-2">
+                            <span v-if="currentSort !== 'TinhTrang'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'status' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'TinhTrang' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'status' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'TinhTrang' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('startDate')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('NgayMuon')">
                             Ngày mượn
-                            <span v-if="currentSort !== 'startDate'" class="ml-2">
+                            <span v-if="currentSort !== 'NgayMuon'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'startDate' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'NgayMuon' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'startDate' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'NgayMuon' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('endDate')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('NgayTra')">
                             Ngày hết hạn
-                            <span v-if="currentSort !== 'endDate'" class="ml-2">
+                            <span v-if="currentSort !== 'NgayTra'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'endDate' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'NgayTra' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'endDate' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'NgayTra' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
@@ -122,17 +122,17 @@
                         class="border-b border-gray-200 hover:bg-gray-100"
                     >
                         <td class="py-4 px-6 text-left">
-                            <span class="font-medium">{{ order?.orderBy?.Ho }}</span>
+                            <span class="font-medium">{{ order?.MaDocGia?.Ho }}</span>
                         </td>
                         <td class="py-4 px-6 text-left">
-                            <span class="font-medium">{{ order?.orderBy?.Ten }}</span>
+                            <span class="font-medium">{{ order?.MaDocGia?.Ten }}</span>
                         </td>
                         <td class="py-4 px-6 text-center">
                             <span>{{ order?.SoQuyen }}</span>
                         </td>
                         <td class="py-4 px-6 text-center">
                             <Select
-                                v-model="order.status"
+                                v-model="order.TinhTrang"
                                 @update:modelValue="(newStatus) => updateOrderStatus(order._id, newStatus)"
                                 class="w-full"
                             >
@@ -161,10 +161,10 @@
                             </Select>
                         </td>
                         <td class="py-4 px-6 text-center">
-                            <span>{{ formatDate(order?.startDate) }}</span>
+                            <span>{{ formatDate(order?.NgayMuon) }}</span>
                         </td>
                         <td class="py-4 px-6 text-center">
-                            <span>{{ formatDate(order?.endDate) }}</span>
+                            <span>{{ formatDate(order?.NgayTra) }}</span>
                         </td>
                         <td class="py-4 px-6 text-center">
                             <span>{{ formatDate(order?.createdAt) }}</span>
@@ -204,7 +204,7 @@
                     <div class="mb-4">
                         <label for="name" class="block text-sm font-medium text-gray-700">Id</label>
                         <input
-                            v-model="newOrder.orderBy"
+                            v-model="newOrder.MaDocGia"
                             type="text"
                             id="name"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
@@ -232,11 +232,11 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                        <label for="TinhTrang" class="block text-sm font-medium text-gray-700">TinhTrang</label>
                         <input
-                            v-model="newOrder.status"
+                            v-model="newOrder.TinhTrang"
                             type="text"
-                            id="status"
+                            id="TinhTrang"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
@@ -269,39 +269,38 @@
             <div @click.stop class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-1/3">
                 <h2 class="text-xl font-bold text-center mb-4">Thông tin đơn hàng</h2>
                 <div class="space-y-2">
-                    <p><strong>Họ: </strong> {{ selectedOrder.orderBy?.Ho }}</p>
-                    <p><strong>Tên: </strong> {{ selectedOrder.orderBy?.Ten }}</p>
-                    <p><strong>Email: </strong> {{ selectedOrder?.orderBy?.email }}</p>
+                    <p><strong>Họ: </strong> {{ selectedOrder.MaDocGia?.Ho }}</p>
+                    <p><strong>Tên: </strong> {{ selectedOrder.MaDocGia?.Ten }}</p>
+                    <p><strong>Email: </strong> {{ selectedOrder?.MaDocGia?.email }}</p>
                     <p><strong>Số lượng: </strong> {{ selectedOrder.SoQuyen }}</p>
                     <p>
                         <strong>Tình trạng: </strong>
-                        <!-- {{ selectedOrder.status }} -->
                         <Badge
-                            v-if="selectedOrder.status === 'accepted'"
+                            v-if="selectedOrder.TinhTrang === 'accepted'"
                             class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs"
                             >Accepted</Badge
                         >
 
                         <Badge
-                            v-else-if="selectedOrder.status === 'pending'"
+                            v-else-if="selectedOrder.TinhTrang === 'pending'"
                             class="bg-blue-200 text-blue-600 py-1 px-3 rounded-full text-xs"
                             >Pending</Badge
                         >
 
                         <Badge
-                            v-else-if="selectedOrder.status === 'rejected'"
+                            v-else-if="selectedOrder.TinhTrang === 'rejected'"
                             class="bg-red-100 text-red-800 py-1 px-3 rounded-full text-xs"
                             >Rejected</Badge
                         >
                         <Badge
-                            v-else-if="selectedOrder.status === 'cancel'"
+                            v-else-if="selectedOrder.TinhTrang === 'cancel'"
                             class="bg-gray-100 text-gray-800 py-1 px-3 rounded-full text-xs"
                             >Cancel</Badge
                         >
                     </p>
 
-                    <p><strong>Ngày mượn: </strong> {{ formatDate(selectedOrder.startDate) }}</p>
-                    <p><strong>Ngày hết hạn: </strong> {{ formatDate(selectedOrder.endDate) }}</p>
+                    <p><strong>Ngày mượn: </strong> {{ formatDate(selectedOrder.NgayMuon) }}</p>
+                    <p><strong>Ngày hết hạn: </strong> {{ formatDate(selectedOrder.NgayTra) }}</p>
                     <p><strong>Ngày tạo: </strong> {{ formatDate(selectedOrder.createdAt) }}</p>
                     <p><strong>Ngày cập nhật: </strong> {{ formatDate(selectedOrder.updatedAt) }}</p>
                 </div>
@@ -325,11 +324,11 @@
                 <h2 class="text-lg font-bold mb-4">Chỉnh sửa thông tin đơn hàng</h2>
                 <form @submit.prevent="saveEditedOrder">
                     <div class="mb-4">
-                        <label for="editStatus" class="block text-sm font-medium text-gray-700">Status</label>
+                        <label for="editTinhTrang" class="block text-sm font-medium text-gray-700">TinhTrang</label>
                         <input
-                            v-model="orderToEdit.status"
+                            v-model="orderToEdit.TinhTrang"
                             type="text"
-                            id="editStatus"
+                            id="editTinhTrang"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
                     </div>
@@ -456,12 +455,12 @@ const sortedAndPaginatedOrders = computed(() => {
 const filteredOrders = computed(() => {
     const searchQueryInput = searchQuery.value.toLowerCase().replace(/\//g, ''); // Remove "/"
     return orders.value.filter((order) => {
-        const Ho = order.orderBy.Ho ? String(order.orderBy.Ho).toLowerCase() : '';
-        const Ten = order.orderBy.Ten ? String(order.orderBy.Ten).toLowerCase() : '';
-        const status = order.status ? String(order.status).toLowerCase() : '';
+        const Ho = order.MaDocGia.Ho ? String(order.MaDocGia.Ho).toLowerCase() : '';
+        const Ten = order.MaDocGia.Ten ? String(order.MaDocGia.Ten).toLowerCase() : '';
+        const TinhTrang = order.TinhTrang ? String(order.TinhTrang).toLowerCase() : '';
         const createdAt = order.createdAt ? new Date(order.createdAt) : null;
-        const startDate = order.startDate ? new Date(order.startDate) : null;
-        const endDate = order.endDate ? new Date(order.endDate) : null;
+        const NgayMuon = order.NgayMuon ? new Date(order.NgayMuon) : null;
+        const NgayTra = order.NgayTra ? new Date(order.NgayTra) : null;
         // const updatedAt = order.updatedAt ? new Date(order.updatedAt) : null;
 
         const formattedCreatedAt = createdAt
@@ -469,16 +468,16 @@ const filteredOrders = computed(() => {
               (createdAt.getMonth() + 1).toString().padStart(2, '0') +
               createdAt.getFullYear()
             : '';
-        const formattedStartDate = startDate
-            ? startDate.getDate().toString().padStart(2, '0') +
-              (startDate.getMonth() + 1).toString().padStart(2, '0') +
-              startDate.getFullYear()
+        const formattedNgayMuon = NgayMuon
+            ? NgayMuon.getDate().toString().padStart(2, '0') +
+              (NgayMuon.getMonth() + 1).toString().padStart(2, '0') +
+              NgayMuon.getFullYear()
             : '';
 
-        const formattedEndDate = endDate
-            ? endDate.getDate().toString().padStart(2, '0') +
-              (endDate.getMonth() + 1).toString().padStart(2, '0') +
-              endDate.getFullYear()
+        const formattedNgayTra = NgayTra
+            ? NgayTra.getDate().toString().padStart(2, '0') +
+              (NgayTra.getMonth() + 1).toString().padStart(2, '0') +
+              NgayTra.getFullYear()
             : '';
 
         const searchQueryNumber = Number(searchQueryInput);
@@ -493,11 +492,11 @@ const filteredOrders = computed(() => {
         return (
             Ho.includes(searchQueryInput) ||
             Ten.includes(searchQueryInput) ||
-            status.includes(searchQueryInput) ||
+            TinhTrang.includes(searchQueryInput) ||
             matchNumber(order.SoQuyen) ||
             formattedCreatedAt.includes(searchQueryInput) || // Compare formatted date
-            formattedStartDate.includes(searchQueryInput) || // Compare formatted date
-            formattedEndDate.includes(searchQueryInput) // Compare formatted date
+            formattedNgayMuon.includes(searchQueryInput) || // Compare formatted date
+            formattedNgayTra.includes(searchQueryInput) // Compare formatted date
         );
     });
 });
@@ -588,7 +587,7 @@ async function updateOrderStatus(orderId, newStatus) {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${staffToken}`,
             },
-            body: JSON.stringify({ status: newStatus }),
+            body: JSON.stringify({ TinhTrang: newStatus }),
         });
         const data = await res.json();
         console.log('dataUpdateStatus: ', data);
