@@ -45,15 +45,15 @@
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('address')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('DiaChi')">
                             Địa chỉ
-                            <span v-if="currentSort !== 'address'" class="ml-2">
+                            <span v-if="currentSort !== 'DiaChi'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'address' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'DiaChi' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'address' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'DiaChi' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
@@ -94,7 +94,7 @@
                             <span class="font-medium">{{ publisher?.name }}</span>
                         </td>
                         <td class="py-4 px-6 text-left">
-                            <span>{{ publisher?.address }}</span>
+                            <span>{{ publisher?.DiaChi }}</span>
                         </td>
                         <td class="py-4 px-6 text-center">
                             <span>{{ formatDate(publisher?.createdAt) }}</span>
@@ -148,11 +148,11 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="address" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
+                        <label for="DiaChi" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
                         <input
-                            v-model="newPublisher.address"
+                            v-model="newPublisher.DiaChi"
                             type="text"
-                            id="address"
+                            id="DiaChi"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
@@ -185,7 +185,7 @@
                 <h2 class="text-xl font-bold text-center mb-4">Thông tin nhà xuất bản</h2>
                 <div class="space-y-2">
                     <p><strong>Tên:</strong> {{ selectedPublisher.name }}</p>
-                    <p><strong>Địa chỉ:</strong> {{ selectedPublisher.address }}</p>
+                    <p><strong>Địa chỉ:</strong> {{ selectedPublisher.DiaChi }}</p>
                     <p><strong>Ngày tạo:</strong> {{ formatDate(selectedPublisher.createdAt) }}</p>
                     <p><strong>Ngày cập nhật:</strong> {{ formatDate(selectedPublisher.updatedAt) }}</p>
                 </div>
@@ -220,11 +220,11 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="editAddress" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
+                        <label for="editDiaChi" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
                         <input
-                            v-model="publisherToEdit.address"
+                            v-model="publisherToEdit.DiaChi"
                             type="text"
-                            id="editAddress"
+                            id="editDiaChi"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
                     </div>
@@ -290,7 +290,7 @@ export default {
             searchQuery: '',
             newPublisher: {
                 name: '',
-                address: '',
+                DiaChi: '',
             },
             isAddPublisherModalVisible: false,
             currentPage: 1, // Bắt đầu với trang đầu tiên
@@ -341,7 +341,7 @@ export default {
             const searchQuery = this.searchQuery.toLowerCase().replace(/\//g, ''); // Loại bỏ dấu "/"
             return this.publishers.filter((publisher) => {
                 const name = publisher.name ? String(publisher.name).toLowerCase() : '';
-                const address = publisher.address ? String(publisher.address).toLowerCase() : '';
+                const DiaChi = publisher.DiaChi ? String(publisher.DiaChi).toLowerCase() : '';
                 const createdAt = publisher.createdAt ? new Date(publisher.createdAt) : null;
                 const updatedAt = publisher.updatedAt ? new Date(publisher.updatedAt) : null;
 
@@ -359,7 +359,7 @@ export default {
 
                 return (
                     name.includes(searchQuery) ||
-                    address.includes(searchQuery) ||
+                    DiaChi.includes(searchQuery) ||
                     formattedCreatedAt.includes(searchQuery) || // So sánh chuỗi ngày tháng
                     formattedUpdatedAt.includes(searchQuery) // So sánh chuỗi ngày tháng
                 );
@@ -457,7 +457,7 @@ export default {
         resetNewPublisher() {
             this.newPublisher = {
                 name: '',
-                address: '',
+                DiaChi: '',
             };
         },
         async addPublisher() {

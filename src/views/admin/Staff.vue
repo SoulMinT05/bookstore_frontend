@@ -33,27 +33,27 @@
             <table v-else class="w-full table-auto">
                 <thead>
                     <tr class="text-gray-600 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('firstName')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('Ho')">
                             Họ
-                            <span v-if="currentSort !== 'firstName'" class="ml-2">
+                            <span v-if="currentSort !== 'Ho'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'firstName' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'Ho' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'firstName' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'Ho' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('lastName')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('Ten')">
                             Tên
-                            <span v-if="currentSort !== 'lastName'" class="ml-2">
+                            <span v-if="currentSort !== 'Ten'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'lastName' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'Ten' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'lastName' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'Ten' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
@@ -81,15 +81,15 @@
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('role')">
+                        <th class="py-3 px-6 text-center cursor-pointer" @click="sortBy('ChucVu')">
                             Chức vụ
-                            <span v-if="currentSort !== 'role'" class="ml-2">
+                            <span v-if="currentSort !== 'ChucVu'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'role' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'ChucVu' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'role' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'ChucVu' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
@@ -127,10 +127,10 @@
                         class="border-b border-gray-200 hover:bg-gray-100"
                     >
                         <td class="py-3 px-6 text-left">
-                            <span class="font-medium">{{ user.firstName }}</span>
+                            <span class="font-medium">{{ user.Ho }}</span>
                         </td>
                         <td class="py-3 px-6 text-left">
-                            <span>{{ user.lastName }}</span>
+                            <span>{{ user.Ten }}</span>
                         </td>
                         <td class="py-3 px-6 text-left">
                             <span>{{ user.email }}</span>
@@ -151,13 +151,13 @@
 
                         <td class="py-3 px-6 text-center">
                             <Badge
-                                v-if="user.role === 'admin'"
+                                v-if="user.ChucVu === 'admin'"
                                 class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs"
                                 >Quản lý</Badge
                             >
 
                             <Badge
-                                v-else-if="user.role === 'staff'"
+                                v-else-if="user.ChucVu === 'staff'"
                                 class="bg-blue-200 text-blue-600 py-1 px-3 rounded-full text-xs"
                                 >Nhân viên</Badge
                             >
@@ -204,21 +204,21 @@
                 <h2 class="text-lg font-bold mb-4">Thêm nhân viên</h2>
                 <form @submit.prevent="addUser">
                     <div class="mb-4">
-                        <label for="firstName" class="block text-sm font-medium text-gray-700">Họ</label>
+                        <label for="Ho" class="block text-sm font-medium text-gray-700">Họ</label>
                         <input
-                            v-model="newUser.firstName"
+                            v-model="newUser.Ho"
                             type="text"
-                            id="firstName"
+                            id="Ho"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="lastName" class="block text-sm font-medium text-gray-700">Tên</label>
+                        <label for="Ten" class="block text-sm font-medium text-gray-700">Tên</label>
                         <input
-                            v-model="newUser.lastName"
+                            v-model="newUser.Ten"
                             type="text"
-                            id="lastName"
+                            id="Ten"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
@@ -234,30 +234,30 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="birthday" class="block text-sm font-medium text-gray-700">Sinh nhật</label>
+                        <label for="NgaySinh" class="block text-sm font-medium text-gray-700">Sinh nhật</label>
                         <input
                             type="date"
-                            id="birthday"
-                            v-model="newUser.birthday"
+                            id="NgaySinh"
+                            v-model="newUser.NgaySinh"
                             class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="address" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
+                        <label for="DiaChi" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
                         <input
-                            v-model="newUser.address"
+                            v-model="newUser.DiaChi"
                             type="text"
-                            id="address"
+                            id="DiaChi"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Số điện thoại</label>
+                        <label for="DienThoai" class="block text-sm font-medium text-gray-700">Số điện thoại</label>
                         <input
-                            v-model="newUser.phoneNumber"
+                            v-model="newUser.DienThoai"
                             type="text"
-                            id="phoneNumber"
+                            id="DienThoai"
                             aria-describedby="helper-text-explanation"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             pattern="[0-9]{10}"
@@ -265,13 +265,13 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="gender" class="block text-sm font-medium text-gray-700">Giới tính</label>
+                        <label for="Phai" class="block text-sm font-medium text-gray-700">Giới tính</label>
                         <select
-                            v-model="newUser.gender"
-                            id="gender"
+                            v-model="newUser.Phai"
+                            id="Phai"
                             class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
-                            <option value="" disabled selected>Choose a gender</option>
+                            <option value="" disabled selected>Choose a Phai</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                             <option value="other">Other</option>
@@ -279,15 +279,15 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="role" class="block text-sm font-medium text-gray-700">Chức vụ</label>
+                        <label for="ChucVu" class="block text-sm font-medium text-gray-700">Chức vụ</label>
                         <select
-                            v-model="newUser.role"
-                            id="role"
+                            v-model="newUser.ChucVu"
+                            id="ChucVu"
                             class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                             <option value="" disabled selected>Chức vụ</option>
-                            <option v-if="currentRole === 'admin'" value="staff">Nhân viên</option>
-                            <option v-if="currentRole === 'staff'" value="staff">Nhân viên</option>
+                            <option v-if="currentChucVu === 'admin'" value="staff">Nhân viên</option>
+                            <option v-if="currentChucVu === 'staff'" value="staff">Nhân viên</option>
                         </select>
                     </div>
 
@@ -328,13 +328,13 @@
             <div @click.stop class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-2/3 lg:w-1/2">
                 <h2 class="text-xl font-bold text-center mb-4">Thông tin nhân viên</h2>
                 <div class="space-y-2">
-                    <p><strong>First Name:</strong> {{ selectedUser.firstName }}</p>
-                    <p><strong>Last Name:</strong> {{ selectedUser.lastName }}</p>
+                    <p><strong>First Name:</strong> {{ selectedUser.Ho }}</p>
+                    <p><strong>Last Name:</strong> {{ selectedUser.Ten }}</p>
                     <p><strong>Email:</strong> {{ selectedUser.email }}</p>
-                    <p><strong>Birthday:</strong> {{ formatBirthdayHtml(selectedUser.birthday) }}</p>
-                    <p><strong>Address:</strong> {{ selectedUser.address }}</p>
-                    <p><strong>Gender:</strong> {{ selectedUser.gender }}</p>
-                    <p><strong>Phone number:</strong> {{ selectedUser.phoneNumber }}</p>
+                    <p><strong>NgaySinh:</strong> {{ formatNgaySinhHtml(selectedUser.NgaySinh) }}</p>
+                    <p><strong>DiaChi:</strong> {{ selectedUser.DiaChi }}</p>
+                    <p><strong>Phai:</strong> {{ selectedUser.Phai }}</p>
+                    <p><strong>Phone number:</strong> {{ selectedUser.DienThoai }}</p>
                     <p>
                         <strong>Status:</strong>
                         <span
@@ -350,23 +350,23 @@
                     </p>
 
                     <p>
-                        <strong>Role: </strong>
+                        <strong>ChucVu: </strong>
                         <span
                             :class="[
-                                selectedUser.role === 'admin'
+                                selectedUser.ChucVu === 'admin'
                                     ? 'bg-green-200 text-green-600' // Màu cho admin
                                     : 'bg-blue-100 text-blue-800', // Màu cho staff
 
                                 'py-1 px-3 rounded-full text-xs',
                             ]"
                         >
-                            {{ selectedUser.role === 'admin' ? 'Quản lý' : 'Nhân viên' }}
+                            {{ selectedUser.ChucVu === 'admin' ? 'Quản lý' : 'Nhân viên' }}
                         </span>
                     </p>
                     <!-- <p>
-                        <strong>Role:</strong>
-                        <span :class="selectedUser.role === 'admin' ? 'text-blue-500' : 'text-yellow-500'">
-                            {{ selectedUser.role === 'admin' ? 'Quản lý' : 'nhân viên' }}
+                        <strong>ChucVu:</strong>
+                        <span :class="selectedUser.ChucVu === 'admin' ? 'text-blue-500' : 'text-yellow-500'">
+                            {{ selectedUser.ChucVu === 'admin' ? 'Quản lý' : 'nhân viên' }}
                         </span>
                     </p> -->
 
@@ -393,21 +393,21 @@
                 <h2 class="text-lg font-bold mb-4">Chỉnh sửa thông tin nhân viên</h2>
                 <form @submit.prevent="saveEditedUser">
                     <div class="mb-4">
-                        <label for="editFirstName" class="block text-sm font-medium text-gray-700">Họ</label>
+                        <label for="editHo" class="block text-sm font-medium text-gray-700">Họ</label>
                         <input
-                            v-model="userToEdit.firstName"
+                            v-model="userToEdit.Ho"
                             type="text"
-                            id="editFirstName"
+                            id="editHo"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editLastName" class="block text-sm font-medium text-gray-700">Tên</label>
+                        <label for="editTen" class="block text-sm font-medium text-gray-700">Tên</label>
                         <input
-                            v-model="userToEdit.lastName"
+                            v-model="userToEdit.Ten"
                             type="text"
-                            id="editLastName"
+                            id="editTen"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
@@ -423,72 +423,70 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editBirthday" class="block text-sm font-medium text-gray-700">Sinh nhật</label>
+                        <label for="editNgaySinh" class="block text-sm font-medium text-gray-700">Sinh nhật</label>
                         <input
-                            v-model="userToEdit.birthday"
+                            v-model="userToEdit.NgaySinh"
                             type="date"
-                            id="editBirthday"
+                            id="editNgaySinh"
                             class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         />
                     </div>
 
                     <div class="mb-4">
-                        <label for="editAddress" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
+                        <label for="editDiaChi" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
                         <input
-                            v-model="userToEdit.address"
+                            v-model="userToEdit.DiaChi"
                             type="text"
-                            id="editAddress"
+                            id="editDiaChi"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editPhoneNumber" class="block text-sm font-medium text-gray-700"
-                            >Số điện thoại</label
-                        >
+                        <label for="editDienThoai" class="block text-sm font-medium text-gray-700">Số điện thoại</label>
                         <input
-                            v-model="userToEdit.phoneNumber"
+                            v-model="userToEdit.DienThoai"
                             type="text"
-                            id="editPhoneNumber"
+                            id="editDienThoai"
                             aria-describedby="helper-text-explanation"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             pattern="[0-9]{10}"
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editGender" class="block text-sm font-medium text-gray-700">Giới tính</label>
+                        <label for="editPhai" class="block text-sm font-medium text-gray-700">Giới tính</label>
                         <select
-                            v-model="userToEdit.gender"
-                            id="gender"
+                            v-model="userToEdit.Phai"
+                            id="Phai"
                             class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
-                            <option value="" disabled selected>Choose a gender</option>
+                            <option value="" disabled selected>Choose a Phai</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                             <option value="other">Other</option>
                         </select>
                     </div>
                     <div class="mb-4">
-                        <label for="role" class="block text-sm font-medium text-gray-700">Chức vụ</label>
-                        <template v-if="currentRole === 'staff'">
+                        <label for="ChucVu" class="block text-sm font-medium text-gray-700">Chức vụ</label>
+                        <template v-if="currentChucVu === 'staff'">
                             <span
                                 class="block p-2.5 bg-gray-50 text-gray-900 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             >
-                                {{ userToEdit.role === 'staff' ? 'Nhân viên' : 'Quản lý' }}
+                                {{ userToEdit.ChucVu === 'staff' ? 'Nhân viên' : 'Quản lý' }}
                             </span>
                         </template>
                         <!-- <template v-else>
 
                             <select
-                                v-model="userToEdit.role"
-                                id="role"
+                                v-model="userToEdit.ChucVu"
+                                id="ChucVu"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             >
-                                <option value="" disabled selected>Chọn role</option>
+                                <option value="" disabled selected>Chọn ChucVu</option>
                                 <option value="user">nhân viên</option>
                                 <option value="staff">Nhân viên</option>
                             </select>
                         </template> -->
-                        <!-- <template v-if="userToEdit.role === 'admin'">
+                        <!-- <template v-if="userToEdit.ChucVu === 'admin'">
                             <span
                                 class="block p-2.5 bg-gray-50 text-gray-900 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             >
@@ -560,17 +558,17 @@ export default {
             currentSort: '', // Cột hiện tại để sắp xếp
             currentSortDir: 'asc',
             newUser: {
-                firstName: '',
-                lastName: '',
+                Ho: '',
+                Ten: '',
                 email: '',
-                birthday: null,
-                address: '',
-                phoneNumber: '',
-                gender: '',
+                NgaySinh: null,
+                DiaChi: '',
+                DienThoai: '',
+                Phai: '',
                 password: '',
-                role: '',
+                ChucVu: '',
             },
-            currentRole: 'staff',
+            currentChucVu: 'staff',
             searchQuery: '',
             isAddUserModalVisible: false,
             currentPage: 1, // Bắt đầu với trang đầu tiên
@@ -620,17 +618,17 @@ export default {
         filteredUsers() {
             const searchQuery = this.searchQuery.toLowerCase().trim().replace(/\//g, '');
 
-            const roleMap = {
+            const ChucVuMap = {
                 'nhân viên': 'staff',
                 'quản lý': 'admin',
             };
 
-            const normalizedSearchQuery = roleMap[searchQuery] || searchQuery;
+            const normalizedSearchQuery = ChucVuMap[searchQuery] || searchQuery;
             return this.users.filter((user) => {
-                const firstName = user.firstName ? user.firstName.toLowerCase() : '';
-                const lastName = user.lastName ? user.lastName.toLowerCase() : '';
+                const Ho = user.Ho ? user.Ho.toLowerCase() : '';
+                const Ten = user.Ten ? user.Ten.toLowerCase() : '';
                 const email = user.email ? user.email?.toLowerCase() : '';
-                const role = user.role ? user.role?.toLowerCase() : '';
+                const ChucVu = user.ChucVu ? user.ChucVu?.toLowerCase() : '';
 
                 const createdAt = user.createdAt ? new Date(user.createdAt) : null;
                 const updatedAt = user.updatedAt ? new Date(user.updatedAt) : null;
@@ -647,10 +645,10 @@ export default {
                     : '';
 
                 return (
-                    firstName.includes(searchQuery.toLowerCase()) ||
-                    lastName.includes(searchQuery.toLowerCase()) ||
+                    Ho.includes(searchQuery.toLowerCase()) ||
+                    Ten.includes(searchQuery.toLowerCase()) ||
                     email.includes(searchQuery.toLowerCase()) ||
-                    role.includes(normalizedSearchQuery) ||
+                    ChucVu.includes(normalizedSearchQuery) ||
                     formattedCreatedAt.includes(searchQuery) ||
                     formattedUpdatedAt.includes(searchQuery)
                 );
@@ -694,7 +692,7 @@ export default {
 
             return `${day}/${month}/${year}`;
         },
-        formatBirthdayHtml(dateString) {
+        formatNgaySinhHtml(dateString) {
             if (!dateString) return ''; // Trả về chuỗi rỗng nếu không có ngày sinh
             const date = new Date(dateString); // Chuyển đổi chuỗi thành đối tượng Date
             const day = String(date.getDate()).padStart(2, '0'); // Lấy ngày và thêm 0 nếu cần
@@ -702,9 +700,9 @@ export default {
             const year = date.getFullYear(); // Lấy năm
             return `${day}/${month}/${year}`; // Trả về định dạng dd/mm/yyyy
         },
-        formatBirthday(birthday) {
-            if (!birthday) return '';
-            const date = new Date(birthday); // Chuyển đổi thành đối tượng Date
+        formatNgaySinh(NgaySinh) {
+            if (!NgaySinh) return '';
+            const date = new Date(NgaySinh); // Chuyển đổi thành đối tượng Date
             if (isNaN(date)) return ''; // Kiểm tra nếu ngày không hợp lệ
             const day = String(date.getDate()).padStart(2, '0'); // Lấy ngày
             const month = String(date.getMonth() + 1).padStart(2, '0'); // Lấy tháng (tháng 0-11)
@@ -764,15 +762,15 @@ export default {
         },
         resetNewUser() {
             this.newUser = {
-                firstName: '',
-                lastName: '',
+                Ho: '',
+                Ten: '',
                 email: '',
-                birthday: null,
-                address: '',
-                phoneNumber: '',
-                gender: '',
+                NgaySinh: null,
+                DiaChi: '',
+                DienThoai: '',
+                Phai: '',
                 password: '',
-                role: '',
+                ChucVu: '',
             };
         },
         async addUser() {
@@ -809,8 +807,8 @@ export default {
         editUser(user) {
             console.log('User to edit:', user);
             this.userToEdit = { ...user }; // Make a copy of the user object to avoid directly modifying the array
-            this.userToEdit.birthday = this.formatBirthday(user.birthday);
-            console.log('Converted birthday for edit:', this.userToEdit.birthday);
+            this.userToEdit.NgaySinh = this.formatNgaySinh(user.NgaySinh);
+            console.log('Converted NgaySinh for edit:', this.userToEdit.NgaySinh);
             this.isEditUserModalVisible = true;
         },
         closeEditUserModal() {
@@ -939,11 +937,11 @@ export default {
         this.fetchUsers();
         const staffLocalStorage = JSON.parse(localStorage.getItem('staff'));
         console.log('staffLocalStorage: ', staffLocalStorage);
-        // const currentUserRole = staffLocalStorage.userData.role;
-        const currentUserRole =
-            staffLocalStorage && staffLocalStorage.userData ? staffLocalStorage.userData.role : 'staff';
-        console.log('currentUserRole: ', currentUserRole);
-        this.currentRole = currentUserRole;
+        // const currentUserChucVu = staffLocalStorage.userData.ChucVu;
+        const currentUserChucVu =
+            staffLocalStorage && staffLocalStorage.userData ? staffLocalStorage.userData.ChucVu : 'staff';
+        console.log('currentUserChucVu: ', currentUserChucVu);
+        this.currentChucVu = currentUserChucVu;
     },
 };
 </script>

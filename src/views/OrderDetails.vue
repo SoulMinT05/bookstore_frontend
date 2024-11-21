@@ -35,7 +35,7 @@
                         <div class="grid gap-1">
                             <div>
                                 Họ và tên:
-                                {{ orderDetails?.orderBy?.firstName + ' ' + orderDetails?.orderBy?.lastName }}
+                                {{ orderDetails?.orderBy?.Ho + ' ' + orderDetails?.orderBy?.Ten }}
                             </div>
                         </div>
                         <div class="grid gap-1" v-if="orderDetails?.startDate">
@@ -45,9 +45,7 @@
                     <div class="grid gap-2 md:grid-cols-2">
                         <div class="grid gap-1">
                             <div v-if="orderDetails?.orderBy?.email">Email: {{ orderDetails?.orderBy?.email }}</div>
-                            <div v-if="orderDetails?.orderBy?.address">
-                                Địa chỉ: {{ orderDetails?.orderBy?.address }}
-                            </div>
+                            <div v-if="orderDetails?.orderBy?.DiaChi">Địa chỉ: {{ orderDetails?.orderBy?.DiaChi }}</div>
                         </div>
                         <div class="grid gap-1" v-if="orderDetails?.endDate">
                             <div>Ngày hết hạn mượn: {{ formatDate(orderDetails?.endDate) }}</div>

@@ -109,12 +109,12 @@
                     <CardContent class="space-y-4">
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div class="space-y-2">
-                                <Label for="firstName">Họ</Label>
-                                <Input v-model="currentUser.firstName" id="firstName" placeholder="Lý" />
+                                <Label for="Ho">Họ</Label>
+                                <Input v-model="currentUser.Ho" id="Ho" placeholder="Lý" />
                             </div>
                             <div class="space-y-2">
-                                <Label for="lastName">Tên</Label>
-                                <Input v-model="currentUser.lastName" id="lastName" placeholder="Lệ Hoa" />
+                                <Label for="Ten">Tên</Label>
+                                <Input v-model="currentUser.Ten" id="Ten" placeholder="Lệ Hoa" />
                             </div>
                         </div>
                         <div class="space-y-2">
@@ -127,12 +127,8 @@
                             />
                         </div>
                         <div class="space-y-2">
-                            <Label for="address">Địa chỉ</Label>
-                            <Textarea
-                                v-model="currentUser.address"
-                                id="address"
-                                placeholder="123 Hai Bà Trưng, TP HCM"
-                            />
+                            <Label for="DiaChi">Địa chỉ</Label>
+                            <Textarea v-model="currentUser.DiaChi" id="DiaChi" placeholder="123 Hai Bà Trưng, TP HCM" />
                         </div>
                         <div class="flex items-center space-x-2 mt-4">
                             <Popover v-model:open="isPopoverOpen">
@@ -259,8 +255,8 @@ const borrowBooks = async () => {
     }
 
     // Kiểm tra nếu thông tin cá nhân chưa đầy đủ
-    const { firstName, lastName, email, address } = currentUser.value;
-    if (!firstName || !lastName || !email || !address) {
+    const { Ho, Ten, email, DiaChi } = currentUser.value;
+    if (!Ho || !Ten || !email || !DiaChi) {
         toast.error('Cần nhập đầy đủ thông tin cá nhân trước khi mượn sách');
         return;
     }

@@ -45,7 +45,7 @@ const getName = computed(() => {
     try {
         const user = localStorage.getItem('user');
         const userObj = JSON.parse(user); // Chuyển đổi chuỗi JSON thành đối tượng
-        return userObj.userData.firstName + ' ' + userObj.userData.lastName; // Trả về tên người dùng
+        return userObj.userData.Ho + ' ' + userObj.userData.Ten; // Trả về tên người dùng
     } catch (error) {
         console.error('Lỗi khi lấy dữ liệu người dùng từ localStorage:', error);
         return 'Người dùng không tồn tại'; // Trả về giá trị mặc định khi có lỗi

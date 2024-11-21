@@ -216,18 +216,18 @@ router.beforeEach((to, from, next) => {
     const staff = localStorage.getItem('staff');
     const staffData = staff ? JSON.parse(staff)?.staffData : null;
 
-    if (to.path === '/loginAdmin' && (staffData?.role === 'admin' || staffData?.role === 'staff')) {
-        return next('/admin'); // Điều hướng tới /admin nếu role là admin hoặc staff
+    if (to.path === '/loginAdmin' && (staffData?.ChucVu === 'admin' || staffData?.ChucVu === 'staff')) {
+        return next('/admin'); // Điều hướng tới /admin nếu ChucVu là admin hoặc staff
     }
 
-    if (to.path.startsWith('/admin') && userData?.role === 'user') {
+    if (to.path.startsWith('/admin') && userData?.ChucVu === 'user') {
         return next({ path: '/' });
     }
     // if (!userData && to.path !== '/login') {
     //     return next('/login'); // Điều hướng về trang login nếu người dùng chưa đăng nhập
     // }
 
-    if (userData?.role === 'user' && to.path.startsWith('/admin')) {
+    if (userData?.ChucVu === 'user' && to.path.startsWith('/admin')) {
         return next('/'); // Điều hướng về trang chủ nếu user cố gắng vào các route không phải /admin
     }
 

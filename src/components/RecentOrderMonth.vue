@@ -97,12 +97,12 @@ onMounted(() => {
                 <Avatar class="h-9 w-9">
                     <AvatarImage :src="order.orderBy.avatarUrl || '/avatars/default.png'" alt="Avatar" />
                     <AvatarFallback>
-                        {{ order.orderBy.firstName.charAt(0) || '' }}{{ order.orderBy.lastName.charAt(0) || '' }}
+                        {{ order.orderBy.Ho.charAt(0) || '' }}{{ order.orderBy.Ten.charAt(0) || '' }}
                     </AvatarFallback>
                 </Avatar>
                 <div class="ml-4 space-y-1">
                     <p class="text-sm font-medium leading-none">
-                        {{ order.orderBy.firstName || '' }} {{ order.orderBy.lastName || '' }}
+                        {{ order.orderBy.Ho || '' }} {{ order.orderBy.Ten || '' }}
                     </p>
                     <p class="text-sm text-muted-foreground">{{ order.orderBy.email || '' }}</p>
                 </div>

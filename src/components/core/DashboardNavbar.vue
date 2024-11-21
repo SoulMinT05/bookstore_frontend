@@ -32,7 +32,7 @@ const getName = computed(() => {
         }
         const staffObj = JSON.parse(staff); // Chuyển đổi chuỗi JSON thành đối tượng
         console.log('staffObj: ', staffObj);
-        return staffObj.userData.firstName + staffObj.userData.lastName; // Trả về tên người dùng
+        return staffObj.userData.Ho + staffObj.userData.Ten; // Trả về tên người dùng
     } catch (error) {
         console.error('Lỗi khi lấy dữ liệu người dùng từ localStorage:', error);
         return 'Người dùng không tồn tại'; // Trả về giá trị mặc định khi có lỗi

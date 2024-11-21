@@ -27,27 +27,27 @@
             <table v-else class="w-full table-auto">
                 <thead>
                     <tr class="text-gray-600 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('firstName')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('Ho')">
                             Họ
-                            <span v-if="currentSort !== 'firstName'" class="ml-2">
+                            <span v-if="currentSort !== 'Ho'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'firstName' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'Ho' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'firstName' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'Ho' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('lastName')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('Ten')">
                             Tên
-                            <span v-if="currentSort !== 'lastName'" class="ml-2">
+                            <span v-if="currentSort !== 'Ten'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'lastName' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'Ten' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'lastName' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'Ten' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
@@ -122,10 +122,10 @@
                         class="border-b border-gray-200 hover:bg-gray-100"
                     >
                         <td class="py-4 px-6 text-left">
-                            <span class="font-medium">{{ order?.orderBy?.firstName }}</span>
+                            <span class="font-medium">{{ order?.orderBy?.Ho }}</span>
                         </td>
                         <td class="py-4 px-6 text-left">
-                            <span class="font-medium">{{ order?.orderBy?.lastName }}</span>
+                            <span class="font-medium">{{ order?.orderBy?.Ten }}</span>
                         </td>
                         <td class="py-4 px-6 text-center">
                             <span>{{ order?.SoQuyen }}</span>
@@ -212,11 +212,11 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                        <label for="DiaChi" class="block text-sm font-medium text-gray-700">DiaChi</label>
                         <input
-                            v-model="newOrder.address"
+                            v-model="newOrder.DiaChi"
                             type="text"
-                            id="address"
+                            id="DiaChi"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
@@ -269,8 +269,8 @@
             <div @click.stop class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-1/3">
                 <h2 class="text-xl font-bold text-center mb-4">Thông tin đơn hàng</h2>
                 <div class="space-y-2">
-                    <p><strong>Họ: </strong> {{ selectedOrder.orderBy?.firstName }}</p>
-                    <p><strong>Tên: </strong> {{ selectedOrder.orderBy?.lastName }}</p>
+                    <p><strong>Họ: </strong> {{ selectedOrder.orderBy?.Ho }}</p>
+                    <p><strong>Tên: </strong> {{ selectedOrder.orderBy?.Ten }}</p>
                     <p><strong>Email: </strong> {{ selectedOrder?.orderBy?.email }}</p>
                     <p><strong>Số lượng: </strong> {{ selectedOrder.SoQuyen }}</p>
                     <p>
@@ -403,7 +403,7 @@ const searchQuery = ref('');
 
 const newOrder = ref({
     name: '',
-    address: '',
+    DiaChi: '',
 });
 const isAddOrderModalVisible = ref(false);
 const currentPage = ref(1);
@@ -456,8 +456,8 @@ const sortedAndPaginatedOrders = computed(() => {
 const filteredOrders = computed(() => {
     const searchQueryInput = searchQuery.value.toLowerCase().replace(/\//g, ''); // Remove "/"
     return orders.value.filter((order) => {
-        const firstName = order.orderBy.firstName ? String(order.orderBy.firstName).toLowerCase() : '';
-        const lastName = order.orderBy.lastName ? String(order.orderBy.lastName).toLowerCase() : '';
+        const Ho = order.orderBy.Ho ? String(order.orderBy.Ho).toLowerCase() : '';
+        const Ten = order.orderBy.Ten ? String(order.orderBy.Ten).toLowerCase() : '';
         const status = order.status ? String(order.status).toLowerCase() : '';
         const createdAt = order.createdAt ? new Date(order.createdAt) : null;
         const startDate = order.startDate ? new Date(order.startDate) : null;
@@ -491,8 +491,8 @@ const filteredOrders = computed(() => {
         };
 
         return (
-            firstName.includes(searchQueryInput) ||
-            lastName.includes(searchQueryInput) ||
+            Ho.includes(searchQueryInput) ||
+            Ten.includes(searchQueryInput) ||
             status.includes(searchQueryInput) ||
             matchNumber(order.SoQuyen) ||
             formattedCreatedAt.includes(searchQueryInput) || // Compare formatted date
