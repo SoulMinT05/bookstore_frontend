@@ -133,7 +133,7 @@
                                                         <h3
                                                             class="mt-4 text-xl font-semibold line-clamp-2 custom-min-height"
                                                         >
-                                                            {{ product.name }}
+                                                            {{ product.TenSach }}
                                                         </h3>
 
                                                         <div class="mt-4 flex justify-between items-center">

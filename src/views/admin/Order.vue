@@ -193,74 +193,6 @@
             </table>
         </div>
 
-        <!-- Add order modal -->
-        <div
-            v-if="isAddOrderModalVisible"
-            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-        >
-            <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3 modal-content">
-                <h2 class="text-lg font-bold mb-4">Thêm đơn hàng</h2>
-                <form @submit.prevent="addOrder">
-                    <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Id</label>
-                        <input
-                            v-model="newOrder.MaDocGia"
-                            type="text"
-                            id="name"
-                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                            required
-                        />
-                    </div>
-                    <div class="mb-4">
-                        <label for="DiaChi" class="block text-sm font-medium text-gray-700">DiaChi</label>
-                        <input
-                            v-model="newOrder.DiaChi"
-                            type="text"
-                            id="DiaChi"
-                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                            required
-                        />
-                    </div>
-                    <div class="mb-4">
-                        <label for="SoQuyen" class="block text-sm font-medium text-gray-700">SoQuyen</label>
-                        <input
-                            v-model="newOrder.SoQuyen"
-                            type="text"
-                            id="SoQuyen"
-                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                            required
-                        />
-                    </div>
-                    <div class="mb-4">
-                        <label for="TinhTrang" class="block text-sm font-medium text-gray-700">TinhTrang</label>
-                        <input
-                            v-model="newOrder.TinhTrang"
-                            type="text"
-                            id="TinhTrang"
-                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                            required
-                        />
-                    </div>
-
-                    <div class="flex justify-end mt-6">
-                        <button
-                            type="button"
-                            @click="closeAddOrderModal"
-                            class="cursor-pointer hover:opacity-95 mr-2 px-4 py-2 bg-gray-500 text-white rounded-md"
-                        >
-                            Đóng
-                        </button>
-                        <button
-                            type="submit"
-                            class="cursor-pointer hover:opacity-95 px-4 py-2 bg-blue-500 text-white rounded-md"
-                        >
-                            Thêm đơn hàng
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
         <!-- View detail order -->
         <div
             v-if="selectedOrder"
@@ -400,10 +332,6 @@ const currentSort = ref('');
 const currentSortDir = ref('asc');
 const searchQuery = ref('');
 
-const newOrder = ref({
-    name: '',
-    DiaChi: '',
-});
 const isAddOrderModalVisible = ref(false);
 const currentPage = ref(1);
 const pageSize = ref(10);

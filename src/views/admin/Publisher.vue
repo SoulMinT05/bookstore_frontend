@@ -33,15 +33,15 @@
             <table v-else class="w-full table-auto">
                 <thead>
                     <tr class="text-gray-600 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('name')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('TenNXB')">
                             Tên
-                            <span v-if="currentSort !== 'name'" class="ml-2">
+                            <span v-if="currentSort !== 'TenNXB'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'name' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'TenNXB' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'name' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'TenNXB' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
@@ -91,7 +91,7 @@
                         class="border-b border-gray-200 hover:bg-gray-100"
                     >
                         <td class="py-4 px-6 text-left">
-                            <span class="font-medium">{{ publisher?.name }}</span>
+                            <span class="font-medium">{{ publisher?.TenNXB }}</span>
                         </td>
                         <td class="py-4 px-6 text-left">
                             <span>{{ publisher?.DiaChi }}</span>
@@ -138,11 +138,11 @@
                 <h2 class="text-lg font-bold mb-4">Thêm nhà xuất bản</h2>
                 <form @submit.prevent="addPublisher">
                     <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Tên</label>
+                        <label for="TenNXB" class="block text-sm font-medium text-gray-700">Tên</label>
                         <input
-                            v-model="newPublisher.name"
+                            v-model="newPublisher.TenNXB"
                             type="text"
-                            id="name"
+                            id="TenNXB"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
@@ -184,7 +184,7 @@
             <div @click.stop class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-1/3">
                 <h2 class="text-xl font-bold text-center mb-4">Thông tin nhà xuất bản</h2>
                 <div class="space-y-2">
-                    <p><strong>Tên:</strong> {{ selectedPublisher.name }}</p>
+                    <p><strong>Tên:</strong> {{ selectedPublisher.TenNXB }}</p>
                     <p><strong>Địa chỉ:</strong> {{ selectedPublisher.DiaChi }}</p>
                     <p><strong>Ngày tạo:</strong> {{ formatDate(selectedPublisher.createdAt) }}</p>
                     <p><strong>Ngày cập nhật:</strong> {{ formatDate(selectedPublisher.updatedAt) }}</p>
@@ -209,11 +209,11 @@
                 <h2 class="text-lg font-bold mb-4">Chỉnh sửa thông tin nhà xuất bản</h2>
                 <form @submit.prevent="saveEditedPublisher">
                     <div class="mb-4">
-                        <label for="editName" class="block text-sm font-medium text-gray-700">Tên</label>
+                        <label for="editTenNXB" class="block text-sm font-medium text-gray-700">Tên</label>
                         <input
-                            v-model="publisherToEdit.name"
+                            v-model="publisherToEdit.TenNXB"
                             type="text"
-                            id="editName"
+                            id="editTenNXB"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
@@ -289,7 +289,7 @@ export default {
             currentSortDir: 'asc',
             searchQuery: '',
             newPublisher: {
-                name: '',
+                TenNXB: '',
                 DiaChi: '',
             },
             isAddPublisherModalVisible: false,
@@ -340,7 +340,7 @@ export default {
         filteredPublishers() {
             const searchQuery = this.searchQuery.toLowerCase().replace(/\//g, ''); // Loại bỏ dấu "/"
             return this.publishers.filter((publisher) => {
-                const name = publisher.name ? String(publisher.name).toLowerCase() : '';
+                const TenNXB = publisher.TenNXB ? String(publisher.TenNXB).toLowerCase() : '';
                 const DiaChi = publisher.DiaChi ? String(publisher.DiaChi).toLowerCase() : '';
                 const createdAt = publisher.createdAt ? new Date(publisher.createdAt) : null;
                 const updatedAt = publisher.updatedAt ? new Date(publisher.updatedAt) : null;
@@ -358,7 +358,7 @@ export default {
                     : '';
 
                 return (
-                    name.includes(searchQuery) ||
+                    TenNXB.includes(searchQuery) ||
                     DiaChi.includes(searchQuery) ||
                     formattedCreatedAt.includes(searchQuery) || // So sánh chuỗi ngày tháng
                     formattedUpdatedAt.includes(searchQuery) // So sánh chuỗi ngày tháng
@@ -456,7 +456,7 @@ export default {
         },
         resetNewPublisher() {
             this.newPublisher = {
-                name: '',
+                TenNXB: '',
                 DiaChi: '',
             };
         },

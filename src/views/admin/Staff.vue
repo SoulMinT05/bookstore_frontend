@@ -328,13 +328,13 @@
             <div @click.stop class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-2/3 lg:w-1/2">
                 <h2 class="text-xl font-bold text-center mb-4">Thông tin nhân viên</h2>
                 <div class="space-y-2">
-                    <p><strong>First Name:</strong> {{ selectedUser.Ho }}</p>
-                    <p><strong>Last Name:</strong> {{ selectedUser.Ten }}</p>
+                    <p><strong>Họ: </strong> {{ selectedUser.Ho }}</p>
+                    <p><strong>Tên: </strong> {{ selectedUser.Ten }}</p>
                     <p><strong>Email:</strong> {{ selectedUser.email }}</p>
-                    <p><strong>NgaySinh:</strong> {{ formatNgaySinhHtml(selectedUser.NgaySinh) }}</p>
-                    <p><strong>DiaChi:</strong> {{ selectedUser.DiaChi }}</p>
-                    <p><strong>Phai:</strong> {{ selectedUser.Phai }}</p>
-                    <p><strong>Phone number:</strong> {{ selectedUser.DienThoai }}</p>
+                    <p><strong>Ngày sinh:</strong> {{ formatNgaySinhHtml(selectedUser.NgaySinh) }}</p>
+                    <p><strong>Địa chỉ:</strong> {{ selectedUser.DiaChi }}</p>
+                    <p><strong>Phái: </strong> {{ selectedUser.Phai }}</p>
+                    <p><strong>Số điện thoại:</strong> {{ selectedUser.DienThoai }}</p>
                     <p>
                         <strong>Tinh Trang:</strong>
                         <span
