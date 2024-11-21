@@ -35,64 +35,63 @@
                 <thead>
                     <tr class="text-gray-600 uppercase text-sm leading-normal">
                         <th class="py-3 px-6 text-left cursor-pointer">Hình ảnh</th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('name')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('TenSach')">
                             Tên
-                            <span v-if="currentSort !== 'name'" class="ml-2">
+                            <span v-if="currentSort !== 'TenSach'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'name' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'TenSach' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'name' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'TenSach' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('author')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('TacGia')">
                             Tác giả
-                            <span v-if="currentSort !== 'author'" class="ml-2">
+                            <span v-if="currentSort !== 'TacGia'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'author' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'TacGia' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'author' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'TacGia' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <!-- <th class="py-3 px-6 text-left">Price</th> -->
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('quantity')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('SoQuyen')">
                             Số lượng
-                            <span v-if="currentSort !== 'quantity'" class="ml-2">
+                            <span v-if="currentSort !== 'SoQuyen'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'quantity' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'SoQuyen' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'quantity' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'SoQuyen' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('yearOfPublication')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('NamXuatBan')">
                             Năm XB
-                            <span v-if="currentSort !== 'yearOfPublication'" class="ml-2">
+                            <span v-if="currentSort !== 'NamXuatBan'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'yearOfPublication' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'NamXuatBan' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'yearOfPublication' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'NamXuatBan' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('publisherId.name')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('MaNXB.TenNXB')">
                             Nhà XB
-                            <span v-if="currentSort !== 'publisherId.name'" class="ml-2">
+                            <span v-if="currentSort !== 'MaNXB.TenNXB'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'publisherId.name' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'MaNXB.TenNXB' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'publisherId.name' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'MaNXB.TenNXB' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
@@ -119,28 +118,25 @@
                         class="border-b border-gray-200 hover:bg-gray-100"
                     >
                         <td class="py-4 px-6 text-left">
-                            <div v-if="product.images?.length">
-                                <img class="w-16 h-16 object-cover" :src="product.images[0]" alt="Product Image" />
+                            <div v-if="product.HinhAnhSach?.length">
+                                <img class="w-16 h-16 object-cover" :src="product.HinhAnhSach[0]" alt="Product Image" />
                             </div>
-                            <div v-else>No images available</div>
+                            <div v-else>No HinhAnhSach available</div>
                         </td>
                         <td class="py-4 px-6 text-left">
-                            <span class="font-medium">{{ product?.name }}</span>
+                            <span class="font-medium">{{ product?.TenSach }}</span>
                         </td>
                         <td class="py-4 px-6 text-left">
-                            <span class="font-medium">{{ product?.author }}</span>
-                        </td>
-                        <!-- <td class="py-4 px-6 text-left">
-                            <span class="font-medium">{{ product?.price }}</span>
-                        </td> -->
-                        <td class="py-4 px-6 text-left">
-                            <span class="font-medium">{{ product?.quantity }}</span>
+                            <span class="font-medium">{{ product?.TacGia }}</span>
                         </td>
                         <td class="py-4 px-6 text-left">
-                            <span class="font-medium">{{ product?.yearOfPublication }}</span>
+                            <span class="font-medium">{{ product?.SoQuyen }}</span>
                         </td>
                         <td class="py-4 px-6 text-left">
-                            <span class="font-medium">{{ product?.publisherId?.name }}</span>
+                            <span class="font-medium">{{ product?.NamXuatBan }}</span>
+                        </td>
+                        <td class="py-4 px-6 text-left">
+                            <span class="font-medium">{{ product?.MaNXB?.TenNXB }}</span>
                         </td>
                         <td class="py-4 px-6 text-center">
                             <span>{{ formatDate(product?.createdAt) }}</span>
@@ -184,49 +180,49 @@
                 <h2 class="text-lg font-bold mb-4">Thêm sách</h2>
                 <form @submit.prevent="addProduct">
                     <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Tên</label>
+                        <label for="TenSach" class="block text-sm font-medium text-gray-700">Tên</label>
                         <input
-                            v-model="newProduct.name"
+                            v-model="newProduct.TenSach"
                             type="text"
-                            id="name"
+                            id="TenSach"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="author" class="block text-sm font-medium text-gray-700">Tác giả</label>
+                        <label for="TacGia" class="block text-sm font-medium text-gray-700">Tác giả</label>
                         <input
-                            v-model="newProduct.author"
+                            v-model="newProduct.TacGia"
                             type="text"
-                            id="author"
+                            id="TacGia"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="price" class="block text-sm font-medium text-gray-700">Giá</label>
+                        <label for="DonGia" class="block text-sm font-medium text-gray-700">Giá</label>
                         <input
-                            v-model="newProduct.price"
+                            v-model="newProduct.DonGia"
                             type="number"
-                            id="price"
+                            id="DonGia"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="quantity" class="block text-sm font-medium text-gray-700">Số lượng</label>
+                        <label for="SoQuyen" class="block text-sm font-medium text-gray-700">Số lượng</label>
                         <input
-                            v-model="newProduct.quantity"
+                            v-model="newProduct.SoQuyen"
                             type="number"
-                            id="quantity"
+                            id="SoQuyen"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="yearOfPublication" class="block text-sm font-medium text-gray-700">Năm XB</label>
+                        <label for="NamXuatBan" class="block text-sm font-medium text-gray-700">Năm XB</label>
                         <input
-                            v-model="newProduct.yearOfPublication"
+                            v-model="newProduct.NamXuatBan"
                             type="number"
-                            id="yearOfPublication"
+                            id="NamXuatBan"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
                     </div>
@@ -247,8 +243,8 @@
                             required
                         >
                             <option disabled value="">Chọn nhà xuất bản</option>
-                            <option v-for="publisher in publishers" :key="publisher._id" :value="publisher.name">
-                                {{ publisher.name }}
+                            <option v-for="publisher in publishers" :key="publisher._id" :value="publisher.TenNXB">
+                                {{ publisher.TenNXB }}
                             </option>
                         </select>
                     </div>
@@ -309,12 +305,12 @@
                             <img :src="image" alt="Hình ảnh sách" class="rounded-lg w-24 h-24 object-cover" />
                         </div>
                     </div>
-                    <p><strong>Tên sách:</strong> {{ selectedProduct.name }}</p>
-                    <p><strong>Tác giả:</strong> {{ selectedProduct.author }}</p>
-                    <p><strong>Giá:</strong> {{ formatPrice(selectedProduct.price) }}</p>
-                    <p><strong>Số lượng:</strong> {{ selectedProduct.quantity }}</p>
-                    <p><strong>Năm xuất bản:</strong> {{ selectedProduct.yearOfPublication }}</p>
-                    <p><strong>Nhà xuất bản:</strong> {{ selectedProduct.publisherId.name }}</p>
+                    <p><strong>Tên sách:</strong> {{ selectedProduct.TenSach }}</p>
+                    <p><strong>Tác giả:</strong> {{ selectedProduct.TacGia }}</p>
+                    <p><strong>Giá:</strong> {{ formatPrice(selectedProduct.DonGia) }}</p>
+                    <p><strong>Số lượng:</strong> {{ selectedProduct.SoQuyen }}</p>
+                    <p><strong>Năm xuất bản:</strong> {{ selectedProduct.NamXuatBan }}</p>
+                    <p><strong>Nhà xuất bản:</strong> {{ selectedProduct.MaNXB.TenNXB }}</p>
                     <p><strong>Ngày tạo:</strong> {{ formatDate(selectedProduct.createdAt) }}</p>
                     <p><strong>Ngày cập nhật:</strong> {{ formatDate(selectedProduct.updatedAt) }}</p>
                 </div>
@@ -338,75 +334,63 @@
                 <h2 class="text-lg font-bold mb-4">Chỉnh sửa thông tin sách</h2>
                 <form @submit.prevent="saveEditedProduct">
                     <div class="mb-4">
-                        <label for="editName" class="block text-sm font-medium text-gray-700">Tên</label>
+                        <label for="editTenSach" class="block text-sm font-medium text-gray-700">Tên</label>
                         <input
-                            v-model="productToEdit.name"
+                            v-model="productToEdit.TenSach"
                             type="text"
-                            id="editName"
+                            id="editTenSach"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
                     </div>
 
                     <div class="mb-4">
-                        <label for="editAuthor" class="block text-sm font-medium text-gray-700">Tác giả</label>
+                        <label for="editTacGia" class="block text-sm font-medium text-gray-700">Tác giả</label>
                         <input
-                            v-model="productToEdit.author"
+                            v-model="productToEdit.TacGia"
                             type="text"
-                            id="editAuthor"
+                            id="editTacGia"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editPrice" class="block text-sm font-medium text-gray-700">Gía</label>
+                        <label for="editDonGia" class="block text-sm font-medium text-gray-700">Gía</label>
                         <input
-                            v-model="productToEdit.price"
+                            v-model="productToEdit.DonGia"
                             type="number"
-                            id="editPrice"
+                            id="editDonGia"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editQuantity" class="block text-sm font-medium text-gray-700">Số lượng</label>
+                        <label for="editSoQuyen" class="block text-sm font-medium text-gray-700">Số lượng</label>
                         <input
-                            v-model="productToEdit.quantity"
+                            v-model="productToEdit.SoQuyen"
                             type="number"
-                            id="editQuantity"
+                            id="editSoQuyen"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="editYearOfPublication" class="block text-sm font-medium text-gray-700"
-                            >Năm XB</label
-                        >
+                        <label for="editNamXuatBan" class="block text-sm font-medium text-gray-700">Năm XB</label>
                         <input
-                            v-model="productToEdit.yearOfPublication"
+                            v-model="productToEdit.NamXuatBan"
                             type="number"
-                            id="editYearOfPublication"
+                            id="editNamXuatBan"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         />
                     </div>
                     <div class="mb-4">
                         <label for="publisher" class="block text-sm font-medium text-gray-700">Nhà XB</label>
-                        <!-- <select
-                            v-model="productToEdit.publisherId.name"
-                            id="publisher"
-                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                            required
-                        >
-                            <option disabled value="">Chọn nhà xuất bản</option>
-                            <option v-for="publisher in publishers" :key="publisher._id" :value="publisher.name">
-                                {{ publisher.name }}
-                            </option>
-                        </select> -->
+
                         <select
-                            v-model="productToEdit.publisherId"
+                            v-model="productToEdit.MaNXB"
                             id="publisher"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         >
                             <option disabled value="">Chọn nhà xuất bản</option>
                             <option v-for="publisher in publishers" :key="publisher._id" :value="publisher._id">
-                                {{ publisher.name }}
+                                {{ publisher.TenNXB }}
                             </option>
                         </select>
                     </div>
@@ -516,11 +500,11 @@ export default {
             currentSortDir: 'asc',
             searchQuery: '',
             newProduct: {
-                name: '',
-                author: '',
-                price: null,
-                quantity: null,
-                yearOfPublication: null,
+                TenSach: '',
+                TacGia: '',
+                DonGia: null,
+                SoQuyen: null,
+                NamXuatBan: null,
                 publisher: '',
             },
             // Create images
@@ -575,8 +559,8 @@ export default {
                 let valueB = b[this.currentSort];
 
                 if (this.currentSort === 'publisher') {
-                    valueA = a.publisherId ? a.publisherId.name : '';
-                    valueB = b.publisherId ? b.publisherId.name : '';
+                    valueA = a.MaNXB ? a.MaNXB.TenNXB : '';
+                    valueB = b.MaNXB ? b.MaNXB.TenNXB : '';
                 }
 
                 if (valueA < valueB) return -1 * direction;
@@ -587,9 +571,9 @@ export default {
         filteredBooks() {
             const searchQuery = this.searchQuery.toLowerCase().replace(/\//g, '');
             return this.products.filter((book) => {
-                const name = book.name ? book.name.toLowerCase() : '';
-                const author = book.author ? book.author.toLowerCase() : '';
-                const publisher = book.publisherId?.name ? book.publisherId?.name.toLowerCase() : '';
+                const TenSach = book.TenSach ? book.TenSach.toLowerCase() : '';
+                const TacGia = book.TacGia ? book.TacGia.toLowerCase() : '';
+                const publisher = book.MaNXB?.TenNXB ? book.MaNXB?.TenNXB.toLowerCase() : '';
                 const createdAt = book.createdAt ? new Date(book.createdAt) : null;
                 const updatedAt = book.updatedAt ? new Date(book.updatedAt) : null;
 
@@ -615,11 +599,11 @@ export default {
                 };
 
                 return (
-                    name.includes(searchQuery.toLowerCase()) ||
-                    author.includes(searchQuery.toLowerCase()) ||
+                    TenSach.includes(searchQuery.toLowerCase()) ||
+                    TacGia.includes(searchQuery.toLowerCase()) ||
                     publisher.includes(searchQuery.toLowerCase()) ||
-                    matchNumber(book.quantity) ||
-                    matchNumber(book.yearOfPublication) ||
+                    matchNumber(book.SoQuyen) ||
+                    matchNumber(book.NamXuatBan) ||
                     formattedCreatedAt.includes(searchQuery) // So sánh chuỗi ngày tháng
                     // formattedUpdatedAt.includes(searchQuery)
                 );
@@ -707,11 +691,11 @@ export default {
             doc.setFontSize(12);
             const headers = ['Tên', 'Tác giả', 'Giá', 'Số lượng', 'Năm xuất bản', 'Nhà xuất bản'];
             const data = this.products.map((product) => [
-                product.name,
-                product.author,
-                this.formatPrice(product.price),
-                product.quantity,
-                product.yearOfPublication,
+                product.TenSach,
+                product.TacGia,
+                this.formatPrice(product.DonGia),
+                product.SoQuyen,
+                product.NamXuatBan,
                 product.publisher,
             ]);
 
@@ -790,11 +774,11 @@ export default {
         },
         resetNewProduct() {
             this.newProduct = {
-                name: '',
-                author: '',
-                price: null,
-                quantity: null,
-                yearOfPublication: null,
+                TenSach: '',
+                TacGia: '',
+                DonGia: null,
+                SoQuyen: null,
+                NamXuatBan: null,
                 publisher: '',
             };
             this.uploadImages = [];
@@ -835,15 +819,15 @@ export default {
                 this.isUploading = true;
 
                 const formData = new FormData();
-                formData.append('name', this.newProduct.name);
-                formData.append('author', this.newProduct.author);
-                formData.append('price', this.newProduct.price);
-                formData.append('quantity', this.newProduct.quantity);
-                formData.append('yearOfPublication', this.newProduct.yearOfPublication);
+                formData.append('TenSach', this.newProduct.TenSach);
+                formData.append('TacGia', this.newProduct.TacGia);
+                formData.append('DonGia', this.newProduct.DonGia);
+                formData.append('SoQuyen', this.newProduct.SoQuyen);
+                formData.append('NamXuatBan', this.newProduct.NamXuatBan);
                 formData.append('publisher', this.newProduct.publisher);
                 // Thêm các ảnh đã chọn vào form data
                 this.uploadImages.forEach((image) => {
-                    formData.append('images', image); // Gửi từng ảnh
+                    formData.append('HinhAnhSach', image); // Gửi từng ảnh
                 });
 
                 // Gửi request tạo sản phẩm cùng với ảnh
@@ -895,7 +879,7 @@ export default {
 
         editProduct(product) {
             this.productToEdit = { ...product }; // Make a copy of the publisher object to avoid directly modifying the array
-            this.currentImages = [...product.images];
+            this.currentImages = [...product.HinhAnhSach];
             this.deletedImages = [];
             this.newImages = [];
             this.isEditProductModalVisible = true;
@@ -919,11 +903,11 @@ export default {
 
                 const formData = new FormData();
                 // Gán các thông tin sản phẩm từ productToEdit vào FormData
-                formData.append('name', this.productToEdit.name);
-                formData.append('author', this.productToEdit.author);
-                formData.append('price', this.productToEdit.price);
-                formData.append('quantity', this.productToEdit.quantity);
-                formData.append('yearOfPublication', this.productToEdit.yearOfPublication);
+                formData.append('TenSach', this.productToEdit.TenSach);
+                formData.append('TacGia', this.productToEdit.TacGia);
+                formData.append('DonGia', this.productToEdit.DonGia);
+                formData.append('SoQuyen', this.productToEdit.SoQuyen);
+                formData.append('NamXuatBan', this.productToEdit.NamXuatBan);
                 formData.append('publisher', this.productToEdit.publisher);
                 // Gửi đường dẫn hình ảnh đã xóa
                 if (this.deletedImages.length > 0) {
@@ -932,7 +916,7 @@ export default {
                 // Thêm hình ảnh mới (là các file, không phải link text)
                 if (this.newImages.length > 0) {
                     for (const file of this.newImages) {
-                        formData.append('images', file); // Chỉ thêm file, không thêm link
+                        formData.append('HinhAnhSach', file); // Chỉ thêm file, không thêm link
                     }
                 }
 

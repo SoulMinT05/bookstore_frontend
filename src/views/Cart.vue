@@ -59,13 +59,13 @@
 
                                 <td class="p-4">
                                     <img
-                                        :src="item.product.images[0]"
+                                        :src="item.product.HinhAnhSach[0]"
                                         class="w-16 md:w-32 max-w-full max-h-full"
-                                        :alt="item.product.name"
+                                        :alt="item.product.TenSach"
                                     />
                                 </td>
                                 <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                                    {{ item.product.name }}
+                                    {{ item.product.TenSach }}
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
@@ -88,7 +88,7 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                                    {{ formatCurrency(item.product.price) }}
+                                    {{ formatCurrency(item.product.DonGia) }}
                                 </td>
                                 <td class="px-6 py-4" @click="removeProductCart(item.product._id)">
                                     <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline"
@@ -157,7 +157,7 @@
             </div>
         </main>
 
-        <!-- Footer -->
+        <Footer />
     </div>
 </template>
 

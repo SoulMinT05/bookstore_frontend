@@ -74,12 +74,12 @@
                                 <TableCell>
                                     <img
                                         class="w-20 h-20 object-cover rounded"
-                                        :src="product?.product?.images[0]"
+                                        :src="product?.product?.HinhAnhSach[0]"
                                         alt="Product Image"
                                         crossOrigin="anonymous"
                                     />
                                 </TableCell>
-                                <TableCell class="font-medium">{{ product?.product?.name }}</TableCell>
+                                <TableCell class="font-medium">{{ product?.product?.TenSach }}</TableCell>
                                 <TableCell class="font-medium">{{ product?.count }}</TableCell>
                             </TableRow>
                         </TableBody>
@@ -93,7 +93,7 @@
                 <CardContent class="grid gap-4">
                     <div class="flex items-center">
                         <div>Tổng số lượng</div>
-                        <div class="ml-auto">{{ orderDetails?.quantity }}</div>
+                        <div class="ml-auto">{{ orderDetails?.SoQuyen }}</div>
                     </div>
                     <div class="flex items-center">
                         <div>Trạng thái</div>

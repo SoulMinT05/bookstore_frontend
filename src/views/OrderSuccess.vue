@@ -22,7 +22,7 @@
                 </div>
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Số lượng</span>
-                    <span>{{ lastOrder.quantity }}</span>
+                    <span>{{ lastOrder.SoQuyen }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Trạng thái</span>

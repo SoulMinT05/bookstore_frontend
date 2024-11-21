@@ -51,15 +51,15 @@
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('quantity')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('SoQuyen')">
                             Số lượng
-                            <span v-if="currentSort !== 'quantity'" class="ml-2">
+                            <span v-if="currentSort !== 'SoQuyen'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'quantity' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'SoQuyen' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'quantity' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'SoQuyen' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
@@ -128,7 +128,7 @@
                             <span class="font-medium">{{ order?.orderBy?.lastName }}</span>
                         </td>
                         <td class="py-4 px-6 text-center">
-                            <span>{{ order?.quantity }}</span>
+                            <span>{{ order?.SoQuyen }}</span>
                         </td>
                         <td class="py-4 px-6 text-center">
                             <Select
@@ -222,11 +222,11 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                        <label for="SoQuyen" class="block text-sm font-medium text-gray-700">SoQuyen</label>
                         <input
-                            v-model="newOrder.quantity"
+                            v-model="newOrder.SoQuyen"
                             type="text"
-                            id="quantity"
+                            id="SoQuyen"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                             required
                         />
@@ -272,7 +272,7 @@
                     <p><strong>Họ: </strong> {{ selectedOrder.orderBy?.firstName }}</p>
                     <p><strong>Tên: </strong> {{ selectedOrder.orderBy?.lastName }}</p>
                     <p><strong>Email: </strong> {{ selectedOrder?.orderBy?.email }}</p>
-                    <p><strong>Số lượng: </strong> {{ selectedOrder.quantity }}</p>
+                    <p><strong>Số lượng: </strong> {{ selectedOrder.SoQuyen }}</p>
                     <p>
                         <strong>Tình trạng: </strong>
                         <!-- {{ selectedOrder.status }} -->
@@ -494,7 +494,7 @@ const filteredOrders = computed(() => {
             firstName.includes(searchQueryInput) ||
             lastName.includes(searchQueryInput) ||
             status.includes(searchQueryInput) ||
-            matchNumber(order.quantity) ||
+            matchNumber(order.SoQuyen) ||
             formattedCreatedAt.includes(searchQueryInput) || // Compare formatted date
             formattedStartDate.includes(searchQueryInput) || // Compare formatted date
             formattedEndDate.includes(searchQueryInput) // Compare formatted date

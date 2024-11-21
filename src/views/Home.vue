@@ -12,9 +12,9 @@
 
             <h2
                 class="text-2xl font-bold text-gray-800 mt-16"
-                v-if="productsByPublisher.length > 0 && productsByPublisher[0].publisherId"
+                v-if="productsByPublisher.length > 0 && productsByPublisher[0].MaNXB"
             >
-                {{ productsByPublisher[0].publisherId.name }}
+                {{ productsByPublisher[0].MaNXB.TenNXB }}
             </h2>
 
             <Carousel
@@ -34,20 +34,20 @@
                                 <Card>
                                     <CardContent class="p-4">
                                         <img
-                                            :src="product.images[0]"
+                                            :src="product.HinhAnhSach[0]"
                                             alt="product"
                                             class="w-full h-48 object-cover rounded-t-lg"
                                         />
                                         <h3 class="mt-4 text-xl font-semibold line-clamp-2 custom-min-height">
-                                            {{ product.name }}
+                                            {{ product.TenSach }}
                                         </h3>
 
                                         <div class="mt-4 flex justify-between items-center">
                                             <p class="text-gray-500 whitespace-normal dark:text-gray-400">
-                                                {{ product.author }}
+                                                {{ product.TacGia }}
                                             </p>
                                             <span class="text-lg font-medium text-red-600 dark:text-white">{{
-                                                formatCurrency(product.price | currency)
+                                                formatCurrency(product.DonGia | currency)
                                             }}</span>
                                         </div>
                                         <div class="mt-4 flex justify-between items-center">
@@ -64,7 +64,7 @@
                 <CarouselNext />
             </Carousel>
         </div>
-        <!-- <Footer /> -->
+        <Footer />
     </div>
 </template>
 
@@ -97,11 +97,17 @@ const fetchProductsByAllPublishers = async () => {
         const res = await axios.get('/publisher/getAllPublishers');
         const publishers = res.data.publishers;
 
-        const productPromises = publishers.map((publisher) =>
-            axios.get(`/book/publisher/${publisher._id}`).then((productRes) => productRes.data.products),
-        );
+        const productPromises = publishers.map((publisher) => {
+            console.log('publisher: ', publisher);
+            return axios.get(`/book/publisher/${publisher._id}`).then((productRes) => {
+                console.log('productRes.data.products: ', productRes.data.products);
+                return productRes.data.products;
+            });
+        });
 
         const allProducts = await Promise.all(productPromises);
+        console.log('allProducts: ', allProducts);
+        console.log('allProducts.flat(): ', allProducts.flat());
         productsByPublisher.value = allProducts.flat();
         console.log('All products by all publishers: ', productsByPublisher.value);
     } catch (error) {
@@ -117,7 +123,7 @@ const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
 };
 onMounted(() => {
-    fetchProductsByPublisher();
+    // fetchProductsByPublisher();
     fetchProductsByAllPublishers();
 });
 </script>

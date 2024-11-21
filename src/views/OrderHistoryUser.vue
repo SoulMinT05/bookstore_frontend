@@ -37,7 +37,7 @@
 
                             <div class="flex items-center justify-between">
                                 <span class="font-medium">Tổng số lượng </span>
-                                <span>{{ order.quantity }}</span>
+                                <span>{{ order.SoQuyen }}</span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="font-medium">Tình trạng </span>
@@ -53,6 +53,7 @@
                 </li>
             </ul>
         </div>
+        <Footer />
     </div>
 </template>
 

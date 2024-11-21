@@ -21,9 +21,9 @@
                 <div className="flex flex-col">
                     <section className="py-4 md:py-6 lg:py-2">
                         <div className="container grid md:grid-cols-2 gap-8 px-4 md:px-6">
-                            <div className="flex flex-col items-start gap-6" v-if="bookDetails.images">
+                            <div className="flex flex-col items-start gap-6" v-if="bookDetails.HinhAnhSach">
                                 <img
-                                    :src="bookDetails.images[0]"
+                                    :src="bookDetails.HinhAnhSach[0]"
                                     alt="Product Image"
                                     width="{600}"
                                     height="{600}"
@@ -31,7 +31,7 @@
                                 />
                                 <div class="flex gap-4">
                                     <img
-                                        v-for="(image, index) in bookDetails.images.slice(1, 5)"
+                                        v-for="(image, index) in bookDetails.HinhAnhSach.slice(1, 5)"
                                         :key="index"
                                         :src="image"
                                         alt="Thumbnail Image"
@@ -42,29 +42,29 @@
                             </div>
                             <div className="flex flex-col items-start gap-6">
                                 <h1
-                                    className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight"
-                                    v-if="bookDetails.name"
+                                    className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight"
+                                    v-if="bookDetails.TenSach"
                                 >
-                                    {{ bookDetails.name }}
+                                    {{ bookDetails.TenSach }}
                                 </h1>
                                 <p className="text-muted-foreground text-lg" v-if="bookDetails.description">
                                     {{ bookDetails.description }}
                                 </p>
-                                <p className="text-lg font-semibold" v-if="bookDetails.author">
+                                <p className="text-lg font-semibold" v-if="bookDetails.TacGia">
                                     Tác giả:
-                                    {{ bookDetails.author }}
+                                    {{ bookDetails.TacGia }}
                                 </p>
-                                <p className="text-lg font-semibold" v-if="bookDetails.publisherId">
+                                <p className="text-lg font-semibold" v-if="bookDetails.MaNXB">
                                     Nhà xuất bản:
-                                    {{ bookDetails.publisherId.name }}
+                                    {{ bookDetails.MaNXB.TenNXB }}
                                 </p>
-                                <p className="text-lg font-semibold" v-if="bookDetails.yearOfPublication">
+                                <p className="text-lg font-semibold" v-if="bookDetails.NamXuatBan">
                                     Năm xuất bản:
-                                    {{ bookDetails.yearOfPublication }}
+                                    {{ bookDetails.NamXuatBan }}
                                 </p>
                                 <div className="flex items-center gap-4">
-                                    <h2 className="text-4xl font-bold text-red-600" v-if="bookDetails.price">
-                                        {{ formatCurrency(bookDetails.price) }}
+                                    <h2 className="text-4xl font-bold text-red-600" v-if="bookDetails.DonGia">
+                                        {{ formatCurrency(bookDetails.DonGia) }}
                                     </h2>
                                     <Button size="lg" @click="addToCart">Thêm vào giỏ hàng</Button>
                                 </div>
@@ -113,7 +113,7 @@
                                     </div>
                                 </div>
                             </div> -->
-                            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight -mb-8">Sản phẩm tương tự</h2>
+                            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight -mb-8">Sản phẩm tương tự</h2>
                             <Carousel class="relative w-full mt-2" :opts="{ align: 'start' }">
                                 <CarouselContent>
                                     <CarouselItem
@@ -126,7 +126,7 @@
                                                 <Card>
                                                     <CardContent class="p-4">
                                                         <img
-                                                            :src="product.images[0]"
+                                                            :src="product.HinhAnhSach[0]"
                                                             alt="product"
                                                             class="w-full h-48 object-cover rounded-t-lg"
                                                         />
@@ -137,9 +137,9 @@
                                                         </h3>
 
                                                         <div class="mt-4 flex justify-between items-center">
-                                                            <p class="text-gray-500">{{ product.author }}</p>
+                                                            <p class="text-gray-500">{{ product.TacGia }}</p>
                                                             <span class="text-lg font-medium text-red-600">{{
-                                                                formatCurrency(product.price)
+                                                                formatCurrency(product.DonGia)
                                                             }}</span>
                                                         </div>
 
@@ -162,6 +162,7 @@
                 </div>
             </main>
         </div>
+        <Footer />
     </div>
 </template>
 
@@ -217,16 +218,16 @@ const fetchProductDetails = async () => {
 };
 
 const fetchProductSimilarPublisher = async () => {
-    if (!bookDetails.value || !bookDetails.value.publisherId) {
+    if (!bookDetails.value || !bookDetails.value.MaNXB) {
         console.log('Publisher ID not available');
         return;
     }
-    const { publisherId } = bookDetails.value;
+    const { MaNXB } = bookDetails.value;
 
     try {
         const res = await axios.get('/book/relatedProducts', {
             params: {
-                publisherId, // Truyền publisherId để lấy sản phẩm của cùng nhà xuất bản
+                MaNXB, // Truyền MaNXB để lấy sản phẩm của cùng nhà xuất bản
             },
         });
         console.log('res.data: ', res.data);

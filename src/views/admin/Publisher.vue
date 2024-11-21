@@ -503,9 +503,9 @@ export default {
                 const staff = JSON.parse(localStorage.getItem('staff'));
                 const staffToken = staff.accessToken;
 
-                // Lấy publisherId từ publisherToEdit
-                const publisherId = this.publisherToEdit._id;
-                const res = await fetch(`http://localhost:3001/api/publisher/${publisherId}`, {
+                // Lấy MaNXB từ publisherToEdit
+                const MaNXB = this.publisherToEdit._id;
+                const res = await fetch(`http://localhost:3001/api/publisher/${MaNXB}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -523,7 +523,7 @@ export default {
                     return;
                 }
                 // Cập nhật danh sách users sau khi chỉnh sửa
-                const index = this.publishers.findIndex((publisher) => publisher._id === publisherId);
+                const index = this.publishers.findIndex((publisher) => publisher._id === MaNXB);
                 if (index !== -1) {
                     this.publishers[index] = data.updatedPublisher;
                 }
