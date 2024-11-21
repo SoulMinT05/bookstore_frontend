@@ -301,7 +301,7 @@
                 <div class="space-y-2">
                     <p><strong>Hình ảnh:</strong></p>
                     <div class="flex flex-wrap justify-start gap-3 mb-4">
-                        <div v-for="(image, index) in selectedProduct.images" :key="index" class="flex-shrink-0">
+                        <div v-for="(image, index) in selectedProduct.HinhAnhSach" :key="index" class="flex-shrink-0">
                             <img :src="image" alt="Hình ảnh sách" class="rounded-lg w-24 h-24 object-cover" />
                         </div>
                     </div>
@@ -382,18 +382,41 @@
                     </div>
                     <div class="mb-4">
                         <label for="publisher" class="block text-sm font-medium text-gray-700">Nhà XB</label>
-
                         <select
                             v-model="productToEdit.MaNXB"
                             id="publisher"
                             class="mt-1 p-2 w-full border border-gray-300 rounded-md"
                         >
                             <option disabled value="">Chọn nhà xuất bản</option>
-                            <option v-for="publisher in publishers" :key="publisher._id" :value="publisher._id">
+                            <option v-for="publisher in publishers" :key="publisher._id" :value="publisher.TenNXB">
                                 {{ publisher.TenNXB }}
                             </option>
                         </select>
+
+                        <!-- <label for="publisher" class="block text-sm font-medium text-gray-700">Nhà XB</label> -->
+
+                        <!-- <select
+                            v-model="productToEdit.publisherId"
+                            id="publisher"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                        >
+                            <option disabled value="">Chọn nhà xuất bản</option>
+                            <option v-for="publisher in publishers" :key="publisher._id" :value="publisher._id">
+                                {{ publisher.name }}
+                            </option>
+                        </select> -->
                     </div>
+                    <!-- <select
+                            v-model="newProduct.publisher"
+                            id="publisher"
+                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                            required
+                        >
+                            <option disabled value="">Chọn nhà xuất bản</option>
+                            <option v-for="publisher in publishers" :key="publisher._id" :value="publisher.TenNXB">
+                                {{ publisher.TenNXB }}
+                            </option>
+                        </select> -->
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Ảnh hiện tại</label>

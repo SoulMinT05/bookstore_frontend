@@ -127,7 +127,7 @@
                         class="border-b border-gray-200 hover:bg-gray-100"
                     >
                         <td class="py-3 px-6 text-left">
-                            <span class="font-medium">{{ user.Ho }}</span>
+                            <span class="font-medium">{{ user.Ho || user.firstName }}</span>
                         </td>
                         <td class="py-3 px-6 text-left">
                             <span>{{ user.Ten }}</span>
@@ -277,7 +277,7 @@
                             id="Phai"
                             class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
-                            <option value="" disabled selected>Choose a Phai</option>
+                            <option value="" disabled selected>Chọn giới tính</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                             <option value="other">Other</option>
@@ -335,7 +335,7 @@
             <div @click.stop class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-2/3 lg:w-1/2">
                 <h2 class="text-xl font-bold text-center mb-4">Thông tin người dùng</h2>
                 <div class="space-y-2">
-                    <p><strong>Họ: </strong> {{ selectedUser.Ho }}</p>
+                    <p><strong>Họ: </strong> {{ selectedUser.Ho || selectedUser.firstName }}</p>
                     <p><strong>Tên: </strong> {{ selectedUser.Ten }}</p>
                     <p><strong>Email: </strong> {{ selectedUser.email }}</p>
                     <p><strong>Ngày sinh: </strong> {{ formatNgaySinhHtml(selectedUser.NgaySinh) }}</p>
@@ -473,7 +473,7 @@
                             id="Phai"
                             class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
-                            <option value="" disabled selected>Choose a Phai</option>
+                            <option value="" disabled selected>Chọn giới tính</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                             <option value="other">Other</option>

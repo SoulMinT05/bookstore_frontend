@@ -98,9 +98,9 @@ const fetchProductsByAllPublishers = async () => {
         const publishers = res.data.publishers;
 
         const productPromises = publishers.map((publisher) => {
-            console.log('publisher: ', publisher);
+            console.log('publisher14242: ', publisher);
             return axios.get(`/book/publisher/${publisher._id}`).then((productRes) => {
-                console.log('productRes.data.products: ', productRes.data.products);
+                console.log('productRes.data.products21212: ', productRes.data.products);
                 return productRes.data.products;
             });
         });
