@@ -379,16 +379,17 @@ const sortedAndPaginatedOrders = computed(() => {
     return sortedOrders.slice(start, end);
 });
 
+console.log(' orders.value: ', orders.value);
 // Computed: Filtered publishers based on the search query
 const filteredOrders = computed(() => {
     const searchQueryInput = searchQuery.value.toLowerCase().replace(/\//g, ''); // Remove "/"
     return orders.value.filter((order) => {
-        const Ho = order.MaDocGia.Ho ? String(order.MaDocGia.Ho).toLowerCase() : '';
-        const Ten = order.MaDocGia.Ten ? String(order.MaDocGia.Ten).toLowerCase() : '';
-        const TinhTrang = order.TinhTrang ? String(order.TinhTrang).toLowerCase() : '';
-        const createdAt = order.createdAt ? new Date(order.createdAt) : null;
-        const NgayMuon = order.NgayMuon ? new Date(order.NgayMuon) : null;
-        const NgayTra = order.NgayTra ? new Date(order.NgayTra) : null;
+        const Ho = order?.MaDocGia.Ho ? String(order?.MaDocGia.Ho).toLowerCase() : '';
+        const Ten = order?.MaDocGia.Ten ? String(order?.MaDocGia.Ten).toLowerCase() : '';
+        const TinhTrang = order?.TinhTrang ? String(order?.TinhTrang).toLowerCase() : '';
+        const createdAt = order?.createdAt ? new Date(order?.createdAt) : null;
+        const NgayMuon = order?.NgayMuon ? new Date(order?.NgayMuon) : null;
+        const NgayTra = order?.NgayTra ? new Date(order?.NgayTra) : null;
         // const updatedAt = order.updatedAt ? new Date(order.updatedAt) : null;
 
         const formattedCreatedAt = createdAt

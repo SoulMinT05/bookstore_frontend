@@ -95,7 +95,7 @@ const currentWeekStatistics = computed(() => {
     const data = props.statistics.statisticsWeek?.[0] || {};
     console.log('dataWeeeeek: ', data);
     return [
-        { title: 'Người dùng', count: data.users?.count || 0, growthRate: data.users?.growthRate || 0 },
+        { title: 'Nhân viên', count: data.users?.count || 0, growthRate: data.users?.growthRate || 0 },
         { title: 'Sản phẩm', count: data.products?.count || 0, growthRate: data.products?.growthRate || 0 },
         { title: 'Đơn mượn', count: data.orders?.count || 0, growthRate: data.orders?.growthRate || 0 },
         { title: 'Nhà xuất bản', count: data.publishers?.count || 0, growthRate: data.publishers?.growthRate || 0 },

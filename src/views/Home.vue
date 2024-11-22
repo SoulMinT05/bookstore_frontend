@@ -14,7 +14,7 @@
                 class="text-2xl font-bold text-gray-800 mt-16"
                 v-if="productsByPublisher.length > 0 && productsByPublisher[0].MaNXB"
             >
-                {{ productsByPublisher[0].MaNXB.TenNXB }}
+                Tất cả sách
             </h2>
 
             <Carousel
