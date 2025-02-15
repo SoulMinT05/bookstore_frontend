@@ -263,6 +263,8 @@ const borrowBooks = async () => {
     // Xử lý ngày bắt đầu
     let formattedNgayMuon = NgayMuon.value ? formatDate(NgayMuon.value) : formatDate(new Date());
 
+    console.log('selectedProductIds: ', selectedProductIds);
+
     // Chuẩn bị dữ liệu gửi tới backend
     const orderData = {
         NgayMuon: formattedNgayMuon,
@@ -274,7 +276,16 @@ const borrowBooks = async () => {
     try {
         // Gửi yêu cầu POST đến backend
         const res = await axios.post('/order/createOrder', orderData);
+
         console.log('res.data: ', res.data);
+        // const data = await res.json();
+
+        // const toast = useToast();
+        // console.log('dataOrderUser: ', data);
+        // if (!data.success) {
+        //     toast.error(data.message);
+        //     return;
+        // }
 
         // Hiển thị thông báo thành công
         toast.success('Mượn sách thành công');
