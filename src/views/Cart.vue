@@ -277,7 +277,7 @@ const borrowBooks = async () => {
         // Gửi yêu cầu POST đến backend
         const res = await axios.post('/order/createOrder', orderData);
 
-        console.log('res.data: ', res.data);
+        // console.log('res.data: ', res.data);
         // const data = await res.json();
 
         // const toast = useToast();
@@ -296,6 +296,7 @@ const borrowBooks = async () => {
         toast.error('Mượn sách thất bại. Vui lòng thử lại sau.');
     }
 };
+
 const getCart = async () => {
     try {
         const res = await axios.get('/user/getCart');
@@ -344,6 +345,7 @@ const removeProductCart = async (productId) => {
         toast.error('Xoá sản phẩm thất bại');
     }
 };
+
 onMounted(() => {
     getCart();
 });

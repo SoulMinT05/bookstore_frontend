@@ -44,7 +44,10 @@
                         />
                         <span class="ml-2">Remember me</span>
                     </label>
-                    <a href="#" class="text-sm text-blue-600 hover:underline dark:text-blue-500">Forgot password?</a>
+                    <!-- <a href="#" class="text-sm text-blue-600 hover:underline dark:text-blue-500">Quên mật khẩu?</a> -->
+                    <router-link to="forgot-password" class="text-sm text-blue-600 hover:underline dark:text-blue-500"
+                        >Quên mật khẩu?
+                    </router-link>
                 </div>
                 <button
                     type="submit"

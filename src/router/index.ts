@@ -27,6 +27,22 @@ const router = createRouter({
             // IRouteMeta: có thuộc tính title --> quản lý dễ dàng
         },
         {
+            path: '/forgot-password',
+            name: 'forgot-password',
+            component: () => import('@/views/ForgotPassword.vue'),
+            meta: {
+                title: 'ForgotPassword',
+            } as RouteMeta & IRouteMeta,
+        },
+        {
+            path: '/resetPassword/:token',
+            name: 'resetPassword',
+            component: () => import('@/views/ResetPassword.vue'),
+            meta: {
+                title: 'ResetPassword',
+            } as RouteMeta & IRouteMeta,
+        },
+        {
             path: '/loginAdmin',
             name: 'loginAdmin',
             component: () => import('@/views/LoginAdmin.vue'),

@@ -196,6 +196,7 @@ const slug = route.params.slug;
 const toast = useToast();
 const bookDetails = ref({});
 const relatedProducts = ref([]);
+const carts = ref([]);
 
 function formatCurrency(value: number | null | undefined): string {
     if (value == null || isNaN(value)) return '0 ₫'; // Xử lý trường hợp giá trị không hợp lệ
@@ -261,6 +262,13 @@ const addToCart = async () => {
 onMounted(() => {
     fetchProductDetails();
 });
+watch(
+    () => route.params.slug,
+    (newSlug) => {
+        console.log('Slug changed:', newSlug);
+        fetchProductDetails(); // Gọi lại API khi slug thay đổi
+    },
+);
 console.log('Slug from URL:', slug); // Log slug ra console
 </script>
 
