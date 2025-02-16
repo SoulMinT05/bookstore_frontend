@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GlobalSearchPopover from '@/components/core/GlobalSearchPopover.vue';
+import SearchBarBook from './SearchBarBook.vue';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import {
     DropdownMenu,
@@ -118,7 +118,7 @@ onMounted(() => {
             </router-link>
         </div>
         <div class="w-2/5 hidden lg:block">
-            <GlobalSearchPopover />
+            <SearchBarBook />
         </div>
         <Button
             variant="outline"

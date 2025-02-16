@@ -1,7 +1,7 @@
 <template>
     <div>
         <Header />
-        <div class="container mx-auto p-4">
+        <div class="container mx-auto p-4 min-h-[250px]">
             <div class="slider-wrapper">
                 <slick-carousel :autoplay="true" :autoplay-speed="3000" :dots="true">
                     <div v-for="(item, index) in slides" :key="index">
@@ -20,36 +20,36 @@
                         <CarouselItem
                             v-for="product in books"
                             :key="product._id"
-                            class="basis-1/5 flex-shrink-0 relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-lg group hover:shadow-xl hover:-translate-y-2"
+                            class="basis-1/5 flex-shrink-0 relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-lg group hover:shadow-xl hover:-translate-y-2 min-h-[250px]"
                         >
                             <router-link v-if="product.slug" :to="`/bookDetails/${product.slug}`">
-                                <div class="p-1">
-                                    <Card>
-                                        <CardContent class="p-4">
-                                            <img
-                                                :src="product.HinhAnhSach[0]"
-                                                alt="product"
-                                                class="w-full h-48 object-cover rounded-t-lg"
-                                            />
-                                            <h3 class="mt-4 text-xl font-semibold line-clamp-2 custom-min-height">
-                                                {{ product.TenSach }}
-                                            </h3>
+                                <!-- <div class="p-4"> -->
+                                <Card>
+                                    <CardContent class="p-4">
+                                        <img
+                                            :src="product.HinhAnhSach[0]"
+                                            alt="product"
+                                            class="w-full h-48 object-cover rounded-t-lg"
+                                        />
+                                        <h3 class="mt-4 text-xl font-semibold line-clamp-2 custom-min-height">
+                                            {{ product.TenSach }}
+                                        </h3>
 
-                                            <div class="mt-4 flex justify-between items-center">
-                                                <p class="text-gray-500 whitespace-normal dark:text-gray-400">
-                                                    {{ product.TacGia }}
-                                                </p>
-                                                <span class="text-lg font-medium text-red-600 dark:text-white">{{
-                                                    formatCurrency(product.DonGia)
-                                                }}</span>
-                                            </div>
-                                            <div class="mt-4 flex justify-between items-center">
-                                                <Heart class="cursor-pointer" />
-                                                <ShoppingCart class="cursor-pointer" />
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                </div>
+                                        <div class="mt-4 flex justify-between items-center">
+                                            <p class="text-gray-500 whitespace-normal dark:text-gray-400">
+                                                {{ product.TacGia }}
+                                            </p>
+                                            <span class="text-lg font-medium text-red-600 dark:text-white">{{
+                                                formatCurrency(product.DonGia)
+                                            }}</span>
+                                        </div>
+                                        <div class="mt-4 flex justify-between items-center">
+                                            <Heart class="cursor-pointer" />
+                                            <ShoppingCart class="cursor-pointer" />
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                                <!-- </div> -->
                             </router-link>
                         </CarouselItem>
                     </CarouselContent>
