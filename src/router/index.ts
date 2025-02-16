@@ -7,6 +7,7 @@ interface IRouteMeta {
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
+
     routes: [
         {
             path: '/',
@@ -226,6 +227,9 @@ const router = createRouter({
             } as RouteMeta & IRouteMeta,
         },
     ],
+    scrollBehavior(to, from, savedPosition) {
+        return { top: 0, behavior: 'smooth' };
+    },
 });
 
 router.beforeEach((to, from, next) => {

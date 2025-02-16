@@ -18,16 +18,16 @@
                     </BreadcrumbList>
                 </Breadcrumb>
 
-                <div className="flex flex-col">
-                    <section className="py-4 md:py-6 lg:py-2">
-                        <div className="container grid md:grid-cols-2 gap-8 px-4 md:px-6">
-                            <div className="flex flex-col items-start gap-6" v-if="bookDetails.HinhAnhSach">
+                <div class="flex flex-col">
+                    <section class="py-4 md:py-6 lg:py-2">
+                        <div class="container grid md:grid-cols-2 gap-8 px-4 md:px-6">
+                            <div class="flex flex-col items-start gap-6" v-if="bookDetails.HinhAnhSach">
                                 <img
                                     :src="bookDetails.HinhAnhSach[0]"
                                     alt="Product Image"
                                     width="{600}"
                                     height="{600}"
-                                    className="rounded-lg w-full aspect-square object-cover"
+                                    class="rounded-lg w-full aspect-square object-cover"
                                 />
                                 <div class="flex gap-4">
                                     <img
@@ -40,30 +40,30 @@
                                     />
                                 </div>
                             </div>
-                            <div className="flex flex-col items-start gap-6">
+                            <div class="flex flex-col items-start gap-6">
                                 <h1
-                                    className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight"
+                                    class="text-2xl sm:text-3xl md:text-3xl font-bold tracking-tight"
                                     v-if="bookDetails.TenSach"
                                 >
                                     {{ bookDetails.TenSach }}
                                 </h1>
-                                <p className="text-muted-foreground text-lg" v-if="bookDetails.description">
+                                <p class="text-muted-foreground text-lg" v-if="bookDetails.description">
                                     {{ bookDetails.description }}
                                 </p>
-                                <p className="text-lg font-semibold" v-if="bookDetails.TacGia">
+                                <p class="text-lg font-semibold" v-if="bookDetails.TacGia">
                                     Tác giả:
                                     {{ bookDetails.TacGia }}
                                 </p>
-                                <p className="text-lg font-semibold" v-if="bookDetails.MaNXB">
+                                <p class="text-lg font-semibold" v-if="bookDetails.MaNXB">
                                     Nhà xuất bản:
                                     {{ bookDetails.MaNXB.TenNXB }}
                                 </p>
-                                <p className="text-lg font-semibold" v-if="bookDetails.NamXuatBan">
+                                <p class="text-lg font-semibold" v-if="bookDetails.NamXuatBan">
                                     Năm xuất bản:
                                     {{ bookDetails.NamXuatBan }}
                                 </p>
-                                <div className="flex items-center gap-4">
-                                    <h2 className="text-4xl font-bold text-red-600" v-if="bookDetails.DonGia">
+                                <div class="flex items-center gap-4">
+                                    <h2 class="text-4xl font-bold text-red-600" v-if="bookDetails.DonGia">
                                         {{ formatCurrency(bookDetails.DonGia) }}
                                     </h2>
                                     <Button size="lg" @click="addToCart">Thêm vào giỏ hàng</Button>
@@ -71,97 +71,144 @@
                             </div>
                         </div>
                     </section>
-                    <section className="py-12 md:py-24 lg:py-16">
-                        <div className="container grid gap-12 px-4 md:px-6">
-                            <!-- <div className="grid gap-6">
-                                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Product Details</h2>
-                                <div className="grid gap-4 text-muted-foreground">
-                                    <p>
-                                        The Acme Prism T-Shirt is a stylish and comfortable addition to your wardrobe.
-                                        Crafted with a unique prism-inspired pattern, this tee adds a modern touch to
-                                        your everyday look.
-                                    </p>
-                                    <p>
-                                        Made with a blend of 60% combed ringspun cotton and 40% polyester jersey, the
-                                        Acme Prism T-Shirt is soft, breathable, and durable. The fabric is designed to
-                                        keep you cool and comfortable throughout the day.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="grid gap-6">
-                                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-                                    Product Specifications
-                                </h2>
-                                <div className="grid sm:grid-cols-2 gap-6">
-                                    <div className="grid gap-2">
-                                        <h3 className="text-lg font-semibold">Material</h3>
-                                        <p className="text-muted-foreground">
-                                            60% combed ringspun cotton, 40% polyester jersey
-                                        </p>
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <h3 className="text-lg font-semibold">Fit</h3>
-                                        <p className="text-muted-foreground">Regular fit, true to size</p>
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <h3 className="text-lg font-semibold">Care Instructions</h3>
-                                        <p className="text-muted-foreground">Machine wash cold, tumble dry low</p>
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <h3 className="text-lg font-semibold">Origin</h3>
-                                        <p className="text-muted-foreground">Made in USA</p>
-                                    </div>
-                                </div>
-                            </div> -->
-                            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight -mb-8">Sản phẩm tương tự</h2>
-                            <Carousel class="relative w-full mt-2" :opts="{ align: 'start' }">
+                    <section class="py-12 md:py-24 lg:py-16">
+                        <div class="container grid gap-12 px-4 md:px-6">
+                            <h2 class="text-2xl sm:text-3xl font-bold tracking-tight -mb-8">Sản phẩm tương tự</h2>
+                            <Carousel
+                                v-if="relatedProducts.length > 0"
+                                class="relative w-full mt-2"
+                                :opts="{ align: 'start' }"
+                            >
                                 <CarouselContent>
                                     <CarouselItem
-                                        v-for="(product, index) in relatedProducts"
-                                        :key="product.slug"
-                                        class="basis-1/5 flex-shrink-0 relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-lg group hover:shadow-xl hover:-translate-y-2"
+                                        v-for="product in relatedProducts"
+                                        :key="product._id"
+                                        class="basis-1/5 flex-shrink-0 relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-lg group hover:shadow-xl hover:-translate-y-2 h-full"
                                     >
-                                        <router-link v-if="product.slug" :to="`/bookDetails/${product.slug}`">
-                                            <div class="p-1">
-                                                <Card>
-                                                    <CardContent class="p-4">
-                                                        <img
-                                                            :src="product.HinhAnhSach[0]"
-                                                            alt="product"
-                                                            class="w-full h-48 object-cover rounded-t-lg"
-                                                        />
-                                                        <h3
-                                                            class="mt-4 text-xl font-semibold line-clamp-2 custom-min-height"
+                                        <router-link
+                                            v-if="product.slug"
+                                            :to="`/bookDetails/${product.slug}`"
+                                            class="h-full"
+                                        >
+                                            <Card class="h-full flex flex-col">
+                                                <CardContent class="p-4 flex flex-col justify-between h-full">
+                                                    <img
+                                                        :src="product.HinhAnhSach[0]"
+                                                        alt="product"
+                                                        class="w-full h-48 object-cover rounded-t-lg"
+                                                    />
+                                                    <!-- Đặt chiều cao tối thiểu cho tiêu đề -->
+                                                    <h3 class="mt-4 text-xl font-semibold line-clamp-2 min-h-[56px]">
+                                                        {{ product.TenSach }}
+                                                    </h3>
+
+                                                    <!-- Thông tin tác giả và giá -->
+                                                    <div class="mt-4 flex justify-between">
+                                                        <p
+                                                            class="text-gray-500 whitespace-normal dark:text-gray-400 min-h-[48px]"
                                                         >
-                                                            {{ product.TenSach }}
-                                                        </h3>
+                                                            {{ product.TacGia }}
+                                                        </p>
+                                                        <span class="text-lg font-medium text-red-600 dark:text-white">
+                                                            {{ formatCurrency(product.DonGia) }}
+                                                        </span>
+                                                    </div>
 
-                                                        <div class="mt-4 flex justify-between items-center">
-                                                            <p class="text-gray-500">{{ product.TacGia }}</p>
-                                                            <span class="text-lg font-medium text-red-600">{{
-                                                                formatCurrency(product.DonGia)
-                                                            }}</span>
-                                                        </div>
-
-                                                        <div class="mt-4 flex justify-between items-center">
-                                                            <Heart class="cursor-pointer" />
-                                                            <ShoppingCart class="cursor-pointer" />
-                                                        </div>
-                                                    </CardContent>
-                                                </Card>
-                                            </div>
+                                                    <!-- Biểu tượng yêu thích và giỏ hàng -->
+                                                    <div class="mt-4 flex justify-between items-center">
+                                                        <Heart class="cursor-pointer" />
+                                                        <ShoppingCart class="cursor-pointer" />
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
                                         </router-link>
                                     </CarouselItem>
                                 </CarouselContent>
-
                                 <CarouselPrevious />
                                 <CarouselNext />
                             </Carousel>
                         </div>
                     </section>
+
+                    <!-- COmment -->
+                    <section class="py-12 md:py-24 lg:py-16 w-full">
+                        <div class="container flex flex-col gap-12 px-4 md:px-6 items-center w-full">
+                            <div class="w-full space-y-8 py-8">
+                                <div class="space-y-4 w-full">
+                                    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Đánh giá sản phẩm</h2>
+                                    <div class="grid gap-2 w-full">
+                                        <Textarea
+                                            placeholder="Bình luận gì đó..."
+                                            class="w-full h-28 resize-none rounded-md border border-input bg-background p-3 text-sm shadow-sm"
+                                        />
+                                        <p class="text-gray-500 dark:text-gray-400 my-2">
+                                            Chia sẻ cảm nhận và trải nghiệm về sản phẩm
+                                        </p>
+                                        <Button class="justify-cent r">Gửi</Button>
+                                    </div>
+                                </div>
+                                <div class="space-y-6 w-full">
+                                    <div class="flex items-start gap-4 w-full">
+                                        <Avatar class="h-10 w-10 border">
+                                            <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
+                                            <AvatarFallback>CN</AvatarFallback>
+                                        </Avatar>
+                                        <div class="grid gap-1.5 w-full">
+                                            <div class="flex items-center gap-2">
+                                                <div class="font-medium">Olivia Davis</div>
+                                                <div class="text-xs text-muted-foreground">2 days ago</div>
+                                            </div>
+                                            <div class="text-sm text-muted-foreground">
+                                                This is a great product! I've been using it for a week and it's been a
+                                                game-changer.
+                                            </div>
+                                            <!-- <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        size="icon"
+                                                        variant="outline"
+                                                        className="ml-auto rounded-full"
+                                                    >
+                                                        <EllipsisVerticalIcon className="size-5" />
+                                                        <span className="sr-only">Actions</span>
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                                                    <DropdownMenuItem>Files</DropdownMenuItem>
+                                                    <DropdownMenuItem>Share</DropdownMenuItem>
+                                                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu> -->
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-4 w-full">
+                                        <Avatar class="h-10 w-10 border">
+                                            <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
+                                            <AvatarFallback>CN</AvatarFallback>
+                                        </Avatar>
+                                        <div class="grid gap-1.5 w-full">
+                                            <div class="flex items-center gap-2">
+                                                <div class="font-medium">Noah Williams</div>
+                                                <div class="text-xs text-muted-foreground">5 days ago</div>
+                                            </div>
+                                            <div class="text-sm text-muted-foreground">
+                                                I'm really impressed with the quality and performance of this product.
+                                                Highly recommended!
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-center">
+                            <Button variant="outline">Tải thêm bình luận</Button>
+                        </div>
+                    </section>
                 </div>
             </main>
         </div>
+
         <Footer />
     </div>
 </template>
@@ -182,8 +229,11 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { RouterLink } from 'vue-router';
+import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+
+import { RouterLink } from 'vue-router';
 import { onMounted, ref, watch } from 'vue';
 import { Heart, ShoppingCart } from 'lucide-vue-next';
 import { useToast } from 'vue-toastification';
@@ -261,6 +311,11 @@ const addToCart = async () => {
 };
 onMounted(() => {
     fetchProductDetails();
+    console.log('scroll to top');
+    setTimeout(() => {
+        document.querySelector('#app')?.scrollTo({ top: 0, behavior: 'smooth' });
+        document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
 });
 watch(
     () => route.params.slug,
