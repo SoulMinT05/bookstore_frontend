@@ -20,36 +20,38 @@
                         <CarouselItem
                             v-for="product in books"
                             :key="product._id"
-                            class="basis-1/5 flex-shrink-0 relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-lg group hover:shadow-xl hover:-translate-y-2 min-h-[250px]"
+                            class="basis-1/5 flex-shrink-0 relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-lg group hover:shadow-xl hover:-translate-y-2 h-full"
                         >
-                            <router-link v-if="product.slug" :to="`/bookDetails/${product.slug}`">
-                                <!-- <div class="p-4"> -->
-                                <Card>
-                                    <CardContent class="p-4">
+                            <router-link v-if="product.slug" :to="`/bookDetails/${product.slug}`" class="h-full">
+                                <Card class="h-full flex flex-col">
+                                    <CardContent class="p-4 flex flex-col justify-between h-full">
                                         <img
                                             :src="product.HinhAnhSach[0]"
                                             alt="product"
                                             class="w-full h-48 object-cover rounded-t-lg"
                                         />
-                                        <h3 class="mt-4 text-xl font-semibold line-clamp-2 custom-min-height">
+                                        <!-- Đặt chiều cao tối thiểu cho tiêu đề -->
+                                        <h3 class="mt-4 text-xl font-semibold line-clamp-2 min-h-[56px]">
                                             {{ product.TenSach }}
                                         </h3>
 
-                                        <div class="mt-4 flex justify-between items-center">
-                                            <p class="text-gray-500 whitespace-normal dark:text-gray-400">
+                                        <!-- Thông tin tác giả và giá -->
+                                        <div class="mt-4 flex justify-between">
+                                            <p class="text-gray-500 whitespace-normal dark:text-gray-400 min-h-[48px]">
                                                 {{ product.TacGia }}
                                             </p>
-                                            <span class="text-lg font-medium text-red-600 dark:text-white">{{
-                                                formatCurrency(product.DonGia)
-                                            }}</span>
+                                            <span class="text-lg font-medium text-red-600 dark:text-white">
+                                                {{ formatCurrency(product.DonGia) }}
+                                            </span>
                                         </div>
+
+                                        <!-- Biểu tượng yêu thích và giỏ hàng -->
                                         <div class="mt-4 flex justify-between items-center">
                                             <Heart class="cursor-pointer" />
                                             <ShoppingCart class="cursor-pointer" />
                                         </div>
                                     </CardContent>
                                 </Card>
-                                <!-- </div> -->
                             </router-link>
                         </CarouselItem>
                     </CarouselContent>

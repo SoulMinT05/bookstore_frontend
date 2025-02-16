@@ -43,6 +43,14 @@ const router = createRouter({
             } as RouteMeta & IRouteMeta,
         },
         {
+            path: '/search/:keyword',
+            name: 'search',
+            component: () => import('@/views/SearchResult.vue'),
+            meta: {
+                title: 'SearchResult',
+            } as RouteMeta & IRouteMeta,
+        },
+        {
             path: '/loginAdmin',
             name: 'loginAdmin',
             component: () => import('@/views/LoginAdmin.vue'),

@@ -7,9 +7,13 @@
                     placeholder="Tìm kiếm sách..."
                     class="pr-10 w-full"
                     @focus="handleFocus"
-                    @keydown.enter="handleSearch"
+                    @keyup.enter="handleSearch"
                 />
-                <Search class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" size="18" />
+                <Search
+                    @click="handleSearch"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer transition-transform duration-200 ease-in-out hover:text-foreground hover:scale-110 active:scale-90"
+                    size="18"
+                />
             </div>
         </PopoverTrigger>
 
@@ -21,7 +25,7 @@
                         v-for="(keyword, index) in searchHistory"
                         :key="index"
                         class="cursor-pointer hover:bg-gray-100 p-2 rounded-md"
-                        @click="searchQuery = keyword"
+                        @click="selectSearchHistory(keyword)"
                     >
                         {{ keyword }}
                     </li>
@@ -37,12 +41,15 @@ import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Search } from 'lucide-vue-next';
+import { useRouter } from 'vue-router';
 import axiosUser from '@/utils/axiosUser';
 
 const searchQuery = ref('');
 const searchHistory = ref([]);
-const isPopoverOpen = ref(false);
 const searchResults = ref([]);
+const isPopoverOpen = ref(false);
+
+const router = useRouter();
 
 onMounted(async () => {
     await fetchSearchHistory();
@@ -54,6 +61,11 @@ onMounted(async () => {
 onUnmounted(() => {
     window.removeEventListener('resize', updatePopoverWidth); // Gỡ bỏ event khi component bị hủy
 });
+
+const selectSearchHistory = (keyword) => {
+    searchQuery.value = keyword;
+    isPopoverOpen.value = false;
+};
 
 const fetchSearchHistory = async () => {
     try {
@@ -75,6 +87,17 @@ const handleSearch = async () => {
     try {
         const res = await axiosUser.get(`/book/search?keyword=${searchQuery.value}`);
         console.log('searchResults.value: ', res.data.books);
+        searchResults.value = res.data.books;
+
+        router.push({
+            name: 'search',
+            params: {
+                keyword: searchQuery.value,
+            },
+            state: {
+                searchResults: searchResults.value,
+            },
+        });
     } catch (error) {
         console.error('Lỗi khi tìm kiếm', error);
     }
