@@ -1,112 +1,128 @@
 <template>
-    <section class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center">
-        <div class="w-full max-w-md p-6 bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <h1 class="text-xl font-bold text-gray-900 md:text-2xl dark:text-white text-center">Đăng nhập</h1>
-            <form class="mt-6 space-y-6" @submit.prevent="onLogin">
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-900 dark:text-white"> Email </label>
-                    <input
-                        v-model="email"
-                        type="email"
-                        name="email"
-                        id="email"
-                        class="w-full p-2.5 mt-1 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        required
-                    />
-                </div>
-                <div class="relative">
-                    <label for="password" class="block text-sm font-medium text-gray-900 dark:text-white">
-                        Password
-                    </label>
-                    <input
-                        v-model="password"
-                        :type="showPassword ? 'text' : 'password'"
-                        name="password"
-                        id="password"
-                        class="w-full p-2.5 mt-1 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        required
-                    />
-                    <button
-                        type="button"
-                        @click="showPassword = !showPassword"
-                        style="margin-top: 12px"
-                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-300"
-                    >
-                        <i v-if="showPassword" class="fas fa-eye text-gray-600 dark:text-white"></i>
-                        <i v-else class="fas fa-eye-slash text-gray-600 dark:text-white"></i>
-                    </button>
-                </div>
-                <div class="flex justify-between items-center">
-                    <label class="flex items-center text-sm text-gray-500 dark:text-gray-300">
-                        <input
-                            type="checkbox"
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                        />
-                        <span class="ml-2">Remember me</span>
-                    </label>
-                    <!-- <a href="#" class="text-sm text-blue-600 hover:underline dark:text-blue-500">Quên mật khẩu?</a> -->
-                    <router-link to="forgot-password" class="text-sm text-blue-600 hover:underline dark:text-blue-500"
-                        >Quên mật khẩu?
-                    </router-link>
-                </div>
-                <button
-                    type="submit"
-                    class="w-full py-2.5 text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                    Đăng nhập
-                </button>
-                <p class="text-sm text-center text-gray-500 dark:text-gray-400">
-                    Chưa có tài khoản?
-                    <router-link to="/register" class="font-medium text-blue-600 hover:underline dark:text-blue-500">
-                        Đăng ký
-                    </router-link>
-                </p>
-            </form>
-        </div>
-    </section>
+    <div class="flex items-center justify-center min-h-screen w-full">
+        <Card class="w-full max-w-md md:max-w-lg mx-auto">
+            <CardHeader class="text-center">
+                <CardTitle>Đăng nhập</CardTitle>
+                <CardDescription>Đăng nhập bằng email và password</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <form @submit.prevent="onSubmit">
+                    <div class="grid gap-6">
+                        <div class="grid gap-6">
+                            <div class="grid gap-2">
+                                <Label for="email">Email</Label>
+                                <Input
+                                    v-model="email"
+                                    id="email"
+                                    type="email"
+                                    placeholder="example@example.com"
+                                    required
+                                />
+                            </div>
+                            <div class="grid gap-2">
+                                <Input
+                                    v-model="password"
+                                    id="password"
+                                    type="password"
+                                    placeholder="Typing12#"
+                                    required
+                                />
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <label class="flex items-center text-sm text-gray-500 dark:text-gray-300">
+                                    <input
+                                        type="checkbox"
+                                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    />
+                                    <span class="ml-2">Remember me</span>
+                                </label>
+                                <router-link to="forgot-password" class="text-sm underline-offset-4 hover:underline"
+                                    >Quên mật khẩu?
+                                </router-link>
+                            </div>
+                            <Button type="submit" class="w-full">Đăng nhập</Button>
+                        </div>
+                        <div
+                            class="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border"
+                        >
+                            <span class="relative z-10 bg-background px-2 text-muted-foreground">
+                                Or continue with
+                            </span>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <Button @click.prevent variant="outline" class="w-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5 mr-2">
+                                    <path
+                                        d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                                Login with Apple
+                            </Button>
+                            <Button @click.prevent variant="outline" class="w-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5 mr-2">
+                                    <path
+                                        d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                                Login with Google
+                            </Button>
+                        </div>
+                        <p class="text-center text-sm font-light text-gray-500 dark:text-gray-400">
+                            Chưa có tài khoản?
+                            <router-link
+                                to="/register"
+                                class="font-medium text-gray-900 hover:underline dark:text-gray-100"
+                            >
+                                Đăng ký
+                            </router-link>
+                        </p>
+                    </div>
+                </form>
+            </CardContent>
+        </Card>
+    </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
-export default {
-    data() {
-        return {
-            email: '',
-            password: '',
-            showPassword: false, // Flag to toggle password visibility
-        };
-    },
-    methods: {
-        async onLogin() {
-            const userData = {
-                email: this.email,
-                password: this.password,
-            };
-            try {
-                const res = await fetch('http://localhost:3001/api/user/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(userData),
-                });
-                const data = await res.json();
+const email = ref('');
+const password = ref('');
+const router = useRouter();
+const toast = useToast();
 
-                const toast = useToast();
-                console.log('dataLogin: ', data);
-                if (!data.success) {
-                    toast.error(data.message);
-                    return;
-                }
-                toast.success('Đăng nhập thành công!');
-                localStorage.setItem('user', JSON.stringify(data)); // Store user info
-                this.$router.push('/admin/dashboard');
-            } catch (error) {
-                console.log('error: ', error);
-                toast.error(error.message);
-            }
-        },
-    },
+const onSubmit = async () => {
+    try {
+        const response = await fetch('http://localhost:3001/api/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email.value,
+                password: password.value,
+            }),
+        });
+
+        const data = await response.json();
+        if (!data.success) {
+            toast.error(data.message);
+            return;
+        }
+
+        toast.success('Đăng nhập thành công!');
+        localStorage.setItem('user', JSON.stringify(data)); // Store user info
+        router.push('/admin/dashboard');
+    } catch (error) {
+        toast.error('Đã xảy ra lỗi. Vui lòng thử lại!');
+    }
 };
 </script>

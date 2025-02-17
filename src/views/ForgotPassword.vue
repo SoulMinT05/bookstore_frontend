@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-center justify-center min-h-screen w-full">
-        <Card class="mx-auto max-w-md md:max-w-lg p-8">
+        <Card class="mx-auto max-w-md md:max-w-lg w-full p-8">
             <CardHeader class="space-y-1">
                 <CardTitle class="text-2xl font-bold text-center">Quên mật khẩu</CardTitle>
                 <CardDescription>Nhập email của bạn bên dưới để nhận mật khẩu mới </CardDescription>
@@ -10,10 +10,12 @@
                     <div class="space-y-2">
                         <Label for="email">Email</Label>
                         <Input id="email" v-model="email" type="email" placeholder="m@example.com" required />
-                        <p class="text-sm text-gray-500">Kiểm tra đường link đã được gửi qua email.</p>
+                        <p class="text-sm text-gray-500" style="margin-top: 20px; margin-bottom: 4px">
+                            Kiểm tra đường link đã được gửi qua email.
+                        </p>
                     </div>
                     <!-- <Button type="submit" class="w-full">Lấy lại mật khẩu</Button> -->
-                    <Button type="submit" class="w-full mt-16 mb-4" :disabled="loading">
+                    <Button type="submit" class="w-full my-16" :disabled="loading">
                         <span v-if="loading">Đang gửi...</span>
                         <span v-else>Lấy lại mật khẩu</span>
                     </Button>

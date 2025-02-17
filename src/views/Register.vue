@@ -72,8 +72,8 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
     <div class="flex items-center justify-center min-h-screen w-full">
-        <Card class="w-full sm:max-w-xl mx-auto">
-            <CardHeader>
+        <Card class="w-full max-w-md md:max-w-lg mx-auto">
+            <CardHeader class="text-center">
                 <CardTitle>Đăng ký</CardTitle>
                 <CardDescription>Đăng ký tạo tài khoản</CardDescription>
             </CardHeader>
