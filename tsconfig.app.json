@@ -15,6 +15,7 @@
     ],
     "exclude": ["src/**/__tests__/*"],
     "compilerOptions": {
+        "noEmit": true,
         "composite": true,
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
         "baseUrl": ".",
@@ -22,7 +23,6 @@
             "@/*": ["./src/*"]
         },
         "allowJs": true, // Đảm bảo bạn có thể biên dịch các file JavaScript
-        "noEmit": false, // Đảm bảo rằng TypeScript sẽ biên dịch ra các file JS
         "moduleResolution": "node"
     }
 }
