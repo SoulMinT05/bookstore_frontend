@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 
 dotenv.config(); // Tải .env vào
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode }: { mode: string }) => {
     const rootDir = path.resolve(__dirname, 'src');
     const env = loadEnv(mode, process.cwd(), '');
     const production = env.NODE_ENV === 'production';
@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
     return {
         root: rootDir,
         base: '/',
-        appType: 'spa',
+        appType: 'spa' as const,
         plugins: [vue()],
         css: {
             postcss: {
@@ -31,10 +31,11 @@ export default defineConfig(({ mode }) => {
             minify: production,
             sourcemap: production,
             outDir: path.resolve(rootDir, '..', 'dist'),
+            emptyOutDir: true,
         },
 
         server: {
-            port: env.VITE_PORT_FRONTEND, // Thiết lập cổng chạy cho máy chủ Vite (frontend)
+            port: Number(env.VITE_PORT_FRONTEND), // Thiết lập cổng chạy cho máy chủ Vite (frontend)
             proxy: {
                 '/api': {
                     // Đường dẫn bắt đầu bằng "/api" sẽ được chuyển tiếp qua proxy
