@@ -3,7 +3,6 @@ import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import tailwind from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
-
 import dotenv from 'dotenv';
 
 dotenv.config(); // Tải .env vào
@@ -33,6 +32,7 @@ export default defineConfig(({ mode }) => {
             sourcemap: production,
             outDir: path.resolve(rootDir, '..', 'dist'),
         },
+
         server: {
             port: env.VITE_PORT_FRONTEND, // Thiết lập cổng chạy cho máy chủ Vite (frontend)
             proxy: {
