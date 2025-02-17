@@ -2,10 +2,10 @@
     <div class="mt-16">
         <Header />
 
-        <div class="flex flex-col min-h-[100dvh]">
+        <div class="flex flex-col min-h-[100dvh] mt-16">
             <main class="flex-1 relative">
                 <div class="container px-4 md:px-6">
-                    <Breadcrumb class="px-4">
+                    <Breadcrumb class="px-4 mt-4">
                         <BreadcrumbList>
                             <BreadcrumbItem>
                                 <BreadcrumbLink as-child>
@@ -14,7 +14,7 @@
                             </BreadcrumbItem>
                             <BreadcrumbSeparator>/</BreadcrumbSeparator>
                             <BreadcrumbItem>
-                                <BreadcrumbPage class="text-xl">{{ slug }} </BreadcrumbPage>
+                                <BreadcrumbPage class="text-xl">{{ bookDetails.TenSach }} </BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>

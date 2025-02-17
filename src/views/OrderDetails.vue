@@ -1,122 +1,126 @@
 <template>
-    <div class="mt-20">
+    <div>
         <Header />
-        <Breadcrumb class="mt-20" :style="{ marginLeft: '22px' }">
-            <BreadcrumbList>
-                <BreadcrumbItem>
-                    <BreadcrumbLink as-child>
-                        <RouterLink class="text-xl" to="/">Trang chủ</RouterLink>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator> / </BreadcrumbSeparator>
-                <BreadcrumbItem>
-                    <BreadcrumbLink as-child>
-                        <RouterLink class="text-xl" to="/orderHistoryUser">Lịch sử đơn hàng</RouterLink>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator> / </BreadcrumbSeparator>
-                <BreadcrumbItem>
-                    <BreadcrumbPage class="text-xl">Chi tiết đơn mượn</BreadcrumbPage>
-                </BreadcrumbItem>
-            </BreadcrumbList>
-        </Breadcrumb>
-        <div class="w-full px-4 py-6 space-y-6 mt-8" id="order-pdf">
-            <Card v-if="orderDetails">
-                <CardHeader>
-                    <CardTitle>Mã đơn {{ orderDetails._id }}</CardTitle>
-                </CardHeader>
-            </Card>
-            <Card v-if="orderDetails">
-                <CardHeader>
-                    <CardTitle>Thông tin người mượn</CardTitle>
-                </CardHeader>
-                <CardContent class="space-y-2">
-                    <div class="grid gap-2 md:grid-cols-2">
-                        <div class="grid gap-1">
-                            <div>
-                                Họ và tên:
-                                {{ orderDetails?.MaDocGia?.Ho + ' ' + orderDetails?.MaDocGia?.Ten }}
+        <div class="container mx-auto p-4">
+            <Breadcrumb class="mt-20" :style="{ marginLeft: '22px' }">
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink as-child>
+                            <RouterLink class="text-xl" to="/">Trang chủ</RouterLink>
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator> / </BreadcrumbSeparator>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink as-child>
+                            <RouterLink class="text-xl" to="/orderHistoryUser">Lịch sử đơn hàng</RouterLink>
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator> / </BreadcrumbSeparator>
+                    <BreadcrumbItem>
+                        <BreadcrumbPage class="text-xl">Chi tiết đơn mượn</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
+            <div class="w-full px-4 py-6 space-y-6 mt-4" id="order-pdf">
+                <Card v-if="orderDetails">
+                    <CardHeader>
+                        <CardTitle>Mã đơn {{ orderDetails._id }}</CardTitle>
+                    </CardHeader>
+                </Card>
+                <Card v-if="orderDetails">
+                    <CardHeader>
+                        <CardTitle>Thông tin người mượn</CardTitle>
+                    </CardHeader>
+                    <CardContent class="space-y-2">
+                        <div class="grid gap-2 md:grid-cols-2">
+                            <div class="grid gap-1">
+                                <div>
+                                    Họ và tên:
+                                    {{ orderDetails?.MaDocGia?.Ho + ' ' + orderDetails?.MaDocGia?.Ten }}
+                                </div>
+                            </div>
+                            <div class="grid gap-1" v-if="orderDetails?.NgayMuon">
+                                <div>Ngày bắt đầu mượn: {{ formatDate(orderDetails?.NgayMuon) }}</div>
                             </div>
                         </div>
-                        <div class="grid gap-1" v-if="orderDetails?.NgayMuon">
-                            <div>Ngày bắt đầu mượn: {{ formatDate(orderDetails?.NgayMuon) }}</div>
-                        </div>
-                    </div>
-                    <div class="grid gap-2 md:grid-cols-2">
-                        <div class="grid gap-1">
-                            <div v-if="orderDetails?.MaDocGia?.email">Email: {{ orderDetails?.MaDocGia?.email }}</div>
-                            <div v-if="orderDetails?.MaDocGia?.DiaChi">
-                                Địa chỉ: {{ orderDetails?.MaDocGia?.DiaChi }}
+                        <div class="grid gap-2 md:grid-cols-2">
+                            <div class="grid gap-1">
+                                <div v-if="orderDetails?.MaDocGia?.email">
+                                    Email: {{ orderDetails?.MaDocGia?.email }}
+                                </div>
+                                <div v-if="orderDetails?.MaDocGia?.DiaChi">
+                                    Địa chỉ: {{ orderDetails?.MaDocGia?.DiaChi }}
+                                </div>
+                            </div>
+                            <div class="grid gap-1" v-if="orderDetails?.NgayTra">
+                                <div>Ngày hết hạn mượn: {{ formatDate(orderDetails?.NgayTra) }}</div>
                             </div>
                         </div>
-                        <div class="grid gap-1" v-if="orderDetails?.NgayTra">
-                            <div>Ngày hết hạn mượn: {{ formatDate(orderDetails?.NgayTra) }}</div>
+                    </CardContent>
+                </Card>
+                <div class="border-t border-gray-200 dark:border-gray-800" />
+                <Card class="mt-4">
+                    <CardHeader>
+                        <CardTitle>Thông tin sách mượn</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead class="w-40">Hình ảnh</TableHead>
+                                    <TableHead class="max-w-[150px]">Tên</TableHead>
+                                    <TableHead>Số lượng</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                <TableRow v-for="(product, index) in orderDetails?.MaSach" :key="index">
+                                    <TableCell>
+                                        <img
+                                            class="w-20 h-20 object-cover rounded"
+                                            :src="product?.product?.HinhAnhSach[0]"
+                                            alt="Product Image"
+                                            crossOrigin="anonymous"
+                                        />
+                                    </TableCell>
+                                    <TableCell class="font-medium">{{ product?.product?.TenSach }}</TableCell>
+                                    <TableCell class="font-medium">{{ product?.count }}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
+                <Card class="mt-4" v-if="orderDetails">
+                    <CardHeader>
+                        <CardTitle>Tóm tắt</CardTitle>
+                    </CardHeader>
+                    <CardContent class="grid gap-4">
+                        <div class="flex items-center">
+                            <div>Tổng số lượng</div>
+                            <div class="ml-auto">{{ orderDetails?.SoQuyen }}</div>
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
-            <div class="border-t border-gray-200 dark:border-gray-800" />
-            <Card class="mt-4">
-                <CardHeader>
-                    <CardTitle>Thông tin sách mượn</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead class="w-40">Hình ảnh</TableHead>
-                                <TableHead class="max-w-[150px]">Tên</TableHead>
-                                <TableHead>Số lượng</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            <TableRow v-for="(product, index) in orderDetails?.MaSach" :key="index">
-                                <TableCell>
-                                    <img
-                                        class="w-20 h-20 object-cover rounded"
-                                        :src="product?.product?.HinhAnhSach[0]"
-                                        alt="Product Image"
-                                        crossOrigin="anonymous"
-                                    />
-                                </TableCell>
-                                <TableCell class="font-medium">{{ product?.product?.TenSach }}</TableCell>
-                                <TableCell class="font-medium">{{ product?.count }}</TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
-            <Card class="mt-4" v-if="orderDetails">
-                <CardHeader>
-                    <CardTitle>Tóm tắt</CardTitle>
-                </CardHeader>
-                <CardContent class="grid gap-4">
-                    <div class="flex items-center">
-                        <div>Tổng số lượng</div>
-                        <div class="ml-auto">{{ orderDetails?.SoQuyen }}</div>
-                    </div>
-                    <div class="flex items-center">
-                        <div>Trạng thái</div>
-                        <div class="ml-auto">
-                            <Badge
-                                v-if="orderDetails?.TinhTrang"
-                                :class="`transition-none ${getStatusClass(orderDetails?.TinhTrang)}`"
-                                >{{ orderDetails?.TinhTrang }}</Badge
-                            >
+                        <div class="flex items-center">
+                            <div>Trạng thái</div>
+                            <div class="ml-auto">
+                                <Badge
+                                    v-if="orderDetails?.TinhTrang"
+                                    :class="`transition-none ${getStatusClass(orderDetails?.TinhTrang)}`"
+                                    >{{ orderDetails?.TinhTrang }}</Badge
+                                >
+                            </div>
                         </div>
-                    </div>
-                    <Separator />
-                </CardContent>
-                <!-- <CardFooter class="flex items-center gap-2">
+                        <Separator />
+                    </CardContent>
+                    <!-- <CardFooter class="flex items-center gap-2">
                     <Button size="sm" @click="exportToPDF">In PDF</Button>
                     <Button variant="outline" size="sm">Huỷ đơn</Button>
                 </CardFooter> -->
-            </Card>
+                </Card>
+            </div>
+            <CardFooter class="flex items-center gap-2">
+                <Button size="sm" @click="exportToPDF">In PDF</Button>
+                <Button variant="destructive" @click="cancelOrder" size="sm">Huỷ đơn</Button>
+            </CardFooter>
         </div>
-        <CardFooter class="flex items-center gap-2">
-            <Button size="sm" @click="exportToPDF">In PDF</Button>
-            <Button variant="destructive" @click="cancelOrder" size="sm">Huỷ đơn</Button>
-        </CardFooter>
     </div>
 </template>
 

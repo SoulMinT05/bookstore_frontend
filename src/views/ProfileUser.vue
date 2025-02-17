@@ -1,194 +1,209 @@
 <template>
-    <section class="bg-gray-50 dark:bg-gray-900 flex items-center justify-center m-12">
-        <div class="w-full max-w-md p-6 bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <h1 class="text-xl font-bold text-gray-900 md:text-2xl dark:text-white text-center">
-                Thông tin người dùng
-            </h1>
-            <form @submit.prevent="updateInfo">
-                <div class="mb-4">
-                    <label for="editHo" class="block text-sm font-medium text-gray-900 dark:text-white">Họ</label>
-                    <input
-                        v-model="userToEdit.Ho"
-                        type="text"
-                        id="editHo"
-                        class="w-full p-2.5 mt-1 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        required
-                    />
-                </div>
-                <div class="mb-4">
-                    <label for="editTen" class="block text-sm font-medium text-gray-900 dark:text-white">Tên</label>
-                    <input
-                        v-model="userToEdit.Ten"
-                        type="text"
-                        id="editTen"
-                        class="w-full p-2.5 mt-1 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        required
-                    />
-                </div>
-                <div class="mb-4">
-                    <label for="editEmail" class="block text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                    <input
-                        v-model="userToEdit.email"
-                        type="email"
-                        id="editEmail"
-                        class="w-full p-2.5 mt-1 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        required
-                        disabled
-                    />
-                </div>
-                <div class="mb-4">
-                    <label for="editNgaySinh" class="block text-sm font-medium text-gray-900 dark:text-white"
-                        >Ngày sinh</label
-                    >
-                    <input
-                        v-model="userToEdit.NgaySinh"
-                        type="date"
-                        id="editNgaySinh"
-                        class="w-full p-2.5 mt-1 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    />
-                </div>
+    <div>
+        <Header />
+        <div class="flex items-center justify-center min-h-screen w-full mt-16">
+            <Card class="w-full max-w-md md:max-w-lg mx-auto">
+                <CardHeader class="text-center">
+                    <CardTitle>Thông tin người dùng</CardTitle>
+                    <CardDescription>Cập nhật thông tin tài khoản</CardDescription>
+                </CardHeader>
+                <CardContent class="space-y-8">
+                    <form @submit.prevent="onSubmit" class="space-y-4">
+                        <!-- Họ -->
+                        <div class="space-y-2">
+                            <Label for="Ho">Họ</Label>
+                            <Input id="Ho" type="text" placeholder="Nguyễn" v-model="userToEdit.Ho" />
+                            <!-- <p v-if="Ho.errorMessage" class="text-red-500 text-sm mt-1">{{ Ho.errorMessage }}</p> -->
+                        </div>
 
-                <div class="mb-4">
-                    <label for="editDiaChi" class="block text-sm font-medium text-gray-900 dark:text-white"
-                        >Địa chỉ</label
-                    >
-                    <input
-                        v-model="userToEdit.DiaChi"
-                        type="text"
-                        id="editDiaChi"
-                        class="w-full p-2.5 mt-1 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    />
-                </div>
-                <div class="mb-4">
-                    <label for="editDienThoai" class="block text-sm font-medium text-gray-900 dark:text-white"
-                        >Số điện thoại</label
-                    >
-                    <input
-                        v-model="userToEdit.DienThoai"
-                        type="text"
-                        id="editDienThoai"
-                        aria-describedby="helper-text-explanation"
-                        class="w-full p-2.5 mt-1 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-blue-500 focus:border-blue-500 block dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        pattern="[0-9]{10}"
-                    />
-                </div>
-                <div class="mb-4">
-                    <label for="editPhai" class="block text-sm font-medium text-gray-900 dark:text-white"
-                        >Giới tính</label
-                    >
-                    <select
-                        v-model="userToEdit.Phai"
-                        id="Phai"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    >
-                        <option value="" disabled selected>Chọn giới tính</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
+                        <!-- Tên -->
+                        <div class="space-y-2">
+                            <Label for="Ten">Tên</Label>
+                            <Input id="Ten" type="text" placeholder="Văn Thy" v-model="userToEdit.Ten" />
+                            <!-- <p v-if="Ten.errorMessage" class="text-red-500 text-sm mt-1">{{ Ten.errorMessage }}</p> -->
+                        </div>
 
-                <div class="flex justify-end mt-6">
-                    <button
-                        type="submit"
-                        class="cursor-pointer hover:opacity-95 px-4 py-2 bg-blue-500 text-white rounded-md"
-                    >
-                        Cập nhật
-                    </button>
-                </div>
-            </form>
+                        <!-- Email -->
+                        <div class="space-y-2">
+                            <Label for="email">Email</Label>
+                            <Input
+                                id="email"
+                                type="email"
+                                placeholder="example@gmail.com"
+                                v-model="userToEdit.email"
+                                disabled
+                            />
+                        </div>
+
+                        <!-- Ngày Sinh -->
+                        <div class="space-y-2">
+                            <Label for="NgaySinh">Ngày sinh</Label>
+                            <Popover v-model:open="isPopoverOpen">
+                                <PopoverTrigger as-child>
+                                    <Button variant="outline" class="w-full justify-start text-left font-normal">
+                                        {{ formatDate(userToEdit.NgaySinh) }}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent class="w-full p-2">
+                                    <Calendar v-model="userToEdit.NgaySinh" placeholder="Chọn ngày sinh" />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+
+                        <!-- Địa chỉ -->
+                        <div class="space-y-2">
+                            <Label for="DiaChi">Địa chỉ</Label>
+                            <Input id="DiaChi" type="text" placeholder="Địa chỉ" v-model="userToEdit.DiaChi" />
+                        </div>
+
+                        <!-- Số điện thoại -->
+                        <div class="space-y-2">
+                            <Label for="DienThoai">Số điện thoại</Label>
+                            <Input
+                                id="DienThoai"
+                                type="text"
+                                placeholder="Số điện thoại"
+                                v-model="userToEdit.DienThoai"
+                            />
+                        </div>
+
+                        <!-- Giới tính -->
+                        <div class="space-y-2">
+                            <Label for="Phai">Giới tính</Label>
+                            <Select v-model="userToEdit.Phai" id="Phai" class="w-full" placement="bottom">
+                                <SelectTrigger class="w-full">
+                                    <SelectValue placeholder="Chọn giới tính" />
+                                </SelectTrigger>
+                                <SelectContent class="w-full">
+                                    <SelectItem value="male">Nam</SelectItem>
+                                    <SelectItem value="female">Nữ</SelectItem>
+                                    <SelectItem value="other">Khác</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <Button type="submit" class="w-full" :disabled="isSubmitting">
+                            {{ isSubmitting ? 'Đang xử lý...' : 'Cập nhật' }}
+                        </Button>
+                    </form>
+                </CardContent>
+            </Card>
         </div>
-    </section>
+        <Footer />
+    </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive } from 'vue';
+import { useForm } from 'vee-validate';
+import * as yup from 'yup';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'; // Import Popover
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Calendar } from '@/components/ui/calendar';
 import { useToast } from 'vue-toastification';
 
-export default {
-    data() {
-        return {
-            userToEdit: {
-                Ho: '',
-                Ten: '',
-                email: '',
-                NgaySinh: '',
-                DiaChi: '',
-                DienThoai: '',
-                Phai: '',
-            },
-        };
-    },
-    methods: {
-        fetchUser() {
-            const user = JSON.parse(localStorage.getItem('user'));
-            console.log('user.userData: ', user.userData);
-            if (user && user.userData) {
-                this.userToEdit.Ho = user.userData.Ho || '';
-                this.userToEdit.Ten = user.userData.Ten || '';
-                this.userToEdit.email = user.userData.email || '';
-                // this.userToEdit.NgaySinh = user.userData.NgaySinh || '';
-                this.userToEdit.NgaySinh = this.formatNgaySinh(user.userData.NgaySinh);
-                this.userToEdit.DiaChi = user.userData.DiaChi || '';
-                this.userToEdit.DienThoai = user.userData.DienThoai || '';
-                this.userToEdit.Phai = user.userData.Phai || '';
-            }
-        },
-        formatNgaySinhHtml(dateString) {
-            if (!dateString) return ''; // Trả về chuỗi rỗng nếu không có ngày sinh
-            const date = new Date(dateString); // Chuyển đổi chuỗi thành đối tượng Date
-            const day = String(date.getDate()).padStart(2, '0'); // Lấy ngày và thêm 0 nếu cần
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Lấy tháng (tháng bắt đầu từ 0)
-            const year = date.getFullYear(); // Lấy năm
-            return `${day}/${month}/${year}`; // Trả về định dạng dd/mm/yyyy
-        },
-        formatNgaySinh(NgaySinh) {
-            if (!NgaySinh) return '';
-            const date = new Date(NgaySinh); // Chuyển đổi thành đối tượng Date
-            if (isNaN(date)) return ''; // Kiểm tra nếu ngày không hợp lệ
-            const day = String(date.getDate()).padStart(2, '0'); // Lấy ngày
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Lấy tháng (tháng 0-11)
-            const year = date.getFullYear(); // Lấy năm
-            return `${year}-${month}-${day}`;
-        },
+import Header from '@/components/Header.vue';
+import Footer from '@/components/Footer.vue';
 
-        async updateInfo() {
-            const updatedUserData = this.userToEdit;
-            const user = JSON.parse(localStorage.getItem('user'));
-            const userToken = user.accessToken;
-            try {
-                const res = await fetch('http://localhost:3001/api/user/updateInfoFromUser', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userToken}`,
-                    },
-                    body: JSON.stringify(updatedUserData),
-                });
-                const data = await res.json();
-                console.log('dataUpdateInfo: ', data);
-                const toast = useToast();
-                if (!data.success) {
-                    toast.error(data.message);
-                    return;
-                }
-                const updatedUser = {
-                    ...user,
-                    userData: {
-                        ...user.userData,
-                        ...updatedUserData,
-                    },
-                };
-                localStorage.setItem('user', JSON.stringify(updatedUser));
-                toast.success('Cập nhật thông tin thành công!');
-            } catch (error) {
-                console.error('Lỗi khi cập nhật thông tin:', error);
-                const toast = useToast();
-                toast.error('Cập nhật thông tin thất bại.');
-            }
-        },
-    },
-    mounted() {
-        this.fetchUser();
-    },
+const isPopoverOpen = ref(false);
+
+// Validation schema for updating user data
+const updateSchema = yup.object({
+    Ho: yup.string().required('Cần nhập họ'),
+    Ten: yup.string().required('Cần nhập tên'),
+    email: yup.string().email('Địa chỉ email không hợp lệ').required('Cần nhập email'),
+    // NgaySinh: yup.date().required('Cần nhập ngày sinh'),
+    DiaChi: yup.string().required('Cần nhập địa chỉ'),
+    DienThoai: yup
+        .string()
+        .matches(/^\d{10}$/, 'Số điện thoại không hợp lệ')
+        .required('Cần nhập số điện thoại'),
+});
+
+// Initialize form with vee-validate
+const { handleSubmit, isSubmitting } = useForm({
+    validationSchema: updateSchema,
+});
+
+const formatDate = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+
+    // Đảm bảo ngày và tháng có 2 chữ số nếu cần
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Tháng bắt đầu từ 0, cần +1
+    const day = d.getDate().toString().padStart(2, '0');
+
+    // Trả về định dạng yyyy/mm/dd
+    return `${year}-${month}-${day}`;
 };
+
+// Fetch user data to edit
+const userToEdit = reactive({
+    Ho: '',
+    Ten: '',
+    email: '',
+    // NgaySinh: '',
+    DiaChi: '',
+    DienThoai: '',
+    Phai: '',
+});
+
+const toast = useToast();
+
+const fetchUser = () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.userData) {
+        Object.assign(userToEdit, user.userData); // ✅ Gán giá trị vào `reactive()`
+    }
+};
+
+fetchUser();
+
+// Handle form submission
+const onSubmit = async () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userToken = user?.accessToken;
+    if (!userToken) {
+        toast.error('Token không hợp lệ');
+        return;
+    }
+
+    try {
+        const res = await fetch('http://localhost:3001/api/user/updateInfoFromUser', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userToken}`,
+            },
+            body: JSON.stringify(userToEdit),
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+            toast.error(data.message);
+            return;
+        }
+
+        const updatedUser = {
+            ...user,
+            userData: { ...user.userData, ...userToEdit },
+        };
+
+        console.log('updatedUser: ', updatedUser);
+
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        toast.success('Cập nhật thông tin thành công!');
+    } catch (error) {
+        console.error('error: ', error);
+        toast.error('Cập nhật thất bại. Hãy kiểm tra lại!');
+    }
+};
+
+fetchUser();
 </script>
