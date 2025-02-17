@@ -10,7 +10,7 @@ const fetchData = async () => {
         const staff = JSON.parse(localStorage.getItem('staff'));
         const staffToken = staff.accessToken;
 
-        const res = await fetch('http://localhost:3001/api/statistic/month', {
+        const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/statistic/month`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

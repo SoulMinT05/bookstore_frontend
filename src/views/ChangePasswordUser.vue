@@ -68,7 +68,7 @@ const changePassword = async () => {
     try {
         const user = JSON.parse(localStorage.getItem('user'));
         const userToken = user.accessToken;
-        const res = await fetch('http://localhost:3001/api/user/changePassword', {
+        const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/user/changePassword`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

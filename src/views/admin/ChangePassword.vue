@@ -91,7 +91,7 @@ export default {
             try {
                 const staff = JSON.parse(localStorage.getItem('staff'));
                 const staffToken = staff.accessToken;
-                const res = await fetch('http://localhost:3001/api/staff/changePassword', {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/staff/changePassword`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

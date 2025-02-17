@@ -424,7 +424,7 @@ export default {
             try {
                 const staff = JSON.parse(localStorage.getItem('staff'));
                 const staffToken = staff.accessToken;
-                const res = await fetch('http://localhost:3001/api/publisher/getAllPublishers', {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/publisher/getAllPublishers`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -464,7 +464,7 @@ export default {
             try {
                 const staff = JSON.parse(localStorage.getItem('staff'));
                 const staffToken = staff.accessToken;
-                const res = await fetch('http://localhost:3001/api/publisher/createPublisher', {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/publisher/createPublisher`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -505,7 +505,7 @@ export default {
 
                 // Lấy MaNXB từ publisherToEdit
                 const MaNXB = this.publisherToEdit._id;
-                const res = await fetch(`http://localhost:3001/api/publisher/${MaNXB}`, {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/publisher/${MaNXB}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -548,7 +548,7 @@ export default {
                 const staff = JSON.parse(localStorage.getItem('staff'));
                 const staffToken = staff.accessToken;
 
-                const res = await fetch(`http://localhost:3001/api/publisher/${publisher._id}`, {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/publisher/${publisher._id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',

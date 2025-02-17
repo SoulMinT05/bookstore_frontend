@@ -763,7 +763,7 @@ export default {
             try {
                 const staff = JSON.parse(localStorage.getItem('staff'));
                 const staffToken = staff.accessToken;
-                const res = await fetch('http://localhost:3001/api/user/getAllUsers', {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/user/getAllUsers`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -810,7 +810,7 @@ export default {
             try {
                 const staff = JSON.parse(localStorage.getItem('staff'));
                 const staffToken = staff.accessToken;
-                const res = await fetch('http://localhost:3001/api/user/createUserFromAdmin', {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/user/createUserFromAdmin`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -855,7 +855,7 @@ export default {
 
                 // Lấy userId từ userToEdit
                 const userId = this.userToEdit._id;
-                const res = await fetch(`http://localhost:3001/api/user/updateInfoFromAdmin/${userId}`, {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/user/updateInfoFromAdmin/${userId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -900,7 +900,7 @@ export default {
                 const staffLocalStorage = JSON.parse(localStorage.getItem('staff'));
                 const staffToken = staffLocalStorage.accessToken;
 
-                const res = await fetch(`http://localhost:3001/api/user/${user._id}`, {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/user/${user._id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -932,7 +932,7 @@ export default {
                 const staffLocalStorage = JSON.parse(localStorage.getItem('staff'));
                 const staffToken = staffLocalStorage.accessToken;
 
-                const res = await fetch(`http://localhost:3001/api/user/locked/${user._id}`, {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/user/locked/${user._id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

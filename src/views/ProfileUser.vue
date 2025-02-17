@@ -174,7 +174,7 @@ const onSubmit = async () => {
     }
 
     try {
-        const res = await fetch('http://localhost:3001/api/user/updateInfoFromUser', {
+        const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/user/updateInfoFromUser`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

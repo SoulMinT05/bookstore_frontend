@@ -52,7 +52,7 @@ const resetPassword = async () => {
     }
 
     try {
-        const response = await axios.put('http://localhost:5731/api/user/resetPassword', {
+        const response = await axios.put(`${import.meta.env.VITE_API_FRONTEND}/api/user/resetPassword`, {
             password: password.value,
             token: token.value,
         });

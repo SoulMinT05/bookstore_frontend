@@ -483,7 +483,7 @@ async function fetchOrders() {
     try {
         const staff = JSON.parse(localStorage.getItem('staff'));
         const staffToken = staff.accessToken;
-        const res = await fetch('http://localhost:3001/api/order/getAllOrders', {
+        const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/order/getAllOrders`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -510,7 +510,7 @@ async function updateOrderStatus(orderId, newStatus) {
     try {
         const staff = JSON.parse(localStorage.getItem('staff'));
         const staffToken = staff.accessToken;
-        const res = await fetch(`http://localhost:3001/api/order/updateStatus/${orderId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/order/updateStatus/${orderId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -545,7 +545,7 @@ async function deleteOrder(order) {
     try {
         const staff = JSON.parse(localStorage.getItem('staff'));
         const staffToken = staff.accessToken;
-        const res = await fetch(`http://localhost:3001/api/order/${order._id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/order/${order._id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

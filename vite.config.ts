@@ -4,6 +4,10 @@ import vue from '@vitejs/plugin-vue';
 import tailwind from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
 
+import dotenv from 'dotenv';
+
+dotenv.config(); // Tải .env vào
+
 export default defineConfig(({ mode }) => {
     const rootDir = path.resolve(__dirname, 'src');
     const env = loadEnv(mode, process.cwd(), '');
@@ -30,11 +34,11 @@ export default defineConfig(({ mode }) => {
             outDir: path.resolve(rootDir, '..', 'dist'),
         },
         server: {
-            port: 5731, // Thiết lập cổng chạy cho máy chủ Vite (frontend)
+            port: env.VITE_PORT_FRONTEND, // Thiết lập cổng chạy cho máy chủ Vite (frontend)
             proxy: {
                 '/api': {
                     // Đường dẫn bắt đầu bằng "/api" sẽ được chuyển tiếp qua proxy
-                    target: 'http://localhost:3001', // Địa chỉ của máy chủ backend (ở đây là http://localhost:3001)
+                    target: env.VITE_API_BACKEND,
                     changeOrigin: true, // Thay đổi origin của request thành URL của máy chủ backend để tránh lỗi CORS
                     secure: false, // Bỏ qua kiểm tra chứng chỉ SSL nếu backend dùng HTTPS nhưng không có chứng chỉ hợp lệ
                 },

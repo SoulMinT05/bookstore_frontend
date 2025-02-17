@@ -143,16 +143,42 @@
                                     <div class="space-y-4 w-full">
                                         <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Đánh giá sản phẩm</h2>
                                         <div class="grid gap-2 w-full">
+                                            <!-- <Label for="" class="text-gray-500 dark:text-gray-400 my-2"
+                                                >Xếp hạng sao</Label
+                                            > -->
+                                            <div class="flex items-center justify-between w-full">
+                                                <!-- Tiêu đề -->
+                                                <span class="text-gray-500 dark:text-gray-400">Xếp hạng sao</span>
+
+                                                <!-- Sao căn giữa -->
+                                                <div class="flex items-center gap-2 flex-grow justify-center">
+                                                    <button v-for="star in 5" :key="star" @click="setRating(star)">
+                                                        <Star
+                                                            :class="
+                                                                star <= rating
+                                                                    ? 'fill-yellow-500 text-yellow-500'
+                                                                    : 'fill-muted stroke-muted-foreground'
+                                                            "
+                                                            class="w-6 h-6 transition-all cursor-pointer"
+                                                        />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <Label for="" class="text-gray-500 dark:text-gray-400 my-2"
+                                                >Bình luận của bạn</Label
+                                            >
                                             <Textarea
                                                 placeholder="Bình luận gì đó..."
-                                                class="w-full h-28 resize-none rounded-md border border-input bg-background p-3 text-sm shadow-sm"
+                                                class="w-full h-28 resize-none rounded-md border border-input bg-background p-3 text-base shadow-sm"
                                             />
+
                                             <p class="text-gray-500 dark:text-gray-400 my-2">
                                                 Chia sẻ cảm nhận và trải nghiệm về sản phẩm
                                             </p>
                                             <Button class="justify-cent r">Gửi</Button>
                                         </div>
                                     </div>
+
                                     <div class="space-y-6 w-full">
                                         <div class="flex items-start gap-4 w-full">
                                             <Avatar class="h-10 w-10 border">
@@ -242,9 +268,8 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 import { RouterLink } from 'vue-router';
 import { onMounted, ref, watch } from 'vue';
-import { Heart, ShoppingCart } from 'lucide-vue-next';
+import { Heart, ShoppingCart, Star } from 'lucide-vue-next';
 import { useToast } from 'vue-toastification';
-
 // Lấy route để truy cập tham số URL
 const route = useRoute();
 
@@ -253,8 +278,12 @@ const slug = route.params.slug;
 const toast = useToast();
 const bookDetails = ref({});
 const relatedProducts = ref([]);
-const carts = ref([]);
 const selectedImage = ref(null);
+const rating = ref(0);
+
+const setRating = (value) => {
+    rating.value = value; // Cập nhật số sao khi click
+};
 
 const changeMainImage = (image) => {
     selectedImage.value = image;

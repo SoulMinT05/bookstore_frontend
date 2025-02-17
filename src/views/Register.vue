@@ -45,7 +45,7 @@ const onSubmit = handleSubmit(async (values) => {
         password: password.value,
     };
     try {
-        const res = await fetch('http://localhost:3001/api/user/register', {
+        const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/user/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

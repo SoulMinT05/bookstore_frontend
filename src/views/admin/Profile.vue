@@ -156,7 +156,7 @@ export default {
             const staff = JSON.parse(localStorage.getItem('staff'));
             const staffToken = staff.accessToken;
             try {
-                const res = await fetch('http://localhost:3001/api/staff/updateInfoFromUser', {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/staff/updateInfoFromUser`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

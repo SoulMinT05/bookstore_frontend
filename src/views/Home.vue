@@ -95,6 +95,7 @@ onMounted(() => {
     fetchProductsByAutoPublisher();
 });
 </script>
+ 
 
 <style scoped>
 .line-clamp-2 {

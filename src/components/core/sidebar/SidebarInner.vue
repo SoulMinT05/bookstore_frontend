@@ -36,7 +36,7 @@ const handleLogout = async () => {
     const staff = JSON.parse(localStorage.getItem('staff'));
     const staffToken = staff.accessToken;
     try {
-        const res = await fetch('http://localhost:3001/api/staff/logout', {
+        const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/staff/logout`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

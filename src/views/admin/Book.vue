@@ -737,7 +737,7 @@ export default {
             try {
                 const staff = JSON.parse(localStorage.getItem('staff'));
                 const staffToken = staff.accessToken;
-                const res = await fetch('http://localhost:3001/api/publisher/getAllPublishers', {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/publisher/getAllPublishers`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -765,7 +765,7 @@ export default {
             try {
                 // const user = JSON.parse(localStorage.getItem('user'));
                 // const userToken = user.accessToken;
-                const res = await fetch('http://localhost:3001/api/book/getAllProducts', {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/book/getAllProducts`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -854,7 +854,7 @@ export default {
                 });
 
                 // Gửi request tạo sản phẩm cùng với ảnh
-                const res = await fetch('http://localhost:3001/api/book/createProduct', {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/book/createProduct`, {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${staffToken}`,
@@ -943,7 +943,7 @@ export default {
                     }
                 }
 
-                const res = await fetch(`http://localhost:3001/api/book/${productId}`, {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/book/${productId}`, {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${staffToken}`,
@@ -991,7 +991,7 @@ export default {
                 const staff = JSON.parse(localStorage.getItem('staff'));
                 const staffToken = staff.accessToken;
 
-                const res = await fetch(`http://localhost:3001/api/book/${product._id}`, {
+                const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/book/${product._id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
