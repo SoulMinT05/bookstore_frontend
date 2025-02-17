@@ -42,7 +42,10 @@
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <span class="font-medium">Tình trạng </span>
-                                    <Badge :class="getStatusClass(order.TinhTrang)">{{ order.TinhTrang }}</Badge>
+                                    <Badge :class="getStatusClass(order.TinhTrang)">{{
+                                        getStatusText(order.TinhTrang)
+                                    }}</Badge>
+                                    <!-- <Badge disabled :class="statusClass">{{ statusText }}</Badge> -->
                                 </div>
                             </CardContent>
                             <CardFooter>
@@ -77,14 +80,6 @@ import { Badge } from '@/components/ui/badge';
 
 const orders = ref([]);
 
-const statusClass = computed(() => {
-    const TinhTrang = order.value.TinhTrang;
-    if (TinhTrang === 'pending') return 'bg-blue-500 hover:bg-blue-500'; // Màu xanh dương, không thay đổi khi hover
-    if (TinhTrang === 'accepted') return 'bg-green-500 hover:bg-green-500'; // Màu xanh lá, không thay đổi khi hover
-    if (TinhTrang === 'rejected') return 'bg-red-500 hover:bg-red-500'; // Màu đỏ, không thay đổi khi hover
-    return 'bg-gray-500 hover:bg-gray-500'; // Màu mặc định, không thay đổi khi hover
-});
-
 const getStatusClass = (TinhTrang: string): string => {
     switch (TinhTrang.toLowerCase()) {
         case 'pending':
@@ -97,6 +92,21 @@ const getStatusClass = (TinhTrang: string): string => {
             return 'bg-gray-100 text-gray-600 hover:bg-gray-100';
         default:
             return 'bg-gray-100 text-gray-600';
+    }
+};
+
+const getStatusText = (TinhTrang: string): string => {
+    switch (TinhTrang.toLowerCase()) {
+        case 'pending':
+            return 'Đang xử lý';
+        case 'accepted':
+            return 'Đã chấp nhận';
+        case 'rejected':
+            return 'Đã từ chối';
+        case 'cancel':
+            return 'Đã hủy';
+        default:
+            return 'Không xác định';
     }
 };
 const formatDate = (date: Date | string | null) => {

@@ -5,152 +5,181 @@
 
         <!-- Main -->
 
-        <Breadcrumb class="mt-20" :style="{ marginLeft: '130px' }">
-            <BreadcrumbList>
-                <BreadcrumbItem>
-                    <BreadcrumbLink as-child>
-                        <RouterLink class="text-xl" to="/">Trang chủ</RouterLink>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator> / </BreadcrumbSeparator>
-                <BreadcrumbItem>
-                    <BreadcrumbPage class="text-xl">Giỏ hàng</BreadcrumbPage>
-                </BreadcrumbItem>
-            </BreadcrumbList>
-        </Breadcrumb>
-        <main class="container mx-auto my-8 grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr]">
-            <div>
-                <!-- <h1 className="text-2xl font-bold mb-4">Giỏ hàng</h1> -->
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    <!-- <Checkbox /> -->
-                                    <!-- <Checkbox v-model="selectAll" @change="toggleSelectAll" /> -->
-                                    <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" />
-                                </th>
-                                <th scope="col" class="px-6 py-3">Hình ảnh</th>
-                                <th scope="col" class="px-6 py-3">Tên</th>
-                                <th scope="col" class="px-6 py-3">Số lượng</th>
-                                <th scope="col" class="px-6 py-3">Giá</th>
-                                <th scope="col" class="px-6 py-3">Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="item in carts"
-                                :key="item.product._id"
-                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+        <div class="container mx-auto p-4">
+            <Breadcrumb class="mt-20" :style="{ marginLeft: '24px' }">
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink as-child>
+                            <RouterLink class="text-xl" to="/">Trang chủ</RouterLink>
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator> / </BreadcrumbSeparator>
+                    <BreadcrumbItem>
+                        <BreadcrumbPage class="text-xl">Giỏ hàng</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
+            <main class="container mx-auto my-8 grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr]">
+                <div>
+                    <!-- <h1 className="text-2xl font-bold mb-4">Giỏ hàng</h1> -->
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <thead
+                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
                             >
-                                <td class="px-6 py-4">
-                                    <!-- <Checkbox v-model="item.selected" @change="updateSelectAll" /> -->
-                                    <!-- <input type="checkbox"
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        <!-- <Checkbox /> -->
+                                        <!-- <Checkbox v-model="selectAll" @change="toggleSelectAll" /> -->
+                                        <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" />
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">Hình ảnh</th>
+                                    <th scope="col" class="px-6 py-3">Tên</th>
+                                    <th scope="col" class="px-6 py-3">Số lượng</th>
+                                    <th scope="col" class="px-6 py-3">Giá</th>
+                                    <th scope="col" class="px-6 py-3">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="item in carts"
+                                    :key="item.product._id"
+                                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                >
+                                    <td class="px-6 py-4">
+                                        <!-- <Checkbox v-model="item.selected" @change="updateSelectAll" /> -->
+                                        <!-- <input type="checkbox"
                                         :value="item.product._id"
                                      v-model="item.selected"
                                       @change="updateSelectAll" /> -->
-                                    <input
-                                        type="checkbox"
-                                        :value="item.product._id"
-                                        v-model="selectedProductIds"
-                                        @change="updateSelectAll"
-                                    />
-                                </td>
+                                        <input
+                                            type="checkbox"
+                                            :value="item.product._id"
+                                            v-model="selectedProductIds"
+                                            @change="updateSelectAll"
+                                        />
+                                    </td>
 
-                                <td class="p-4">
-                                    <img
-                                        :src="item.product.HinhAnhSach[0]"
-                                        class="w-16 md:w-32 max-w-full max-h-full"
-                                        :alt="item.product.TenSach"
-                                    />
-                                </td>
-                                <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                                    {{ item.product.TenSach }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center">
-                                        <NumberField
-                                            id="quantityCart"
-                                            :default-value="item.quantityCart"
-                                            :min="0"
-                                            class="w-28"
-                                            @change="handleQuantityChange(item.product._id, $event)"
+                                    <td class="p-4">
+                                        <img
+                                            :src="item.product.HinhAnhSach[0]"
+                                            class="w-16 md:w-32 max-w-full max-h-full"
+                                            :alt="item.product.TenSach"
+                                        />
+                                    </td>
+                                    <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                                        {{ item.product.TenSach }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <NumberField
+                                                id="quantityCart"
+                                                :default-value="item.quantityCart"
+                                                :min="0"
+                                                class="w-28"
+                                                @change="handleQuantityChange(item.product._id, $event)"
+                                            >
+                                                <NumberFieldContent>
+                                                    <NumberFieldDecrement
+                                                        class="mx-2"
+                                                        @click="decreaseQuantityCart(item.product._id)"
+                                                    />
+                                                    <NumberFieldInput readonly />
+                                                    <NumberFieldIncrement
+                                                        @click="increaseQuantityCart(item.product._id)"
+                                                    />
+                                                </NumberFieldContent>
+                                            </NumberField>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                                        {{ formatCurrency(item.product.DonGia) }}
+                                    </td>
+                                    <td class="px-6 py-4" @click="removeProductCart(item.product._id)">
+                                        <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                                            >Xoá</a
                                         >
-                                            <NumberFieldContent>
-                                                <NumberFieldDecrement
-                                                    class="mx-2"
-                                                    @click="decreaseQuantityCart(item.product._id)"
-                                                />
-                                                <NumberFieldInput readonly />
-                                                <NumberFieldIncrement @click="increaseQuantityCart(item.product._id)" />
-                                            </NumberFieldContent>
-                                        </NumberField>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                                    {{ formatCurrency(item.product.DonGia) }}
-                                </td>
-                                <td class="px-6 py-4" @click="removeProductCart(item.product._id)">
-                                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline"
-                                        >Xoá</a
-                                    >
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
 
-            <div class="space-y-4">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Thông tin người mượn</CardTitle>
-                    </CardHeader>
-                    <CardContent class="space-y-4">
-                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div class="space-y-2">
-                                <Label for="Ho">Họ</Label>
-                                <Input v-model="currentUser.Ho" id="Ho" placeholder="Lý" />
+                <div class="space-y-4">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Thông tin người mượn</CardTitle>
+                        </CardHeader>
+                        <CardContent class="space-y-4">
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div class="space-y-2">
+                                    <Label for="Ho">Họ</Label>
+                                    <Input v-model="currentUser.Ho" id="Ho" placeholder="Lý" />
+                                </div>
+                                <div class="space-y-2">
+                                    <Label for="Ten">Tên</Label>
+                                    <Input v-model="currentUser.Ten" id="Ten" placeholder="Lệ Hoa" />
+                                </div>
                             </div>
                             <div class="space-y-2">
-                                <Label for="Ten">Tên</Label>
-                                <Input v-model="currentUser.Ten" id="Ten" placeholder="Lệ Hoa" />
+                                <Label for="email">Email</Label>
+                                <Input
+                                    v-model="currentUser.email"
+                                    id="email"
+                                    type="email"
+                                    placeholder="lehoa@example.com"
+                                />
                             </div>
-                        </div>
-                        <div class="space-y-2">
-                            <Label for="email">Email</Label>
-                            <Input
-                                v-model="currentUser.email"
-                                id="email"
-                                type="email"
-                                placeholder="lehoa@example.com"
-                            />
-                        </div>
-                        <div class="space-y-2">
-                            <Label for="DiaChi">Địa chỉ</Label>
-                            <Textarea v-model="currentUser.DiaChi" id="DiaChi" placeholder="123 Hai Bà Trưng, TP HCM" />
-                        </div>
-                        <div class="flex items-center space-x-2 mt-4">
-                            <Popover v-model:open="isPopoverOpen">
-                                <PopoverTrigger as-child>
-                                    <Button variant="outline" class="w-full justify-start text-left font-normal">
-                                        {{ formatDate(NgayMuon || new Date()) }}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent class="w-full p-2">
-                                    <Calendar v-model="NgayMuon" placeholder="Chọn ngày bắt đầu" />
-                                </PopoverContent>
-                            </Popover>
-
-                            <!-- <Button @click="selectDate">Thống kê</Button> -->
-                        </div>
-                    </CardContent>
-                    <CardFooter>
-                        <Button @click="borrowBooks" class="w-full">Mượn sách</Button>
-                    </CardFooter>
-                </Card>
-            </div>
-        </main>
+                            <div class="space-y-2">
+                                <Label for="DiaChi">Địa chỉ</Label>
+                                <Textarea
+                                    v-model="currentUser.DiaChi"
+                                    id="DiaChi"
+                                    placeholder="123 Hai Bà Trưng, TP HCM"
+                                />
+                            </div>
+                            <div class="space-y-2">
+                                <Label for="daysToBorrow">Số ngày mượn</Label>
+                                <Select
+                                    v-model="currentUser.daysToBorrow"
+                                    id="daysToBorrow"
+                                    class="w-full"
+                                    placement="bottom"
+                                >
+                                    <SelectTrigger class="w-full">
+                                        <SelectValue placeholder="Số ngày mượn" />
+                                    </SelectTrigger>
+                                    <SelectContent class="w-full">
+                                        <SelectItem value="7">7</SelectItem>
+                                        <SelectItem value="14">14</SelectItem>
+                                        <SelectItem value="21">21</SelectItem>
+                                        <SelectItem value="30">30</SelectItem>
+                                        <SelectItem value="60">60</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div class="space-y-2">
+                                <Label for="NgayMuon">Ngày bắt đầu mượn</Label>
+                                <Popover v-model:open="isPopoverOpen">
+                                    <PopoverTrigger as-child>
+                                        <Button variant="outline" class="w-full justify-start text-left font-normal">
+                                            {{ formatDate(NgayMuon || new Date()) }}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent class="w-full p-2">
+                                        <Calendar v-model="NgayMuon" placeholder="Chọn ngày bắt đầu" />
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
+                        </CardContent>
+                        <CardFooter>
+                            <Button @click="borrowBooks" class="w-full">Mượn sách</Button>
+                        </CardFooter>
+                    </Card>
+                </div>
+            </main>
+        </div>
 
         <Footer />
     </div>
@@ -163,6 +192,7 @@ import axios from '@/utils/axios';
 // import axiosUser from '@/utils/axiosUser';
 
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 import {
     Breadcrumb,
@@ -248,27 +278,38 @@ watch(
 
 const borrowBooks = async () => {
     // Kiểm tra nếu không có sản phẩm nào được chọn
-    if (selectedProductIds._rawValue.length === 0) {
+    if (selectedProductIds.value.length === 0) {
         toast.error('Cần phải chọn sản phẩm');
         return;
     }
 
     // Kiểm tra nếu thông tin cá nhân chưa đầy đủ
-    const { Ho, Ten, email, DiaChi } = currentUser.value;
+    const { Ho, Ten, email, DiaChi, daysToBorrow } = currentUser.value;
     if (!Ho || !Ten || !email || !DiaChi) {
         toast.error('Cần nhập đầy đủ thông tin cá nhân trước khi mượn sách');
         return;
     }
+    // Kiểm tra nếu số ngày mượn chưa được chọn
+    if (!daysToBorrow) {
+        toast.error('Cần nhập số ngày mượn.');
+        return;
+    }
+
+    if (!NgayMuon.value) {
+        toast.error('Cần chọn ngày mượn.');
+        return;
+    }
 
     // Xử lý ngày bắt đầu
-    let formattedNgayMuon = NgayMuon.value ? formatDate(NgayMuon.value) : formatDate(new Date());
+    let formattedNgayMuon = formatDate(NgayMuon.value);
 
     console.log('selectedProductIds: ', selectedProductIds);
 
     // Chuẩn bị dữ liệu gửi tới backend
     const orderData = {
         NgayMuon: formattedNgayMuon,
-        orderedProductIds: selectedProductIds._rawValue,
+        orderedProductIds: selectedProductIds.value,
+        daysToBorrow: parseInt(daysToBorrow),
     };
 
     console.log('orderData: ', orderData);
@@ -288,12 +329,12 @@ const borrowBooks = async () => {
         // }
 
         // Hiển thị thông báo thành công
-        toast.success('Mượn sách thành công');
+        toast.success('Gửi yêu cầu mượn sách thành công');
         router.push('orderSuccess');
     } catch (error) {
         // Xử lý lỗi từ server
-        console.error('Error fetching borrow books: ', error.message);
-        toast.error('Mượn sách thất bại. Vui lòng thử lại sau.');
+        console.error('Error fetching borrow books: ', error.response.data.message);
+        toast.error(error.response.data.message);
     }
 };
 

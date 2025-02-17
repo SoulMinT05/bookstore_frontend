@@ -10,7 +10,7 @@
                 </slick-carousel>
             </div>
 
-            <div v-for="(books, category) in booksByCategory" :key="category">
+            <div class="mx-auto" v-for="(books, category) in booksByCategory" :key="category">
                 <h2 class="text-2xl font-bold text-gray-800 mt-16">
                     {{ category }}
                 </h2>
@@ -55,8 +55,8 @@
                             </router-link>
                         </CarouselItem>
                     </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
+                    <CarouselPrevious class="absolute z-10" style="margin-left: 2px" />
+                    <CarouselNext class="absolute z-10" style="margin-right: 2px" />
                 </Carousel>
             </div>
         </div>

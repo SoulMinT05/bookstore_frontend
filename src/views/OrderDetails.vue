@@ -104,7 +104,7 @@
                                 <Badge
                                     v-if="orderDetails?.TinhTrang"
                                     :class="`transition-none ${getStatusClass(orderDetails?.TinhTrang)}`"
-                                    >{{ orderDetails?.TinhTrang }}</Badge
+                                    >{{ getStatusText(orderDetails?.TinhTrang) }}</Badge
                                 >
                             </div>
                         </div>
@@ -199,6 +199,20 @@ const getStatusClass = (TinhTrang: string): string => {
             return 'bg-black-100 text-black-600 hover:bg-black-100';
         default:
             return 'bg-gray-100 text-gray-600';
+    }
+};
+const getStatusText = (TinhTrang: string): string => {
+    switch (TinhTrang.toLowerCase()) {
+        case 'pending':
+            return 'Đang xử lý';
+        case 'accepted':
+            return 'Đã chấp nhận';
+        case 'rejected':
+            return 'Đã từ chối';
+        case 'cancel':
+            return 'Đã hủy';
+        default:
+            return 'Không xác định';
     }
 };
 

@@ -13,6 +13,10 @@
                     <span>{{ lastOrder._id }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2">
+                    <span class="font-medium">Ngày tạo đơn</span>
+                    <span>{{ formatDate(lastOrder.NgayTao) }}</span>
+                </div>
+                <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Ngày mượn</span>
                     <span>{{ formatDate(lastOrder.NgayMuon) }}</span>
                 </div>
@@ -26,7 +30,7 @@
                 </div>
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Trạng thái</span>
-                    <Badge disabled :class="statusClass">{{ lastOrder.TinhTrang }}</Badge>
+                    <Badge disabled :class="statusClass">{{ statusText }}</Badge>
                 </div>
             </CardContent>
         </Card>
@@ -60,6 +64,15 @@ const statusClass = computed(() => {
     if (TinhTrang === 'rejected') return 'bg-red-500 hover:bg-red-500'; // Màu đỏ, không thay đổi khi hover
     return 'bg-gray-500 hover:bg-gray-500'; // Màu mặc định, không thay đổi khi hover
 });
+
+const statusText = computed(() => {
+    const TinhTrang = lastOrder.value.TinhTrang;
+    if (TinhTrang === 'pending') return 'Đang xử lý';
+    if (TinhTrang === 'accepted') return 'Đã chấp nhận';
+    if (TinhTrang === 'rejected') return 'Đã từ chối';
+    return 'Không xác định'; // Trạng thái mặc định nếu không phải 3 giá trị trên
+});
+
 const formatDate = (date: Date | string | null) => {
     if (!date) return '';
     const d = new Date(date);
