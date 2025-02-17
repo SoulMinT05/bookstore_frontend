@@ -6,7 +6,12 @@
         },
         "noEmit": true,
         "allowJs": true,
-        "checkJs": false,
+        "checkJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "target": "esnext",
+        "module": "esnext",
         "jsx": "preserve"
     },
     "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

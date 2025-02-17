@@ -25,6 +25,8 @@ export default defineConfig(({ mode }: { mode: string }) => {
         resolve: {
             alias: {
                 '@': rootDir,
+                // '@': path.resolve(__dirname, 'src'),
+                vue: 'vue/dist/vue.runtime.esm-bundler.js',
             },
         },
         build: {
