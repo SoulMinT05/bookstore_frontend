@@ -12,7 +12,7 @@
                 <Search
                     @click="handleSearch"
                     class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer transition-transform duration-200 ease-in-out hover:text-foreground hover:scale-110 active:scale-90"
-                    size="18"
+                    :size="18"
                 />
             </div>
         </PopoverTrigger>
@@ -104,7 +104,7 @@ const handleSearch = async () => {
 };
 
 const popoverWidth = ref('300px'); // Giá trị mặc định
-const triggerRef = ref(null);
+const triggerRef = ref<HTMLElement | null>(null);
 
 const updatePopoverWidth = () => {
     if (triggerRef.value) {

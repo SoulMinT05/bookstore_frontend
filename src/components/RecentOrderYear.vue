@@ -19,8 +19,9 @@ const statistics = ref({
 });
 const fetchData = async () => {
     try {
-        const staff = JSON.parse(localStorage.getItem('staff'));
-        const staffToken = staff.accessToken;
+        const staffData = localStorage.getItem('staff');
+        const staff = staffData ? JSON.parse(staffData) : null;
+        const staffToken = staff?.accessToken ?? '';
 
         const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/statistic/year`, {
             method: 'GET',

@@ -27,27 +27,27 @@
             <table v-else class="w-full table-auto">
                 <thead>
                     <tr class="text-gray-600 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('Ho')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('MaDocGia.Ho' as OrderSortKey)">
                             Họ
-                            <span v-if="currentSort !== 'Ho'" class="ml-2">
+                            <span v-if="currentSort !== 'MaDocGia.Ho'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'Ho' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'MaDocGia.Ho' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'Ho' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'MaDocGia.Ho' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
-                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('Ten')">
+                        <th class="py-3 px-6 text-left cursor-pointer" @click="sortBy('MaDocGia.Ten' as OrderSortKey)">
                             Tên
-                            <span v-if="currentSort !== 'Ten'" class="ml-2">
+                            <span v-if="currentSort !== 'MaDocGia.Ten'" class="ml-2">
                                 <i class="fas fa-sort"></i>
                             </span>
-                            <span v-if="currentSort === 'Ten' && currentSortDir === 'asc'" class="ml-2">
+                            <span v-if="currentSort === 'MaDocGia.Ten' && currentSortDir === 'asc'" class="ml-2">
                                 <i class="fas fa-sort-up"></i>
                             </span>
-                            <span v-if="currentSort === 'Ten' && currentSortDir === 'desc'" class="ml-2">
+                            <span v-if="currentSort === 'MaDocGia.Ten' && currentSortDir === 'desc'" class="ml-2">
                                 <i class="fas fa-sort-down"></i>
                             </span>
                         </th>
@@ -118,7 +118,7 @@
                 <tbody class="text-gray-600 text-sm font-light">
                     <tr
                         v-for="order in sortedAndPaginatedOrders"
-                        :key="order?.id"
+                        :key="order?._id"
                         class="border-b border-gray-200 hover:bg-gray-100"
                     >
                         <td class="py-4 px-6 text-left">
@@ -169,9 +169,6 @@
                         <td class="py-4 px-6 text-center">
                             <span>{{ formatDate(order?.createdAt) }}</span>
                         </td>
-                        <!-- <td class="py-4 px-6 text-center">
-                            <span>{{ formatDate(order?.updatedAt) }}</span>
-                        </td> -->
                         <td class="py-4 px-6 text-center">
                             <div class="flex item-center justify-center">
                                 <button
@@ -247,43 +244,6 @@
             </div>
         </div>
 
-        <!-- Edit order modal -->
-        <div
-            v-if="isEditOrderModalVisible"
-            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-        >
-            <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/3 modal-content">
-                <h2 class="text-lg font-bold mb-4">Chỉnh sửa thông tin đơn hàng</h2>
-                <form @submit.prevent="saveEditedOrder">
-                    <div class="mb-4">
-                        <label for="editTinhTrang" class="block text-sm font-medium text-gray-700">TinhTrang</label>
-                        <input
-                            v-model="orderToEdit.TinhTrang"
-                            type="text"
-                            id="editTinhTrang"
-                            class="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                        />
-                    </div>
-
-                    <div class="flex justify-end mt-6">
-                        <button
-                            type="button"
-                            @click="closeEditPublisherModal"
-                            class="cursor-pointer hover:opacity-95 mr-2 px-4 py-2 bg-gray-500 text-white rounded-md"
-                        >
-                            Đóng
-                        </button>
-                        <button
-                            type="submit"
-                            class="cursor-pointer hover:opacity-95 px-4 py-2 bg-blue-500 text-white rounded-md"
-                        >
-                            Cập nhật
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
         <div class="mt-4 flex justify-between">
             <button
                 @click="goToPage(currentPage - 1)"
@@ -327,15 +287,48 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 
-const orders = ref([]);
-const currentSort = ref('');
-const currentSortDir = ref('asc');
+// const orders = ref([]);
+interface DocGia {
+    Ho: string;
+    Ten: string;
+    email: string;
+    DiaChi: string;
+}
+interface Product {
+    _id: string;
+    TenSach: string;
+    HinhAnhSach: string[];
+    // Thêm các thuộc tính khác nếu cần
+}
+
+interface OrderItem {
+    product: Product;
+    count: number;
+}
+
+interface Order {
+    _id: string;
+    MaDocGia: DocGia; // Đây là phần bạn thiếu kiểu cho MaDocGia
+    MaSach: OrderItem[];
+    NgayMuon: Date;
+    NgayTra: Date;
+    SoQuyen: number;
+    TinhTrang: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+type OrderSortKey = keyof Order | `MaDocGia.${keyof DocGia}`; // Hỗ trợ cả thuộc tính con như 'Ho', 'Ten' của MaDocGia
+
+const orders = ref<Order[]>([]);
+// const currentSort = ref<keyof Order>('MaDocGia');
+const currentSort = ref<OrderSortKey>('MaDocGia.Ho');
+const currentSortDir = ref<'asc' | 'desc'>('asc');
 const searchQuery = ref('');
 
-const isAddOrderModalVisible = ref(false);
 const currentPage = ref(1);
 const pageSize = ref(10);
-const selectedOrder = ref(null);
+const selectedOrder = ref<Order | null>(null);
 const orderToEdit = ref(null);
 const isEditOrderModalVisible = ref(false);
 const isLoading = ref(false);
@@ -359,12 +352,26 @@ const sortedOrdersComputed = computed(() => {
     }
 
     const direction = currentSortDir.value === 'asc' ? 1 : -1;
+    function getValueByKey(obj: any, key: string): any {
+        return key.split('.').reduce((o, i) => o?.[i], obj);
+    }
     return [...ordersToSort].sort((a, b) => {
-        const valueA = a[currentSort.value];
-        const valueB = b[currentSort.value];
+        if (currentSort.value.includes('.')) {
+            const keys = currentSort.value.split('.');
+            const valueA = keys.reduce((obj, key) => obj[key], a);
+            const valueB = keys.reduce((obj, key) => obj[key], b);
 
-        if (valueA < valueB) return -1 * direction;
-        if (valueA > valueB) return 1 * direction;
+            if (valueA < valueB) return -1 * direction;
+            if (valueA > valueB) return 1 * direction;
+        } else {
+            // Sắp xếp theo các thuộc tính trực tiếp của Order (ví dụ: SoQuyen, NgayMuon)
+            const valueA = getValueByKey(a, currentSort.value);
+            const valueB = getValueByKey(b, currentSort.value);
+
+            if (valueA < valueB) return -1 * direction;
+            if (valueA > valueB) return 1 * direction;
+        }
+
         return 0;
     });
 });
@@ -390,12 +397,17 @@ const filteredOrders = computed(() => {
         const createdAt = order?.createdAt ? new Date(order?.createdAt) : null;
         const NgayMuon = order?.NgayMuon ? new Date(order?.NgayMuon) : null;
         const NgayTra = order?.NgayTra ? new Date(order?.NgayTra) : null;
-        // const updatedAt = order.updatedAt ? new Date(order.updatedAt) : null;
+        const updatedAt = order?.updatedAt ? new Date(order?.updatedAt) : null;
 
         const formattedCreatedAt = createdAt
             ? createdAt.getDate().toString().padStart(2, '0') +
               (createdAt.getMonth() + 1).toString().padStart(2, '0') +
               createdAt.getFullYear()
+            : '';
+        const formattedUpdatedAt = updatedAt
+            ? updatedAt.getDate().toString().padStart(2, '0') +
+              (updatedAt.getMonth() + 1).toString().padStart(2, '0') +
+              updatedAt.getFullYear()
             : '';
         const formattedNgayMuon = NgayMuon
             ? NgayMuon.getDate().toString().padStart(2, '0') +
@@ -411,7 +423,7 @@ const filteredOrders = computed(() => {
 
         const searchQueryNumber = Number(searchQueryInput);
         const isSearchQueryNumber = !isNaN(searchQueryNumber);
-        const matchNumber = (value) => {
+        const matchNumber = (value: string | number | null) => {
             if (isSearchQueryNumber && value != null) {
                 return value.toString().includes(searchQueryInput); // Tìm kiếm theo chuỗi số
             }
@@ -424,6 +436,7 @@ const filteredOrders = computed(() => {
             TinhTrang.includes(searchQueryInput) ||
             matchNumber(order.SoQuyen) ||
             formattedCreatedAt.includes(searchQueryInput) || // Compare formatted date
+            formattedUpdatedAt.includes(searchQueryInput) || // Compare formatted date
             formattedNgayMuon.includes(searchQueryInput) || // Compare formatted date
             formattedNgayTra.includes(searchQueryInput) // Compare formatted date
         );
@@ -432,7 +445,7 @@ const filteredOrders = computed(() => {
 
 const toast = useToast();
 
-function sortBy(column) {
+function sortBy(column: OrderSortKey) {
     if (currentSort.value === column) {
         // Nếu đã sắp xếp theo cột này, đổi chiều
         currentSortDir.value = currentSortDir.value === 'asc' ? 'desc' : 'asc';
@@ -455,14 +468,14 @@ function previousPage() {
     }
 }
 
-function goToPage(page) {
+function goToPage(page: number) {
     currentPage.value = page;
 }
-function resetToFirstPage(page) {
+function resetToFirstPage(page?: number) {
     currentPage.value = 1;
 }
 
-function formatDate(date) {
+function formatDate(date: string | Date): string {
     const d = new Date(date);
     const year = d.getUTCFullYear();
     const month = String(d.getUTCMonth() + 1).padStart(2, '0');
@@ -481,8 +494,9 @@ function exportToExcel() {
 async function fetchOrders() {
     isLoading.value = true;
     try {
-        const staff = JSON.parse(localStorage.getItem('staff'));
-        const staffToken = staff.accessToken;
+        const staffData = localStorage.getItem('staff');
+        const staff = staffData ? JSON.parse(staffData) : null;
+        const staffToken = staff.accessToken || '';
         const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/order/getAllOrders`, {
             method: 'GET',
             headers: {
@@ -498,7 +512,7 @@ async function fetchOrders() {
             return;
         }
         orders.value = data.orders;
-    } catch (error) {
+    } catch (error: any) {
         console.log('error: ', error);
         toast.error(error.message);
     } finally {
@@ -506,10 +520,11 @@ async function fetchOrders() {
     }
 }
 
-async function updateOrderStatus(orderId, newStatus) {
+async function updateOrderStatus(orderId: string | number, newStatus: string) {
     try {
-        const staff = JSON.parse(localStorage.getItem('staff'));
-        const staffToken = staff.accessToken;
+        const staffData = localStorage.getItem('staff');
+        const staff = staffData ? JSON.parse(staffData) : null;
+        const staffToken = staff.accessToken || '';
         const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/order/updateStatus/${orderId}`, {
             method: 'PUT',
             headers: {
@@ -526,13 +541,13 @@ async function updateOrderStatus(orderId, newStatus) {
             return;
         }
         toast.success('Cập nhật tình trạng đơn hàng thành công');
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error adding order:', error);
         toast.error(error.message);
     }
 }
 
-function viewOrder(order) {
+function viewOrder(order: Order) {
     selectedOrder.value = order;
 }
 
@@ -540,11 +555,12 @@ function closeModal() {
     selectedOrder.value = null;
 }
 
-async function deleteOrder(order) {
+async function deleteOrder(order: Order) {
     if (!confirm('Bạn chắc chắn xoá đơn hàng này không?')) return;
     try {
-        const staff = JSON.parse(localStorage.getItem('staff'));
-        const staffToken = staff.accessToken;
+        const staffData = localStorage.getItem('staff');
+        const staff = staffData ? JSON.parse(staffData) : null;
+        const staffToken = staff.accessToken || '';
         const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/order/${order._id}`, {
             method: 'DELETE',
             headers: {
@@ -564,7 +580,7 @@ async function deleteOrder(order) {
             1,
         );
         toast.success('Xoá đơn hàng thành công');
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error deleting user:', error.message);
         toast.error(error.message);
     }

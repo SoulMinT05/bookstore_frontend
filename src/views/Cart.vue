@@ -256,7 +256,7 @@ interface CartItem {
     selected: boolean;
 }
 
-const selectedDaysToBorrow = ref(currentUser.value.daysToBorrow.toString() || '0');
+const selectedDaysToBorrow = ref(currentUser.value?.daysToBorrow?.toString() || '0');
 
 function formatCurrency(value: number | null | undefined): string {
     if (value == null || isNaN(value)) return '0 ₫'; // Xử lý trường hợp giá trị không hợp lệ
@@ -320,12 +320,20 @@ const borrowBooks = async () => {
         return;
     }
 
-    if (typeof daysToBorrow === 'string') {
-        currentUser.value.daysToBorrow = parseInt(daysToBorrow, 10);
-    }
+    // if (typeof daysToBorrow === 'string') {
+    //     currentUser.value.daysToBorrow = parseInt(daysToBorrow, 10);
+    // }
+
+    // // Kiểm tra nếu số ngày mượn chưa được chọn
+    // if (!currentUser.value.daysToBorrow || currentUser.value.daysToBorrow === 0) {
+    //     toast.error('Cần nhập số ngày mượn.');
+    //     return;
+    // }
+
+    const daysToBorrowValue = daysToBorrow ?? '0'; // Cung cấp giá trị mặc định '0' nếu daysToBorrow là undefined
 
     // Kiểm tra nếu số ngày mượn chưa được chọn
-    if (!currentUser.value.daysToBorrow || currentUser.value.daysToBorrow === 0) {
+    if (!daysToBorrowValue || daysToBorrowValue === '0') {
         toast.error('Cần nhập số ngày mượn.');
         return;
     }
@@ -344,7 +352,7 @@ const borrowBooks = async () => {
     const orderData = {
         NgayMuon: formattedNgayMuon,
         orderedProductIds: selectedProductIds.value,
-        daysToBorrow: parseInt(daysToBorrow.toString()),
+        daysToBorrow: parseInt(daysToBorrowValue.toString()),
     };
 
     console.log('orderData: ', orderData);

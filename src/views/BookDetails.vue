@@ -14,7 +14,7 @@
                             </BreadcrumbItem>
                             <BreadcrumbSeparator>/</BreadcrumbSeparator>
                             <BreadcrumbItem>
-                                <BreadcrumbPage class="text-xl">{{ bookDetails.TenSach || '' }} </BreadcrumbPage>
+                                <BreadcrumbPage class="text-xl">{{ bookDetails?.TenSach || '' }} </BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
@@ -342,7 +342,7 @@ const fetchProductSimilarPublisher = async () => {
         });
         console.log('res.data: ', res.data);
         relatedProducts.value = res.data.relatedProducts.filter(
-            (product: Book) => product._id !== bookDetails?.value._id,
+            (product: Book) => product._id !== bookDetails?.value?._id,
         );
         console.log('relatedProducts.value: ', relatedProducts.value);
     } catch (error: any) {

@@ -110,7 +110,7 @@ const getCart = async () => {
         cartCount.value = carts.value.length;
         console.log('carts.valueHeader: ', carts.value);
         console.log('cartCount.valueHeader: ', cartCount.value);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching get cart: ', error.message);
     }
 };
