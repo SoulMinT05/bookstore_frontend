@@ -62,13 +62,13 @@
 
                                     <td class="p-4">
                                         <img
-                                            :src="item.product.HinhAnhSach[0]"
+                                            :src="item.product?.HinhAnhSach[0]"
                                             class="w-16 md:w-32 max-w-full max-h-full"
-                                            :alt="item.product.TenSach"
+                                            :alt="item.product?.TenSach"
                                         />
                                     </td>
                                     <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                                        {{ item.product.TenSach }}
+                                        {{ item.product?.TenSach }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
@@ -77,7 +77,6 @@
                                                 :default-value="item.quantityCart"
                                                 :min="0"
                                                 class="w-28"
-                                                @change="handleQuantityChange(item.product._id, $event)"
                                             >
                                                 <NumberFieldContent>
                                                     <NumberFieldDecrement
@@ -93,7 +92,7 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                                        {{ formatCurrency(item.product.DonGia) }}
+                                        {{ formatCurrency(item.product?.DonGia) }}
                                     </td>
                                     <td class="px-6 py-4" @click="removeProductCart(item.product._id)">
                                         <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline"
@@ -142,7 +141,7 @@
                             <div class="space-y-2">
                                 <Label for="daysToBorrow">Số ngày mượn</Label>
                                 <Select
-                                    v-model="currentUser.daysToBorrow"
+                                    v-model="selectedDaysToBorrow"
                                     id="daysToBorrow"
                                     class="w-full"
                                     placement="bottom"
@@ -151,11 +150,11 @@
                                         <SelectValue placeholder="Số ngày mượn" />
                                     </SelectTrigger>
                                     <SelectContent class="w-full">
-                                        <SelectItem value="7">7</SelectItem>
-                                        <SelectItem value="14">14</SelectItem>
-                                        <SelectItem value="21">21</SelectItem>
-                                        <SelectItem value="30">30</SelectItem>
-                                        <SelectItem value="60">60</SelectItem>
+                                        <SelectItem :value="'7'">7</SelectItem>
+                                        <SelectItem :value="'14'">14</SelectItem>
+                                        <SelectItem :value="'21'">21</SelectItem>
+                                        <SelectItem :value="'30'">30</SelectItem>
+                                        <SelectItem :value="'60'">60</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -168,7 +167,11 @@
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent class="w-full p-2">
-                                        <Calendar v-model="NgayMuon" placeholder="Chọn ngày bắt đầu" />
+                                        <Calendar
+                                            v-model="NgayMuon"
+                                            @update:model-value="handleDateChange"
+                                            placeholder="Chọn ngày bắt đầu"
+                                        />
                                     </PopoverContent>
                                 </Popover>
                             </div>
@@ -222,6 +225,9 @@ import { onMounted, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
 
+const router = useRouter();
+const toast = useToast();
+
 interface User {
     Ho: string;
     Ten: string;
@@ -229,10 +235,28 @@ interface User {
     DiaChi: string;
     daysToBorrow?: number;
 }
-const currentUser = ref<User | null>(null);
+const currentUser = ref<User>({
+    Ho: '',
+    Ten: '',
+    email: '',
+    DiaChi: '',
+    daysToBorrow: 7,
+});
 
-const router = useRouter();
-const toast = useToast();
+interface Product {
+    _id: string;
+    HinhAnhSach: string[]; // assuming HinhAnhSach is an array of strings
+    TenSach: string;
+    DonGia: number;
+}
+
+interface CartItem {
+    product: Product;
+    quantityCart: number; // assuming quantityCart is a number
+    selected: boolean;
+}
+
+const selectedDaysToBorrow = ref(currentUser.value.daysToBorrow.toString() || '0');
 
 function formatCurrency(value: number | null | undefined): string {
     if (value == null || isNaN(value)) return '0 ₫'; // Xử lý trường hợp giá trị không hợp lệ
@@ -257,11 +281,16 @@ const formatDate = (date: Date | string | null) => {
 };
 
 const selectAll = ref(false);
-// const carts = ref([]);
-const carts = ref<{ product: { _id: string }; selected: boolean }[]>([]);
+
+const carts = ref<CartItem[]>([]);
 const NgayMuon = ref(null);
 const isPopoverOpen = ref(false);
-const selectedProductIds = ref([]);
+const selectedProductIds = ref<string[]>([]);
+
+const handleDateChange = () => {
+    // Đóng popover sau khi chọn ngày
+    isPopoverOpen.value = false;
+};
 
 const toggleSelectAll = () => {
     console.log('selectAll: ', selectAll.value);
@@ -277,14 +306,6 @@ const updateSelectAll = () => {
     selectAll.value = carts.value.every((item) => selectedProductIds.value.includes(item.product._id));
 };
 
-watch(
-    carts,
-    () => {
-        selectAll.value = carts.value.every((item) => item.selected);
-    },
-    { deep: true },
-);
-
 const borrowBooks = async () => {
     // Kiểm tra nếu không có sản phẩm nào được chọn
     if (selectedProductIds.value.length === 0) {
@@ -293,19 +314,24 @@ const borrowBooks = async () => {
     }
 
     // Kiểm tra nếu thông tin cá nhân chưa đầy đủ
-    const { Ho, Ten, email, DiaChi, daysToBorrow } = currentUser.value as User;
+    const { Ho, Ten, email, DiaChi, daysToBorrow } = currentUser.value;
     if (!Ho || !Ten || !email || !DiaChi) {
         toast.error('Cần nhập đầy đủ thông tin cá nhân trước khi mượn sách');
         return;
     }
+
+    if (typeof daysToBorrow === 'string') {
+        currentUser.value.daysToBorrow = parseInt(daysToBorrow, 10);
+    }
+
     // Kiểm tra nếu số ngày mượn chưa được chọn
-    if (!daysToBorrow || daysToBorrow === 0) {
+    if (!currentUser.value.daysToBorrow || currentUser.value.daysToBorrow === 0) {
         toast.error('Cần nhập số ngày mượn.');
         return;
     }
 
     if (!NgayMuon.value) {
-        toast.error('Cần chọn ngày mượn.');
+        toast.error('Cần chọn ngày bắt đầu mượn.');
         return;
     }
 
@@ -318,7 +344,7 @@ const borrowBooks = async () => {
     const orderData = {
         NgayMuon: formattedNgayMuon,
         orderedProductIds: selectedProductIds.value,
-        daysToBorrow: parseInt(daysToBorrow),
+        daysToBorrow: parseInt(daysToBorrow.toString()),
     };
 
     console.log('orderData: ', orderData);
@@ -338,9 +364,7 @@ const getCart = async () => {
     try {
         const res = await axios.get('/user/getCart');
         currentUser.value = res.data.user;
-        console.log('currentUser.value: ', currentUser.value);
         carts.value = res.data.user.cart;
-        console.log('carts.value11: ', carts.value);
     } catch (error: any) {
         console.error('Error fetching get cart: ', error.message);
     }
@@ -358,7 +382,7 @@ const increaseQuantityCart = async (productId: string) => {
         toast.error('Tăng số lượng thất bại');
     }
 };
-const decreaseQuantityCart = async (productId) => {
+const decreaseQuantityCart = async (productId: string) => {
     try {
         const res = await axios.post('/user/decreaseProductCart', { productId });
         console.log('res.dataDecrease: ', res.data);
@@ -370,7 +394,7 @@ const decreaseQuantityCart = async (productId) => {
         toast.error('Giảm số lượng thất bại');
     }
 };
-const removeProductCart = async (productId) => {
+const removeProductCart = async (productId: string) => {
     try {
         const res = await axios.post('/user/removeProductCart', { productId });
         console.log('res.dataRemove: ', res.data);
@@ -382,6 +406,19 @@ const removeProductCart = async (productId) => {
         toast.error('Xoá sản phẩm thất bại');
     }
 };
+
+watch(
+    carts,
+    () => {
+        selectAll.value = carts.value.every((item) => item.selected);
+    },
+    { deep: true },
+);
+
+watch(selectedDaysToBorrow, (newValue) => {
+    // Khi giá trị chọn thay đổi, cập nhật giá trị trong currentUser dưới dạng số
+    currentUser.value.daysToBorrow = parseInt(newValue, 10);
+});
 
 onMounted(() => {
     getCart();

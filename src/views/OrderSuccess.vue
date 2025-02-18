@@ -10,23 +10,23 @@
             <CardContent>
                 <div class="flex justify-between items-center">
                     <span class="font-medium">STT đơn</span>
-                    <span>{{ lastOrder._id }}</span>
+                    <span>{{ lastOrder?._id }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Ngày tạo đơn</span>
-                    <span>{{ formatDate(lastOrder.NgayTao) }}</span>
+                    <span>{{ formatDate(lastOrder?.NgayTao ?? null) }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Ngày mượn</span>
-                    <span>{{ formatDate(lastOrder.NgayMuon) }}</span>
+                    <span>{{ formatDate(lastOrder?.NgayMuon ?? null) }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Ngày hết hạn</span>
-                    <span>{{ formatDate(lastOrder.NgayTra) }}</span>
+                    <span>{{ formatDate(lastOrder?.NgayTra ?? null) }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Số lượng</span>
-                    <span>{{ lastOrder.SoQuyen }}</span>
+                    <span>{{ lastOrder?.SoQuyen }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Trạng thái</span>
@@ -36,7 +36,7 @@
         </Card>
         <div class="mt-8 space-x-4">
             <Button asChild>
-                <router-link :to="`/orderDetails/${lastOrder._id}`">Xem chi tiết đơn</router-link>
+                <router-link :to="`/orderDetails/${lastOrder?._id}`">Xem chi tiết đơn</router-link>
             </Button>
             <Button asChild variant="outline">
                 <router-link to="/">Tiếp tục mượn sách</router-link>

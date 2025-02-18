@@ -25,37 +25,37 @@ const toggleMode = () => {
 };
 const getName = computed(() => {
     try {
-        const staff = localStorage.getItem('staff');
-        console.log('userLocalstoraege: ', staff);
+        const staffData = localStorage.getItem('staff');
+        const staff = staffData ? JSON.parse(staffData) : null;
         if (!staff) {
             return 'Người dùng không tồn tại'; // Không có thông tin người dùng trong localStorage
         }
-        const staffObj = JSON.parse(staff); // Chuyển đổi chuỗi JSON thành đối tượng
-        console.log('staffObj: ', staffObj);
-        return staffObj.userData.Ho + staffObj.userData.Ten; // Trả về tên người dùng
-    } catch (error) {
+        const staffObj = staff?.userData ?? '';
+        return staffObj.Ho + staffObj.Ten; // Trả về tên người dùng
+    } catch (error: any) {
         console.error('Lỗi khi lấy dữ liệu người dùng từ localStorage:', error);
         return 'Người dùng không tồn tại'; // Trả về giá trị mặc định khi có lỗi
     }
 });
 const getEmail = computed(() => {
     try {
-        const staff = localStorage.getItem('staff');
-        console.log('staffLocalstoraege: ', staff);
+        const staffData = localStorage.getItem('staff');
+        const staff = staffData ? JSON.parse(staffData) : null;
         if (!staff) {
             return 'Người dùng không tồn tại'; // Không có thông tin người dùng trong localStorage
         }
-        const staffObj = JSON.parse(staff); // Chuyển đổi chuỗi JSON thành đối tượng
-        return staffObj.userData.email; // Trả về tên người dùng
-    } catch (error) {
+        const staffObj = staff?.userData ?? '';
+        return staffObj.email; // Trả về tên người dùng
+    } catch (error: any) {
         console.error('Lỗi khi lấy dữ liệu người dùng từ localStorage:', error);
         return 'Người dùng không tồn tại'; // Trả về giá trị mặc định khi có lỗi
     }
 });
 const handleLogout = async () => {
     const toast = useToast();
-    const staff = JSON.parse(localStorage.getItem('staff'));
-    const staffToken = staff.accessToken;
+    const staffData = localStorage.getItem('staff');
+    const staff = staffData ? JSON.parse(staffData) : null;
+    const staffToken = staff.accessToken || '';
     try {
         const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/staff/logout`, {
             method: 'POST',

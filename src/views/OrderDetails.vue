@@ -73,7 +73,7 @@
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                <TableRow v-for="(product, index) in orderDetails?.MaSach" :key="index">
+                                <TableRow v-for="(product, index) in orderDetails?.MaSach || []" :key="index">
                                     <TableCell>
                                         <img
                                             class="w-20 h-20 object-cover rounded"
@@ -149,14 +149,31 @@ import { useToast } from 'vue-toastification';
 import html2pdf from 'html2pdf.js';
 
 const route = useRoute();
+interface DocGia {
+    Ho: string;
+    Ten: string;
+    email: string;
+    DiaChi: string;
+}
+interface Product {
+    _id: string;
+    TenSach: string;
+    HinhAnhSach: string[];
+    // Thêm các thuộc tính khác nếu cần
+}
+interface OrderItem {
+    product: Product; // Thông tin sách
+    count: number; // Số lượng sách
+}
+
 interface Order {
     _id: string;
-    MaDocGia: string;
-    NgayMuon: string;
-    NgayTra: string;
+    MaDocGia: DocGia;
+    MaSach: OrderItem[];
+    NgayMuon: Date;
+    NgayTra: Date;
     SoQuyen: number;
     TinhTrang: string;
-    // Add other properties as needed based on the order data
 }
 
 const orderDetails = ref<Order>({} as Order);

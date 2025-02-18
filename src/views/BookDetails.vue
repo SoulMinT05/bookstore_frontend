@@ -14,7 +14,7 @@
                             </BreadcrumbItem>
                             <BreadcrumbSeparator>/</BreadcrumbSeparator>
                             <BreadcrumbItem>
-                                <BreadcrumbPage class="text-xl">{{ bookDetails.TenSach }} </BreadcrumbPage>
+                                <BreadcrumbPage class="text-xl">{{ bookDetails.TenSach || '' }} </BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
@@ -22,9 +22,12 @@
                     <div class="flex flex-col">
                         <section class="py-4 md:py-6 lg:py-2">
                             <div class="container grid md:grid-cols-2 gap-8 px-4 md:px-6">
-                                <div class="flex flex-col items-start gap-6" v-if="bookDetails.HinhAnhSach">
+                                <div
+                                    class="flex flex-col items-start gap-6"
+                                    v-if="bookDetails && bookDetails?.HinhAnhSach"
+                                >
                                     <img
-                                        :src="selectedImage"
+                                        :src="selectedImage || 'fallback-image.jpg'"
                                         alt="Product Image"
                                         width="{600}"
                                         height="{600}"
@@ -32,7 +35,7 @@
                                     />
                                     <div class="flex gap-4">
                                         <img
-                                            v-for="(image, index) in bookDetails.HinhAnhSach.slice(0, 4)"
+                                            v-for="(image, index) in bookDetails?.HinhAnhSach.slice(0, 4)"
                                             :key="index"
                                             :src="image"
                                             alt="Thumbnail Image"
@@ -45,28 +48,28 @@
                                 <div class="flex flex-col items-start gap-6">
                                     <h1
                                         class="text-2xl sm:text-3xl md:text-3xl font-bold tracking-tight"
-                                        v-if="bookDetails.TenSach"
+                                        v-if="bookDetails?.TenSach"
                                     >
-                                        {{ bookDetails.TenSach }}
+                                        {{ bookDetails?.TenSach }}
                                     </h1>
-                                    <p class="text-muted-foreground text-lg" v-if="bookDetails.description">
-                                        {{ bookDetails.description }}
+                                    <p class="text-muted-foreground text-lg" v-if="bookDetails?.description">
+                                        {{ bookDetails?.description }}
                                     </p>
-                                    <p class="text-lg font-semibold" v-if="bookDetails.TacGia">
+                                    <p class="text-lg font-semibold" v-if="bookDetails?.TacGia">
                                         Tác giả:
-                                        {{ bookDetails.TacGia }}
+                                        {{ bookDetails?.TacGia }}
                                     </p>
-                                    <p class="text-lg font-semibold" v-if="bookDetails.MaNXB">
+                                    <p class="text-lg font-semibold" v-if="bookDetails?.MaNXB">
                                         Nhà xuất bản:
-                                        {{ bookDetails.MaNXB.TenNXB }}
+                                        {{ bookDetails?.MaNXB.TenNXB }}
                                     </p>
-                                    <p class="text-lg font-semibold" v-if="bookDetails.NamXuatBan">
+                                    <p class="text-lg font-semibold" v-if="bookDetails?.NamXuatBan">
                                         Năm xuất bản:
-                                        {{ bookDetails.NamXuatBan }}
+                                        {{ bookDetails?.NamXuatBan }}
                                     </p>
                                     <div class="flex items-center gap-4">
-                                        <h2 class="text-4xl font-bold text-red-600" v-if="bookDetails.DonGia">
-                                            {{ formatCurrency(bookDetails.DonGia) }}
+                                        <h2 class="text-4xl font-bold text-red-600" v-if="bookDetails?.DonGia">
+                                            {{ formatCurrency(bookDetails?.DonGia) }}
                                         </h2>
                                         <Button size="lg" @click="addToCart">Thêm vào giỏ hàng</Button>
                                     </div>
@@ -272,11 +275,13 @@ import { Heart, ShoppingCart, Star } from 'lucide-vue-next';
 import { useToast } from 'vue-toastification';
 
 interface Book {
-    HinhAnhSach: string;
+    HinhAnhSach: string[];
     TenSach: string;
     description: string;
     TacGia: string;
-    MaNXB: string;
+    MaNXB: {
+        TenNXB: string;
+    };
     NamXuatBan: number;
     DonGia: number;
     _id: string;
@@ -291,7 +296,7 @@ const slug = route.params.slug;
 const toast = useToast();
 const bookDetails = ref<Book | null>(null); // Sửa kiểu bookDetails
 const relatedProducts = ref<Book[]>([]); // Sửa kiểu relatedProducts
-const selectedImage = ref(null);
+const selectedImage = ref<string | undefined>(undefined);
 const rating = ref(0);
 
 const setRating = (value: number) => {
@@ -299,7 +304,7 @@ const setRating = (value: number) => {
 };
 
 const changeMainImage = (image: string) => {
-    selectedImage.value = image;
+    selectedImage.value = image ?? null;
 };
 
 function formatCurrency(value: number | null | undefined): string {
@@ -317,7 +322,7 @@ const fetchProductDetails = async () => {
         console.log('bookDetails.value: ', bookDetails.value);
 
         fetchProductSimilarPublisher();
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching products:', error);
     }
 };
@@ -337,10 +342,10 @@ const fetchProductSimilarPublisher = async () => {
         });
         console.log('res.data: ', res.data);
         relatedProducts.value = res.data.relatedProducts.filter(
-            (product: Book) => product._id !== bookDetails.value._id,
+            (product: Book) => product._id !== bookDetails?.value._id,
         );
         console.log('relatedProducts.value: ', relatedProducts.value);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching related products:', error);
     }
 };
@@ -358,7 +363,7 @@ const addToCart = async () => {
             productId: bookDetails.value?._id,
         });
         toast.success('Thêm vào giỏ hàng thành công');
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching add to cart: ', error.message);
         toast.success('Thêm vào giỏ hàng thất bại');
     }
@@ -372,7 +377,7 @@ onMounted(() => {
     }, 100);
 
     if (bookDetails.value?.HinhAnhSach && bookDetails.value?.HinhAnhSach.length > 0) {
-        selectedImage.value = bookDetails.value.HinhAnhSach[0];
+        selectedImage.value = bookDetails.value.HinhAnhSach[0] ?? null;
     }
 });
 watch(
@@ -385,7 +390,7 @@ watch(
     () => bookDetails.value?.HinhAnhSach,
     (newImages) => {
         if (newImages && newImages.length > 0) {
-            selectedImage.value = newImages[0];
+            selectedImage.value = newImages[0] ?? null;
         }
     },
     { immediate: true }, // Đảm bảo hàm này chạy ngay khi component mount

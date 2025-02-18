@@ -76,23 +76,29 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Button } from '@/components/ui/button';
 
 import { Heart, ShoppingCart } from 'lucide-vue-next';
-const booksByCategory = ref<
-    Array<{
-        _id: string;
-        slug: string;
-        HinhAnhSach: string[];
-        TenSach: string;
-        TacGia: string;
-        DonGia: number;
-    }>
->([]);
+
+interface Book {
+    _id: string;
+    slug: string;
+    HinhAnhSach: string[];
+    TenSach: string;
+    TacGia: string;
+    DonGia: number;
+}
+
+const booksByCategory = ref<Record<string, Book[]>>({});
 
 const fetchProductsByAutoPublisher = async () => {
     try {
         const res = await axios.get('/book/auto-publishers');
-        booksByCategory.value = res.data.data;
+        // if (Array.isArray(res.data.data)) {
+        //     booksByCategory.value = res.data.data as Record<string, Book[]>;
+        // } else {
+        //     console.error('Dữ liệu không hợp lệ:', res.data.data);
+        // }
+        booksByCategory.value = res.data.data as Record<string, Book[]>;
         console.log('booksByCategory.value: ', booksByCategory.value);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching home:', error);
     }
 };

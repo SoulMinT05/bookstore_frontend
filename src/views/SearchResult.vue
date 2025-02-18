@@ -79,12 +79,11 @@ interface Book {
 
 const route = useRoute();
 const searchResults = ref<Book[]>([]); // 🛠 Dữ liệu sẽ nằm trong searchResults.value
-const keyword = ref(route.params.keyword);
-console.log('keyword: ', keyword);
+const keyword = ref<string>(Array.isArray(route.params.keyword) ? route.params.keyword[0] : route.params.keyword);
 
 onMounted(async () => {
     try {
-        const response = await axiosUser.get(`/book/search?keyword=${encodeURIComponent(route.params.keyword)}`);
+        const response = await axiosUser.get(`/book/search?keyword=${encodeURIComponent(keyword.value)}`);
         searchResults.value = response.data.books || [];
         console.log('Dữ liệu searchResults:', searchResults.value);
     } catch (error: any) {

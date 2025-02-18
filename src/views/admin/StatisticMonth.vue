@@ -101,7 +101,7 @@ const currentMonthStatistics = computed(() => {
 
 const currentMonthYear = computed(() => {
     const now = new Date();
-    const options = { month: 'long', year: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = { month: 'long', year: 'numeric' };
     return now.toLocaleDateString('vi-VN', options);
 });
 </script>
