@@ -13,6 +13,11 @@ import { useToast } from 'vue-toastification';
 
 const route = useRoute();
 
+interface MenuItem {
+    title: string;
+    path: string;
+}
+
 const menus = computed(() =>
     Object.entries(APP_MENU).map(([key, value]) => ({
         key,
@@ -33,8 +38,9 @@ const handleNavigate = (path: string) => {
 
 const handleLogout = async () => {
     const toast = useToast();
-    const staff = JSON.parse(localStorage.getItem('staff'));
-    const staffToken = staff.accessToken;
+    const staffData = localStorage.getItem('staff');
+    const staff = staffData ? JSON.parse(staffData) : null;
+    const staffToken = staff?.accessToken ?? '';
     try {
         const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/staff/logout`, {
             method: 'POST',
@@ -58,7 +64,7 @@ const handleLogout = async () => {
     }
 };
 
-const handleClick = (child) => {
+const handleClick = (child: MenuItem) => {
     if (child.title === 'Đăng xuất' || child.title.toLowerCase() === 'Đăng xuất') {
         handleLogout();
     } else {
