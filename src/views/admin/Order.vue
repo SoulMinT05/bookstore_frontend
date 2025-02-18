@@ -352,25 +352,22 @@ const sortedOrdersComputed = computed(() => {
     }
 
     const direction = currentSortDir.value === 'asc' ? 1 : -1;
-    function getValueByKey(obj: any, key: string): any {
-        return key.split('.').reduce((o, i) => o?.[i], obj);
+
+    function getValueByKey<T>(obj: T, key: string): any {
+        return key.split('.').reduce((o, i) => {
+            if (o && typeof o === 'object') {
+                return (o as Record<string, any>)[i]; //
+            }
+            return undefined;
+        }, obj);
     }
-    return [...ordersToSort].sort((a, b) => {
-        if (currentSort.value.includes('.')) {
-            const keys = currentSort.value.split('.');
-            const valueA = keys.reduce((obj, key) => obj[key], a);
-            const valueB = keys.reduce((obj, key) => obj[key], b);
+    return [...ordersToSort].sort((a: Order, b: Order) => {
+        // Sử dụng getValueByKey với kiểu Order
+        const valueA = getValueByKey(a, currentSort.value);
+        const valueB = getValueByKey(b, currentSort.value);
 
-            if (valueA < valueB) return -1 * direction;
-            if (valueA > valueB) return 1 * direction;
-        } else {
-            // Sắp xếp theo các thuộc tính trực tiếp của Order (ví dụ: SoQuyen, NgayMuon)
-            const valueA = getValueByKey(a, currentSort.value);
-            const valueB = getValueByKey(b, currentSort.value);
-
-            if (valueA < valueB) return -1 * direction;
-            if (valueA > valueB) return 1 * direction;
-        }
+        if (valueA < valueB) return -1 * direction;
+        if (valueA > valueB) return 1 * direction;
 
         return 0;
     });
