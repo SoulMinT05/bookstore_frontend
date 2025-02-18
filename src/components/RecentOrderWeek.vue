@@ -3,7 +3,35 @@ import { ref, onMounted } from 'vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from 'vue-toastification';
 
-const statistics = ref({
+type Reader = {
+    Ho: string;
+    Ten: string;
+    email: string;
+    avatarUrl?: string;
+};
+
+type Order = {
+    MaDocGia: Reader;
+    TinhTrang: 'pending' | 'accepted' | 'rejected' | 'cancel';
+};
+
+type StatisticsData = {
+    currentWeek: {
+        users: number;
+        products: number;
+        orders: number;
+        publishers: number;
+        populateOrders: Order[];
+    };
+    growthRates: {
+        users: number;
+        products: number;
+        orders: number;
+        publishers: number;
+    };
+};
+
+const statistics = ref<StatisticsData>({
     currentWeek: {
         users: 0,
         products: 0,
@@ -21,8 +49,9 @@ const statistics = ref({
 
 const fetchData = async () => {
     try {
-        const staff = JSON.parse(localStorage.getItem('staff'));
-        const staffToken = staff.accessToken;
+        const staffData = localStorage.getItem('staff');
+        const staff = staffData ? JSON.parse(staffData) : null;
+        const staffToken = staff?.accessToken ?? '';
 
         const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/statistic/week`, {
             method: 'GET',
@@ -41,6 +70,11 @@ const fetchData = async () => {
             return;
         }
 
+        // Kiểm tra dữ liệu trả về
+        if (!data.statisticsWeek || data.statisticsWeek.length === 0) {
+            return;
+        }
+
         // Lấy số liệu từ tuần đầu tiên
         const firstWeekData = data.statisticsWeek[0];
 
@@ -50,7 +84,10 @@ const fetchData = async () => {
                 products: firstWeekData.products.count,
                 orders: firstWeekData.orders.count,
                 publishers: firstWeekData.publishers.count,
-                populateOrders: firstWeekData.orders.populateOrders || [], // Giả định rằng `populateOrders` nằm trong `orders`
+                populateOrders: Array.isArray(firstWeekData.orders.populateOrders)
+                    ? firstWeekData.orders.populateOrders
+                    : [],
+                // Giả định rằng `populateOrders` nằm trong `orders`
             },
             growthRates: {
                 users: firstWeekData.users.growthRate,
@@ -65,7 +102,7 @@ const fetchData = async () => {
     }
 };
 
-const getStatusMessage = (TinhTrang) => {
+const getStatusMessage = (TinhTrang: 'pending' | 'accepted' | 'rejected' | 'cancel') => {
     switch (TinhTrang) {
         case 'pending':
             return 'Đang xử lý';
@@ -99,12 +136,14 @@ onMounted(() => {
                 <Avatar class="h-9 w-9">
                     <AvatarImage :src="order.MaDocGia.avatarUrl || '/avatars/default.png'" alt="Avatar" />
                     <AvatarFallback>
-                        {{ order.MaDocGia.Ho.charAt(0) }}{{ order.MaDocGia.Ten.charAt(0) }}
+                        {{ order.MaDocGia.Ho.charAt(0) || '' }}{{ order.MaDocGia.Ten.charAt(0) || '' }}
                     </AvatarFallback>
                 </Avatar>
                 <div class="ml-4 space-y-1">
-                    <p class="text-sm font-medium leading-none">{{ order.MaDocGia.Ho }} {{ order.MaDocGia.Ten }}</p>
-                    <p class="text-sm text-muted-foreground">{{ order.MaDocGia.email }}</p>
+                    <p class="text-sm font-medium leading-none">
+                        {{ order.MaDocGia.Ho || '' }} {{ order.MaDocGia.Ten || '' }}
+                    </p>
+                    <p class="text-sm text-muted-foreground">{{ order.MaDocGia.email || '' }}</p>
                 </div>
                 <div class="ml-auto">
                     <span

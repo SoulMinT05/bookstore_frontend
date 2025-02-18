@@ -44,6 +44,7 @@ const getName = computed(() => {
     // if (!isLoggedIn.value) return '';
     try {
         const user = localStorage.getItem('user');
+        if (!user) return 'Người dùng không tồn tại';
         const userObj = JSON.parse(user); // Chuyển đổi chuỗi JSON thành đối tượng
         return userObj.userData.Ho + ' ' + userObj.userData.Ten; // Trả về tên người dùng
     } catch (error) {
@@ -55,7 +56,7 @@ const getEmail = computed(() => {
     // if (!isLoggedIn.value) return '';
     try {
         const user = localStorage.getItem('user');
-
+        if (!user) return 'Người dùng không tồn tại';
         const userObj = JSON.parse(user); // Chuyển đổi chuỗi JSON thành đối tượng
         return userObj.userData.email; // Trả về tên người dùng
     } catch (error) {
@@ -65,8 +66,19 @@ const getEmail = computed(() => {
 });
 const handleLogout = async () => {
     const toast = useToast();
-    const user = JSON.parse(localStorage.getItem('user'));
-    const userToken = user.accessToken;
+    const user = localStorage.getItem('user');
+    if (!user) {
+        toast.error('Lỗi: Không tìm thấy thông tin người dùng');
+        return;
+    }
+
+    const userObj = JSON.parse(user);
+    const userToken = userObj?.accessToken;
+
+    if (!userToken) {
+        toast.error('Lỗi: Không tìm thấy token đăng nhập');
+        return;
+    }
     try {
         const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/user/logout`, {
             method: 'POST',
@@ -85,8 +97,8 @@ const handleLogout = async () => {
         toast.success('Đăng xuất thành công');
         router.push('/login');
     } catch (error) {
-        toast.error('Đăng xuất thất bại');
-        return;
+        const errMessage = (error as Error).message || 'Lỗi không xác định';
+        console.error('Lỗi khi lấy dữ liệu người dùng từ localStorage:', errMessage);
     }
 };
 

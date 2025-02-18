@@ -42,14 +42,14 @@ const fetchData = async () => {
             currentYear: {
                 users: data.users,
                 products: data.products,
-                orders: data.orders,
+                orders: data.orders || { populateOrders: [] },
                 publishers: data.publishers,
             },
             growthRatesYear: {
-                users: data.users.growthRate,
-                products: data.products.growthRate,
-                orders: data.orders.growthRate,
-                publishers: data.publishers.growthRate,
+                users: data.users.growthRate ?? 0,
+                products: data.products.growthRate ?? 0,
+                orders: data.orders.growthRate ?? 0,
+                publishers: data.publishers.growthRate ?? 0,
             },
         };
     } catch (error) {
@@ -57,7 +57,7 @@ const fetchData = async () => {
     }
 };
 
-const getStatusMessage = (TinhTrang) => {
+const getStatusMessage = (TinhTrang: 'pending' | 'accepted' | 'rejected' | 'cancel') => {
     switch (TinhTrang) {
         case 'pending':
             return 'Đang xử lý';
@@ -84,12 +84,12 @@ onMounted(() => {
         </div>
         <div v-else> -->
         <div
-            v-for="(order, index) in statistics.currentYear.orders.populateOrders"
+            v-for="(order, index) in (statistics.currentYear.orders as any).populateOrders || []"
             :key="index"
             class="flex items-center"
         >
             <Avatar class="h-9 w-9">
-                <AvatarImage :src="order.MaDocGia.avatarUrl || '/avatars/default.png'" alt="Avatar" />
+                <AvatarImage :src="order.MaDocGia.avatarUrl ?? '/avatars/default.png'" alt="Avatar" />
                 <AvatarFallback>{{ order.MaDocGia.Ho.charAt(0) }}{{ order.MaDocGia.Ten.charAt(0) }}</AvatarFallback>
             </Avatar>
             <div class="ml-4 space-y-1">

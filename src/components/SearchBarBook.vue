@@ -47,7 +47,7 @@ import axiosUser from '@/utils/axiosUser';
 const searchQuery = ref('');
 const searchHistory = ref([]);
 const searchResults = ref([]);
-const isPopoverOpen = ref(false);
+const isPopoverOpen = ref<boolean>(false);
 
 const router = useRouter();
 
@@ -62,7 +62,7 @@ onUnmounted(() => {
     window.removeEventListener('resize', updatePopoverWidth); // Gỡ bỏ event khi component bị hủy
 });
 
-const selectSearchHistory = (keyword) => {
+const selectSearchHistory = (keyword: string) => {
     searchQuery.value = keyword;
     isPopoverOpen.value = false;
 };
@@ -108,7 +108,7 @@ const triggerRef = ref(null);
 
 const updatePopoverWidth = () => {
     if (triggerRef.value) {
-        popoverWidth.value = `${triggerRef.value?.$el?.getBoundingClientRect().width}px`;
+        popoverWidth.value = `${triggerRef.value.getBoundingClientRect().width}px`;
     }
 };
 

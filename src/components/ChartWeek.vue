@@ -6,6 +6,12 @@ import { useToast } from 'vue-toastification';
 type Data = { week: string; total: number };
 
 const dataOrders = ref<Data[]>([]);
+type WeekData = {
+    week: string;
+    orders: {
+        count: number;
+    };
+};
 const toast = useToast();
 
 const fetchData = async () => {
@@ -30,10 +36,12 @@ const fetchData = async () => {
         }
 
         // Tạo mảng weeklyData
-        const weeklyData: Data[] = (Array.isArray(data.statisticsWeek) ? data.statisticsWeek : []).map((weekData) => ({
-            week: weekData.week,
-            total: weekData.orders.count,
-        }));
+        const weeklyData: Data[] = (Array.isArray(data.statisticsWeek) ? data.statisticsWeek : []).map(
+            (weekData: WeekData) => ({
+                week: weekData.week,
+                total: weekData.orders.count,
+            }),
+        );
 
         dataOrders.value = weeklyData; // Cập nhật dữ liệu cho biểu đồ
         console.log('Dữ liệu tuần:', dataOrders.value);
