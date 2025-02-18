@@ -40,7 +40,7 @@ const token = ref('');
 const password = ref('');
 
 onMounted(() => {
-    token.value = route.params.token || '';
+    token.value = Array.isArray(route.params.token) ? route.params.token[0] : route.params.token || '';
     console.log('Token từ URL:', token.value);
 });
 
@@ -63,7 +63,7 @@ const resetPassword = async () => {
         } else {
             toast.error(response.data.message || 'Có lỗi xảy ra. Vui lòng thử lại!');
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error('Lỗi đặt lại mật khẩu:', error.response?.data?.message || error.message);
         toast.error('Lỗi đặt lại mật khẩu, vui lòng thử lại sau.');
     }

@@ -68,8 +68,17 @@ import axiosUser from '@/utils/axiosUser';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 
+interface Book {
+    _id: string;
+    slug: string;
+    HinhAnhSach: string[];
+    TenSach: string;
+    TacGia: string;
+    DonGia: number;
+}
+
 const route = useRoute();
-const searchResults = ref([]); // 🛠 Dữ liệu sẽ nằm trong searchResults.value
+const searchResults = ref<Book[]>([]); // 🛠 Dữ liệu sẽ nằm trong searchResults.value
 const keyword = ref(route.params.keyword);
 console.log('keyword: ', keyword);
 
@@ -78,7 +87,7 @@ onMounted(async () => {
         const response = await axiosUser.get(`/book/search?keyword=${encodeURIComponent(route.params.keyword)}`);
         searchResults.value = response.data.books || [];
         console.log('Dữ liệu searchResults:', searchResults.value);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Lỗi khi tìm kiếm:', error);
     }
 });

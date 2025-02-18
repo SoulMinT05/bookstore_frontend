@@ -270,22 +270,35 @@ import { RouterLink } from 'vue-router';
 import { onMounted, ref, watch } from 'vue';
 import { Heart, ShoppingCart, Star } from 'lucide-vue-next';
 import { useToast } from 'vue-toastification';
+
+interface Book {
+    HinhAnhSach: string;
+    TenSach: string;
+    description: string;
+    TacGia: string;
+    MaNXB: string;
+    NamXuatBan: number;
+    DonGia: number;
+    _id: string;
+    slug: string;
+}
+
 // Lấy route để truy cập tham số URL
 const route = useRoute();
 
 // Lấy slug từ URL params
 const slug = route.params.slug;
 const toast = useToast();
-const bookDetails = ref({});
-const relatedProducts = ref([]);
+const bookDetails = ref<Book | null>(null); // Sửa kiểu bookDetails
+const relatedProducts = ref<Book[]>([]); // Sửa kiểu relatedProducts
 const selectedImage = ref(null);
 const rating = ref(0);
 
-const setRating = (value) => {
+const setRating = (value: number) => {
     rating.value = value; // Cập nhật số sao khi click
 };
 
-const changeMainImage = (image) => {
+const changeMainImage = (image: string) => {
     selectedImage.value = image;
 };
 
@@ -310,7 +323,7 @@ const fetchProductDetails = async () => {
 };
 
 const fetchProductSimilarPublisher = async () => {
-    if (!bookDetails.value || !bookDetails.value.MaNXB) {
+    if (!bookDetails.value?.MaNXB) {
         console.log('Publisher ID not available');
         return;
     }
@@ -323,8 +336,9 @@ const fetchProductSimilarPublisher = async () => {
             },
         });
         console.log('res.data: ', res.data);
-        // relatedProducts.value = res.data.relatedProducts;
-        relatedProducts.value = res.data.relatedProducts.filter((product) => product._id !== bookDetails.value._id);
+        relatedProducts.value = res.data.relatedProducts.filter(
+            (product: Book) => product._id !== bookDetails.value._id,
+        );
         console.log('relatedProducts.value: ', relatedProducts.value);
     } catch (error) {
         console.error('Error fetching related products:', error);
@@ -341,9 +355,8 @@ const addToCart = async () => {
 
     try {
         const res = await axios.post('/user/addToCart', {
-            productId: bookDetails.value,
+            productId: bookDetails.value?._id,
         });
-        console.log('res.data: ', res.data);
         toast.success('Thêm vào giỏ hàng thành công');
     } catch (error) {
         console.error('Error fetching add to cart: ', error.message);
@@ -358,7 +371,7 @@ onMounted(() => {
         document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' });
     }, 100);
 
-    if (bookDetails.value.HinhAnhSach && bookDetails.value.HinhAnhSach.length > 0) {
+    if (bookDetails.value?.HinhAnhSach && bookDetails.value?.HinhAnhSach.length > 0) {
         selectedImage.value = bookDetails.value.HinhAnhSach[0];
     }
 });
@@ -369,7 +382,7 @@ watch(
     },
 );
 watch(
-    () => bookDetails.value.HinhAnhSach,
+    () => bookDetails.value?.HinhAnhSach,
     (newImages) => {
         if (newImages && newImages.length > 0) {
             selectedImage.value = newImages[0];
@@ -377,7 +390,6 @@ watch(
     },
     { immediate: true }, // Đảm bảo hàm này chạy ngay khi component mount
 );
-console.log('Slug from URL:', slug); // Log slug ra console
 </script>
 
 <style scoped>

@@ -10,6 +10,22 @@ import StatisticYear from '@/views/admin/StatisticYear.vue';
 import { ref, onMounted, computed } from 'vue';
 import { useToast } from 'vue-toastification';
 
+interface WeekData {
+    week: string;
+    users: { title: string; count: number; growthRate: number };
+    products: { title: string; count: number; growthRate: number };
+    orders: { title: string; count: number; growthRate: number };
+    publishers: { title: string; count: number; growthRate: number };
+}
+
+interface MonthData {
+    month: string;
+    users: { title: string; count: number; growthRate: number };
+    products: { title: string; count: number; growthRate: number };
+    orders: { title: string; count: number; growthRate: number };
+    publishers: { title: string; count: number; growthRate: number };
+}
+
 const statistics = ref({
     // Week
     currentWeek: {
@@ -50,14 +66,15 @@ const statistics = ref({
         orders: 0,
         publishers: 0,
     },
-    statisticsWeek: [],
-    statisticsMonth: [],
+    statisticsWeek: [] as WeekData[],
+    statisticsMonth: [] as MonthData[],
 });
 
 const fetchStatisticsWeek = async () => {
     try {
-        const staff = JSON.parse(localStorage.getItem('staff'));
-        const staffToken = staff.accessToken;
+        const staffData = localStorage.getItem('staff');
+        const staff = staffData ? JSON.parse(staffData) : null;
+        const staffToken = staff?.accessToken ?? '';
         const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/statistic/week`, {
             method: 'GET',
             headers: {
@@ -73,7 +90,7 @@ const fetchStatisticsWeek = async () => {
             toast.error(data.message);
             return;
         }
-        statistics.value.statisticsWeek = data.statisticsWeek.map((weekData) => ({
+        statistics.value.statisticsWeek = data.statisticsWeek.map((weekData: WeekData) => ({
             week: weekData.week,
             users: {
                 title: weekData.users.title,
@@ -97,17 +114,16 @@ const fetchStatisticsWeek = async () => {
             },
         }));
         console.log('statistics.value.statisticsWeek: ', statistics.value.statisticsWeek);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to fetch statistics:', error);
     }
 };
 
 const fetchStatisticsMonth = async () => {
     try {
-        // const user = JSON.parse(localStorage.getItem('user'));
-        // const userToken = user.accessToken;
-        const staff = JSON.parse(localStorage.getItem('staff'));
-        const staffToken = staff.accessToken;
+        const staffData = localStorage.getItem('staff');
+        const staff = staffData ? JSON.parse(staffData) : null;
+        const staffToken = staff?.accessToken ?? '';
         const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/statistic/month`, {
             method: 'GET',
             headers: {
@@ -123,7 +139,7 @@ const fetchStatisticsMonth = async () => {
             toast.error(data.message);
             return;
         }
-        statistics.value.statisticsMonth = data.statisticsMonth.map((monthData) => ({
+        statistics.value.statisticsMonth = data.statisticsMonth.map((monthData: MonthData) => ({
             month: monthData.month,
             users: {
                 title: monthData.users.title,
@@ -146,15 +162,16 @@ const fetchStatisticsMonth = async () => {
                 growthRate: monthData.publishers.growthRate,
             },
         }));
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to fetch statistics:', error);
     }
 };
 
 const fetchStatisticsYear = async () => {
     try {
-        const staff = JSON.parse(localStorage.getItem('staff'));
-        const staffToken = staff.accessToken;
+        const staffData = localStorage.getItem('staff');
+        const staff = staffData ? JSON.parse(staffData) : null;
+        const staffToken = staff?.accessToken ?? '';
         const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/statistic/year`, {
             method: 'GET',
             headers: {
@@ -182,7 +199,7 @@ const fetchStatisticsYear = async () => {
             orders: data.orders.growthRate,
             publishers: data.publishers.growthRate,
         };
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to fetch statistics:', error);
     }
 };

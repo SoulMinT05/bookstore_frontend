@@ -59,7 +59,7 @@ const sendResetLink = async () => {
         } else {
             toast.error('Gửi email thất bại, vui lòng thử lại');
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error sending reset link:', error.message);
         toast.error('Failed to send reset link');
     } finally {

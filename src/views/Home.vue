@@ -2,13 +2,13 @@
     <div>
         <Header />
         <div class="container mx-auto p-4 min-h-[250px]">
-            <div class="slider-wrapper">
+            <!-- <div class="slider-wrapper">
                 <slick-carousel :autoplay="true" :autoplay-speed="3000" :dots="true">
                     <div v-for="(item, index) in slides" :key="index">
                         <img :src="item.image" alt="slide" class="w-full h-64 object-cover" />
                     </div>
                 </slick-carousel>
-            </div>
+            </div> -->
 
             <div class="mx-auto" v-for="(books, category) in booksByCategory" :key="category">
                 <h2 class="text-2xl font-bold text-gray-800 mt-16">
@@ -76,7 +76,16 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Button } from '@/components/ui/button';
 
 import { Heart, ShoppingCart } from 'lucide-vue-next';
-const booksByCategory = ref([]);
+const booksByCategory = ref<
+    Array<{
+        _id: string;
+        slug: string;
+        HinhAnhSach: string[];
+        TenSach: string;
+        TacGia: string;
+        DonGia: number;
+    }>
+>([]);
 
 const fetchProductsByAutoPublisher = async () => {
     try {
