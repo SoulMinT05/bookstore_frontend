@@ -54,11 +54,20 @@ import axios from '@/utils/axios';
 import { Separator } from '@/components/ui/separator';
 import { onMounted, ref, watch, computed } from 'vue';
 
+interface Order {
+    _id: string;
+    NgayTao: string;
+    NgayMuon: string;
+    NgayTra: string;
+    SoQuyen: number;
+    TinhTrang: 'pending' | 'accepted' | 'rejected' | 'cancel'; // Bạn có thể mở rộng thêm các trạng thái nếu cần
+}
+
 const orders = ref([]);
-const lastOrder = ref({});
+const lastOrder = ref<Order | null>(null);
 
 const statusClass = computed(() => {
-    const TinhTrang = lastOrder.value.TinhTrang;
+    const TinhTrang = lastOrder.value?.TinhTrang;
     if (TinhTrang === 'pending') return 'bg-blue-500 hover:bg-blue-500'; // Màu xanh dương, không thay đổi khi hover
     if (TinhTrang === 'accepted') return 'bg-green-500 hover:bg-green-500'; // Màu xanh lá, không thay đổi khi hover
     if (TinhTrang === 'rejected') return 'bg-red-500 hover:bg-red-500'; // Màu đỏ, không thay đổi khi hover
@@ -66,7 +75,7 @@ const statusClass = computed(() => {
 });
 
 const statusText = computed(() => {
-    const TinhTrang = lastOrder.value.TinhTrang;
+    const TinhTrang = lastOrder.value?.TinhTrang;
     if (TinhTrang === 'pending') return 'Đang xử lý';
     if (TinhTrang === 'accepted') return 'Đã chấp nhận';
     if (TinhTrang === 'rejected') return 'Đã từ chối';
@@ -89,16 +98,11 @@ const getInfoUser = async () => {
     try {
         const res = await axios.get('/order/getUserOrderFromUser');
 
-        console.log('res.data: ', res.data);
         orders.value = res.data.order;
-        console.log(' orders.value: ', orders.value);
         if (orders.value) {
-            lastOrder.value = orders.value[orders.value.length - 1]; // Lấy phần tử cuối cùng
-            console.log('Last order.value: ', lastOrder.value);
+            lastOrder.value = orders.value[orders.value.length - 1] as Order; // Lấy phần tử cuối cùng
         }
-        // console.log('currentUser.value: ', currentUser.value);
-        // console.log('carts.value11: ', carts.value);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching get cart: ', error.message);
     }
 };

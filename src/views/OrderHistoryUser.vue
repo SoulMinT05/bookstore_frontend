@@ -78,7 +78,15 @@ import {
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
-const orders = ref([]);
+interface Order {
+    _id: string;
+    NgayMuon: string;
+    NgayTra: string;
+    SoQuyen: number;
+    TinhTrang: string;
+}
+
+const orders = ref<Order[]>([]);
 
 const getStatusClass = (TinhTrang: string): string => {
     switch (TinhTrang.toLowerCase()) {
@@ -129,7 +137,7 @@ const getListOrder = async () => {
         console.log('res.data: ', res.data);
         orders.value = res.data.order;
         console.log('orders.value: ', orders.value);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching get cart: ', error.message);
     }
 };

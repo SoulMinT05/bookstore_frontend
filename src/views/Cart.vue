@@ -222,6 +222,15 @@ import { onMounted, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
 
+interface User {
+    Ho: string;
+    Ten: string;
+    email: string;
+    DiaChi: string;
+    daysToBorrow?: number;
+}
+const currentUser = ref<User | null>(null);
+
 const router = useRouter();
 const toast = useToast();
 
@@ -248,8 +257,8 @@ const formatDate = (date: Date | string | null) => {
 };
 
 const selectAll = ref(false);
-const currentUser = ref({});
-const carts = ref([]);
+// const carts = ref([]);
+const carts = ref<{ product: { _id: string }; selected: boolean }[]>([]);
 const NgayMuon = ref(null);
 const isPopoverOpen = ref(false);
 const selectedProductIds = ref([]);
@@ -270,8 +279,8 @@ const updateSelectAll = () => {
 
 watch(
     carts,
-    (newCarts) => {
-        selectAll.value = newCarts.every((item) => item.selected);
+    () => {
+        selectAll.value = carts.value.every((item) => item.selected);
     },
     { deep: true },
 );
@@ -284,13 +293,13 @@ const borrowBooks = async () => {
     }
 
     // Kiểm tra nếu thông tin cá nhân chưa đầy đủ
-    const { Ho, Ten, email, DiaChi, daysToBorrow } = currentUser.value;
+    const { Ho, Ten, email, DiaChi, daysToBorrow } = currentUser.value as User;
     if (!Ho || !Ten || !email || !DiaChi) {
         toast.error('Cần nhập đầy đủ thông tin cá nhân trước khi mượn sách');
         return;
     }
     // Kiểm tra nếu số ngày mượn chưa được chọn
-    if (!daysToBorrow) {
+    if (!daysToBorrow || daysToBorrow === 0) {
         toast.error('Cần nhập số ngày mượn.');
         return;
     }
@@ -315,23 +324,10 @@ const borrowBooks = async () => {
     console.log('orderData: ', orderData);
 
     try {
-        // Gửi yêu cầu POST đến backend
         const res = await axios.post('/order/createOrder', orderData);
-
-        // console.log('res.data: ', res.data);
-        // const data = await res.json();
-
-        // const toast = useToast();
-        // console.log('dataOrderUser: ', data);
-        // if (!data.success) {
-        //     toast.error(data.message);
-        //     return;
-        // }
-
-        // Hiển thị thông báo thành công
         toast.success('Gửi yêu cầu mượn sách thành công');
         router.push('orderSuccess');
-    } catch (error) {
+    } catch (error: any) {
         // Xử lý lỗi từ server
         console.error('Error fetching borrow books: ', error.response.data.message);
         toast.error(error.response.data.message);
@@ -345,11 +341,11 @@ const getCart = async () => {
         console.log('currentUser.value: ', currentUser.value);
         carts.value = res.data.user.cart;
         console.log('carts.value11: ', carts.value);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching get cart: ', error.message);
     }
 };
-const increaseQuantityCart = async (productId) => {
+const increaseQuantityCart = async (productId: string) => {
     try {
         const res = await axios.post('/user/addToCart', {
             productId,
@@ -357,7 +353,7 @@ const increaseQuantityCart = async (productId) => {
         console.log('res.dataIncrease: ', res.data);
         toast.success('Tăng số lượng thành công');
         getCart();
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching add to cart: ', error.message);
         toast.error('Tăng số lượng thất bại');
     }
@@ -369,7 +365,7 @@ const decreaseQuantityCart = async (productId) => {
 
         toast.success('Giảm số lượng thành công');
         getCart();
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching decrease from cart: ', error.message);
         toast.error('Giảm số lượng thất bại');
     }
@@ -381,7 +377,7 @@ const removeProductCart = async (productId) => {
 
         toast.success('Xoá sản phẩm thành công');
         getCart();
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching remove from cart: ', error.message);
         toast.error('Xoá sản phẩm thất bại');
     }
@@ -391,7 +387,3 @@ onMounted(() => {
     getCart();
 });
 </script>
-
-<style scoped>
-/* Custom styles */
-</style>

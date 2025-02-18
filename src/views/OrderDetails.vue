@@ -148,14 +148,22 @@ import { useToast } from 'vue-toastification';
 
 import html2pdf from 'html2pdf.js';
 
-// Lấy route để truy cập tham số URL
 const route = useRoute();
-const orderDetails = ref({});
+interface Order {
+    _id: string;
+    MaDocGia: string;
+    NgayMuon: string;
+    NgayTra: string;
+    SoQuyen: number;
+    TinhTrang: string;
+    // Add other properties as needed based on the order data
+}
+
+const orderDetails = ref<Order>({} as Order);
+
 const toast = useToast();
 
-// Lấy id từ URL params
 const id = route.params.id;
-console.log('id: ', id);
 
 const cancelOrder = async () => {
     if (!window.confirm('Bạn chắc chắn huỷ đơn này không?')) return;
@@ -235,8 +243,6 @@ const fetchOrderDetails = async () => {
 
         orderDetails.value = res.data.orders;
         console.log('orderDetails.value : ', orderDetails.value);
-        // bookDetails.value = res.data.product;
-        // console.log('bookDetails.value: ', bookDetails.value);
     } catch (error) {
         console.error('Error fetching products:', error);
     }
@@ -244,7 +250,6 @@ const fetchOrderDetails = async () => {
 onMounted(() => {
     fetchOrderDetails();
 });
-console.log('id from URL:', id); // Log id ra console
 </script>
 
 <style scoped>
