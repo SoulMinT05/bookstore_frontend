@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { BarChart } from '@/components/ui/chart-bar';
+import { useToast } from 'vue-toastification';
 
 type Data = { year: number; total: number };
+type Order = { createdAt: string }; // Kiểu dữ liệu cho đơn hàng
+
 const dataOrders = ref<Data[]>([]);
+const toast = useToast();
 
 const fetchData = async () => {
     try {
-        const staff = JSON.parse(localStorage.getItem('staff'));
-        const staffToken = staff.accessToken;
+        const staffData = localStorage.getItem('staff');
+        const staff = staffData ? JSON.parse(staffData) : null;
+        const staffToken = staff?.accessToken ?? '';
+
         const res = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/statistic/year`, {
             method: 'GET',
             headers: {
@@ -16,36 +22,38 @@ const fetchData = async () => {
                 Authorization: `Bearer ${staffToken}`,
             },
         });
-        const data = await res.json();
-        console.log('dataChartYearrrrr: ', data);
 
-        // Giả định rằng data.orders.populateOrders là mảng các đơn hàng với thuộc tính createdAt
-        // Khởi tạo mảng yearlyData với một số năm cần so sánh
+        const data = await res.json();
+        console.log('Dữ liệu thống kê năm:', data);
+
+        if (!data.success) {
+            toast.error(data.message);
+            return;
+        }
+
+        // Khởi tạo mảng yearlyData
         const yearlyData: Data[] = [];
 
-        // Cập nhật số liệu từ API
-        if (Array.isArray(data.orders.populateOrders)) {
-            data.orders.populateOrders.forEach((order) => {
+        if (Array.isArray(data.orders?.populateOrders)) {
+            (data.orders.populateOrders as Order[]).forEach((order) => {
                 const year = new Date(order.createdAt).getFullYear();
                 const existingYearData = yearlyData.find((item) => item.year === year);
 
                 if (existingYearData) {
-                    existingYearData.total += 1; // Tăng tổng số đơn hàng theo năm
+                    existingYearData.total += 1;
                 } else {
-                    yearlyData.push({ year, total: 1 }); // Thêm mới nếu chưa có
+                    yearlyData.push({ year, total: 1 });
                 }
             });
         }
 
-        dataOrders.value = yearlyData; // Lưu dữ liệu vào biến reactive
+        dataOrders.value = yearlyData;
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Lỗi khi lấy dữ liệu:', error instanceof Error ? error.message : error);
     }
 };
 
-onMounted(() => {
-    fetchData(); // Gọi hàm fetchData khi component được mounted
-});
+onMounted(fetchData);
 </script>
 
 <template>
