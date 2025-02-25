@@ -108,7 +108,7 @@
                                 >
                             </div>
                         </div>
-                        <Separator />
+                        <!-- <Separator /> -->
                     </CardContent>
                     <!-- <CardFooter class="flex items-center gap-2">
                     <Button size="sm" @click="exportToPDF">In PDF</Button>
@@ -143,6 +143,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Seperator } from '@/components/ui/seperator';
 import { onMounted, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 
@@ -197,6 +198,9 @@ const cancelOrder = async () => {
 
 const exportToPDF = () => {
     const element = document.getElementById('order-pdf'); // Lấy nội dung cần xuất PDF
+    console.log('HTML Element:', element);
+    console.log('Inner HTML:', element.innerHTML);
+
     if (!element) return;
 
     setTimeout(() => {
@@ -204,12 +208,13 @@ const exportToPDF = () => {
             margin: 1,
             filename: 'order-details.pdf',
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
+            // html2canvas: { scale: 2, useCORS: false },
+            html2canvas: { scale: 1.5, useCORS: true, backgroundColor: 'white' },
             jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
         };
 
         html2pdf().set(options).from(element).save();
-    }, 1000);
+    }, 2000);
 };
 
 const getStatusClass = (TinhTrang: string): string => {

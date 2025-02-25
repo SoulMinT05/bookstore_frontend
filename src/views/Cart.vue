@@ -256,7 +256,7 @@ interface CartItem {
     selected: boolean;
 }
 
-const selectedDaysToBorrow = ref(currentUser.value?.daysToBorrow?.toString() || '0');
+const selectedDaysToBorrow = ref(currentUser.value?.daysToBorrow?.toString() || '7');
 
 function formatCurrency(value: number | null | undefined): string {
     if (value == null || isNaN(value)) return '0 ₫'; // Xử lý trường hợp giá trị không hợp lệ
@@ -330,10 +330,10 @@ const borrowBooks = async () => {
     //     return;
     // }
 
-    const daysToBorrowValue = daysToBorrow ?? '0'; // Cung cấp giá trị mặc định '0' nếu daysToBorrow là undefined
+    const daysToBorrowValue = daysToBorrow ?? '7'; // Cung cấp giá trị mặc định '0' nếu daysToBorrow là undefined
 
     // Kiểm tra nếu số ngày mượn chưa được chọn
-    if (!daysToBorrowValue || daysToBorrowValue === '0') {
+    if (!daysToBorrowValue) {
         toast.error('Cần nhập số ngày mượn.');
         return;
     }

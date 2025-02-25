@@ -7,6 +7,14 @@ body.dark {
     background-color: #030711;
 }
 
+/* #order-pdf {
+    background: white !important;
+    color: black !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
+} */
+
 .left-placholder::before {
     content: attr(placeholder);
     position: relative;

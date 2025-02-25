@@ -7,6 +7,8 @@
                     placeholder="Tìm kiếm sách..."
                     class="pr-10 w-full"
                     @focus="handleFocus"
+                    @blur="handleBlur"
+                    @keydown="handleKeydown"
                     @keyup.enter="handleSearch"
                 />
                 <Search
@@ -17,7 +19,7 @@
             </div>
         </PopoverTrigger>
 
-        <PopoverContent :style="{ width: popoverWidth }">
+        <PopoverContent class="popover-content" :style="{ width: popoverWidth }">
             <div v-if="searchHistory.length > 0">
                 <p class="text-sm text-gray-500 mb-2">Lịch sử tìm kiếm:</p>
                 <ul class="space-y-2">
@@ -37,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch, onBeforeUnmount } from 'vue';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Search } from 'lucide-vue-next';
@@ -47,7 +49,8 @@ import axiosUser from '@/utils/axiosUser';
 const searchQuery = ref('');
 const searchHistory = ref([]);
 const searchResults = ref([]);
-const isPopoverOpen = ref<boolean>(false);
+const isPopoverOpen = ref(false);
+const focusTimeout = ref(null);
 
 const router = useRouter();
 
@@ -56,6 +59,13 @@ onMounted(async () => {
 
     updatePopoverWidth(); // Cập nhật lần đầu
     window.addEventListener('resize', updatePopoverWidth);
+    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('keydown', handleKeydown);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside);
+    document.removeEventListener('keydown', handleKeydown);
 });
 
 onUnmounted(() => {
@@ -77,9 +87,34 @@ const fetchSearchHistory = async () => {
 };
 
 const handleFocus = () => {
-    setTimeout(() => {
+    if (focusTimeout.value !== null) clearTimeout(focusTimeout.value);
+    focusTimeout.value = setTimeout(() => {
         isPopoverOpen.value = true;
-    }, 1000);
+    }, 200);
+};
+
+const handleBlur = (event) => {
+    setTimeout(() => {
+        if (
+            triggerRef.value &&
+            !triggerRef.value.contains(event.relatedTarget) // Kiểm tra nếu blur ra ngoài Input/Search
+        ) {
+            isPopoverOpen.value = false;
+        }
+    }, 100);
+};
+
+const handleKeydown = (event) => {
+    isPopoverOpen.value = true; // Giữ popover mở khi gõ dấu cách
+    if (event.key === ' ') {
+        event.preventDefault(); // Chặn hành động mặc định (submit)
+    }
+};
+
+const handleClickOutside = (event) => {
+    if (triggerRef.value && !triggerRef.value.contains(event.target)) {
+        isPopoverOpen.value = false;
+    }
 };
 
 const handleSearch = async () => {
@@ -110,26 +145,28 @@ const updatePopoverWidth = async () => {
     if (triggerRef.value instanceof HTMLElement) {
         popoverWidth.value = `${triggerRef.value.getBoundingClientRect().width}px`;
     }
-    console.log('popoverWidth: ', popoverWidth);
 };
 
-console.log('triggerRef: ', triggerRef);
+// const debounceTimeout = ref(null);
+// watch(searchQuery, (newValue) => {
+//     if (debounceTimeout.value) clearTimeout(debounceTimeout.value); // Xóa timeout trước đó nếu có
 
-watch(searchQuery, async (newValue) => {
-    if (!newValue.trim()) {
-        searchResults.value = [];
-        return;
-    }
+//     debounceTimeout.value = setTimeout(async () => {
+//         if (!newValue.trim()) {
+//             searchResults.value = [];
+//             return;
+//         }
 
-    console.log('searchQuery:', newValue); // Log giá trị người dùng nhập
+//         console.log('searchQuery:', newValue); // Log giá trị người dùng nhập
 
-    try {
-        const { data } = await axiosUser.get(`/book/search?keyword=${encodeURIComponent(newValue)}`);
-        console.log('API Response:', data); // Log kết quả API
+//         try {
+//             const { data } = await axiosUser.get(`/book/search?keyword=${encodeURIComponent(newValue)}`);
+//             console.log('API Response:', data); // Log kết quả API
 
-        searchResults.value = data.books; // Lưu kết quả vào biến để hiển thị UI
-    } catch (error) {
-        console.error('Lỗi khi tìm kiếm', error);
-    }
-});
+//             searchResults.value = data.books; // Lưu kết quả vào biến để hiển thị UI
+//         } catch (error) {
+//             console.error('Lỗi khi tìm kiếm', error);
+//         }
+//     }, 1000); // Trì hoãn 500ms (có thể điều chỉnh)
+// });
 </script>
