@@ -112,7 +112,7 @@ const handleLogout = async () => {
                 <DropdownMenuTrigger as-child>
                     <Button variant="outline" class="border-0 flex items-center max-w-[200px] w-full justify-start">
                         <Avatar class="h-8 w-8">
-                            <!-- <AvatarImage src="https://github.com/radix-vue.png"></AvatarImage> -->
+                            <AvatarImage src="https://github.com/shadcn.png"></AvatarImage>
                         </Avatar>
                         <span class="ml-2 hidden md:flex justify-start flex-col items-start">
                             <p class="mb-0">{{ getName }}</p>

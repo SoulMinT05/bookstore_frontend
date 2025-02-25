@@ -90,7 +90,7 @@ onMounted(() => {
             class="flex items-center"
         >
             <Avatar class="h-9 w-9">
-                <AvatarImage :src="order.MaDocGia.avatarUrl ?? '/avatars/default.png'" alt="Avatar" />
+                <AvatarImage :src="order.MaDocGia.avatarUrl ?? 'https://github.com/shadcn.png'" alt="Avatar" />
                 <AvatarFallback>{{ order.MaDocGia.Ho.charAt(0) }}{{ order.MaDocGia.Ten.charAt(0) }}</AvatarFallback>
             </Avatar>
             <div class="ml-4 space-y-1">

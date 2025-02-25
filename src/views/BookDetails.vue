@@ -185,7 +185,7 @@
                                     <div class="space-y-6 w-full">
                                         <div class="flex items-start gap-4 w-full">
                                             <Avatar class="h-10 w-10 border">
-                                                <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
+                                                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                                                 <AvatarFallback>CN</AvatarFallback>
                                             </Avatar>
                                             <div class="grid gap-1.5 w-full">
@@ -219,7 +219,7 @@
                                         </div>
                                         <div class="flex items-start gap-4 w-full">
                                             <Avatar class="h-10 w-10 border">
-                                                <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
+                                                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                                                 <AvatarFallback>CN</AvatarFallback>
                                             </Avatar>
                                             <div class="grid gap-1.5 w-full">

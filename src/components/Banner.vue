@@ -23,9 +23,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Card class="w-full overflow-hidden mt-16">
+    <Card class="w-full overflow-hidden mt-16 border-0 shadow-none">
         <CardContent class="relative px-1">
-            <div class="relative h-[200px]">
+            <div class="relative h-[300px]">
                 <div
                     v-for="(slide, index) in adSlides"
                     :key="index"

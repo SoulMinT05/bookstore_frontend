@@ -132,7 +132,7 @@ onMounted(() => {
                 class="flex items-center mt-4"
             >
                 <Avatar class="h-9 w-9">
-                    <AvatarImage :src="order.MaDocGia?.avatarUrl || '/avatars/default.png'" alt="Avatar" />
+                    <AvatarImage :src="order.MaDocGia?.avatarUrl || 'https://github.com/shadcn.png'" alt="Avatar" />
                     <AvatarFallback>
                         {{ order.MaDocGia?.Ho?.charAt(0) || '' }}{{ order.MaDocGia?.Ten?.charAt(0) || '' }}
                     </AvatarFallback>
