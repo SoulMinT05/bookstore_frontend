@@ -9,6 +9,7 @@
                     </div>
                 </slick-carousel>
             </div> -->
+            <Banner />
 
             <div class="mx-auto" v-for="(books, category) in booksByCategory" :key="category">
                 <h2 class="text-2xl font-bold text-gray-800 mt-16">
@@ -67,6 +68,7 @@
 <script lang="ts" setup>
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
+import Banner from '@/components/Banner.vue';
 
 import axios from '@/utils/axios';
 

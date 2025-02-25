@@ -1,7 +1,7 @@
 <template>
     <Popover v-model:open="isPopoverOpen">
-        <PopoverTrigger ref="triggerRef" class="w-full">
-            <div class="relative w-full">
+        <PopoverTrigger class="w-full">
+            <div ref="triggerRef" class="relative w-full">
                 <Input
                     v-model="searchQuery"
                     placeholder="Tìm kiếm sách..."
@@ -106,11 +106,14 @@ const handleSearch = async () => {
 const popoverWidth = ref('300px'); // Giá trị mặc định
 const triggerRef = ref<HTMLElement | null>(null);
 
-const updatePopoverWidth = () => {
-    if (triggerRef.value) {
+const updatePopoverWidth = async () => {
+    if (triggerRef.value instanceof HTMLElement) {
         popoverWidth.value = `${triggerRef.value.getBoundingClientRect().width}px`;
     }
+    console.log('popoverWidth: ', popoverWidth);
 };
+
+console.log('triggerRef: ', triggerRef);
 
 watch(searchQuery, async (newValue) => {
     if (!newValue.trim()) {
