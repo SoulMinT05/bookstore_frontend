@@ -192,7 +192,7 @@
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import axios from '@/utils/axios';
-// import axiosUser from '@/utils/axiosUser';
+import axiosUser from '@/utils/axiosUser';
 
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -320,19 +320,7 @@ const borrowBooks = async () => {
         return;
     }
 
-    // if (typeof daysToBorrow === 'string') {
-    //     currentUser.value.daysToBorrow = parseInt(daysToBorrow, 10);
-    // }
-
-    // // Kiểm tra nếu số ngày mượn chưa được chọn
-    // if (!currentUser.value.daysToBorrow || currentUser.value.daysToBorrow === 0) {
-    //     toast.error('Cần nhập số ngày mượn.');
-    //     return;
-    // }
-
     const daysToBorrowValue = daysToBorrow ?? '7'; // Cung cấp giá trị mặc định '0' nếu daysToBorrow là undefined
-
-    // Kiểm tra nếu số ngày mượn chưa được chọn
     if (!daysToBorrowValue) {
         toast.error('Cần nhập số ngày mượn.');
         return;
@@ -370,9 +358,9 @@ const borrowBooks = async () => {
 
 const getCart = async () => {
     try {
-        const res = await axios.get('/user/getCart');
+        const res = await axiosUser.get('/user/getCart');
         currentUser.value = res.data.user;
-        carts.value = res.data.user.cart;
+        carts.value = res.data.cart;
     } catch (error: any) {
         console.error('Error fetching get cart: ', error.message);
     }

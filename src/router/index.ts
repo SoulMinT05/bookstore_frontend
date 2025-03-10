@@ -18,6 +18,14 @@ const router = createRouter({
             } as RouteMeta & IRouteMeta,
         },
         {
+            path: '/auth-success',
+            name: 'auth-success',
+            component: () => import('@/views/AuthSuccess.vue'),
+            meta: {
+                title: 'AuthSuccess',
+            } as RouteMeta & IRouteMeta,
+        },
+        {
             path: '/login',
             name: 'login',
             component: () => import('@/views/Login.vue'),
@@ -251,10 +259,13 @@ router.beforeEach((to, from, next) => {
     if (to.path.startsWith('/admin') && userData?.ChucVu === 'user') {
         return next({ path: '/' });
     }
-    // if (!userData && to.path !== '/login') {
-    //     return next('/login'); // Điều hướng về trang login nếu người dùng chưa đăng nhập
-    // }
+    if (to.path === '/login' && userData) {
+        return next('/');
+    }
 
+    if (to.path === '/login' && staffData) {
+        return next('/admin');
+    }
     if (userData?.ChucVu === 'user' && to.path.startsWith('/admin')) {
         return next('/'); // Điều hướng về trang chủ nếu user cố gắng vào các route không phải /admin
     }

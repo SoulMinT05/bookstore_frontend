@@ -5,7 +5,7 @@ import { createPinia } from 'pinia';
 import VueFeather from 'vue-feather';
 import Toast from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
-
+import vue3GoogleLogin from 'vue3-google-login';
 import PageHeaderVue from './components/ui/PageHeader.vue';
 import Icon from '@/components/ui/Icon.vue';
 
@@ -22,5 +22,8 @@ app.component('Icon', Icon);
 app.use(createPinia());
 app.use(Toast);
 app.use(router);
+app.use(vue3GoogleLogin, {
+    clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID, // 🔥 Thay bằng Google Client ID của bạn
+});
 
 app.mount('#app');

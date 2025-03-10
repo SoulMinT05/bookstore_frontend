@@ -81,24 +81,24 @@ const onSubmit = handleSubmit(async (values) => {
                 <form @submit.prevent="onSubmit" class="space-y-4">
                     <div class="space-y-2">
                         <Label for="Ho">Họ</Label>
-                        <Input id="Ho" type="text" placeholder="Nguyễn" v-model="Ho.value" />
+                        <Input id="Ho" type="text" v-model="Ho.value" />
                         <p v-if="Ho.errorMessage" class="text-red-500 text-sm mt-1">{{ Ho.errorMessage }}</p>
                     </div>
                     <div class="space-y-2">
                         <Label for="Ten">Tên</Label>
-                        <Input id="Ten" type="text" placeholder="Văn Thy" v-model="Ten.value" />
+                        <Input id="Ten" type="text" v-model="Ten.value" />
                         <p v-if="Ten.errorMessage" class="text-red-500 text-sm mt-1">{{ Ten.errorMessage }}</p>
                     </div>
 
                     <div class="space-y-2">
                         <Label for="email">Email</Label>
-                        <Input id="email" type="email" placeholder="example@gmail.com" v-model="email.value" />
+                        <Input id="email" type="email" v-model="email.value" />
                         <p v-if="email.errorMessage" class="text-red-500 text-sm mt-1">{{ email.errorMessage }}</p>
                     </div>
 
                     <div class="space-y-2">
                         <Label for="password">Mật khẩu</Label>
-                        <Input id="password" type="password" placeholder="Typing12#" v-model="password.value" />
+                        <Input id="password" type="password" v-model="password.value" />
                         <p v-if="password.errorMessage" class="text-red-500 text-sm mt-1">
                             {{ password.errorMessage }}
                         </p>

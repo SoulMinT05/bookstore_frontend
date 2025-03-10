@@ -29,10 +29,12 @@ import { useAppStore } from '@/stores/app';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
 import axios from '@/utils/axios';
+import axiosUser from '@/utils/axiosUser';
 
 const store = useAppStore();
 const router = useRouter();
 const isLoggedIn = ref(!!localStorage.getItem('user'));
+console.log('isLoggedIn: ', isLoggedIn);
 const carts = ref([]);
 const cartCount = ref(0);
 const buttonWidth = ref(300);
@@ -104,12 +106,9 @@ const handleLogout = async () => {
 
 const getCart = async () => {
     try {
-        const res = await axios.get('/user/getCart');
-        console.log('res.data.user: ', res.data.user);
-        carts.value = res.data.user.cart;
+        const res = await axiosUser.get('/user/getCart');
+        carts.value = res.data.cart;
         cartCount.value = carts.value.length;
-        console.log('carts.valueHeader: ', carts.value);
-        console.log('cartCount.valueHeader: ', cartCount.value);
     } catch (error: any) {
         console.error('Error fetching get cart: ', error.message);
     }

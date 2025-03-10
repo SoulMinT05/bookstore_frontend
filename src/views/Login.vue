@@ -1,3 +1,74 @@
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { jwtDecode } from 'jwt-decode';
+import axios from '@/utils/axios';
+
+const email = ref('');
+const password = ref('');
+const router = useRouter();
+const toast = useToast();
+
+const callback = async (response) => {
+    if (response?.credential) {
+        try {
+            const decoded = jwtDecode(response.credential);
+
+            const userData = {
+                Ho: decoded.family_name,
+                Ten: decoded.given_name,
+                email: decoded.email,
+                avatar: decoded.picture, // Profile picture URL
+            };
+
+            const { data } = await axios.post('/auth/google-login', userData);
+            if (data.success) {
+                localStorage.setItem('user', JSON.stringify(data));
+
+                toast.success('Đăng nhập thành công!');
+                router.push('/');
+            } else {
+                toast.error('Xác thực Google thất bại!');
+            }
+        } catch (error) {
+            console.error('Failed to decode JWT:', error);
+        }
+    }
+};
+
+const onSubmit = async () => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/user/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email.value,
+                password: password.value,
+            }),
+        });
+
+        const data = await response.json();
+        if (!data.success) {
+            toast.error(data.message);
+            return;
+        }
+
+        toast.success('Đăng nhập thành công!');
+        localStorage.setItem('user', JSON.stringify(data)); // Store user info
+        router.push('/');
+    } catch (error) {
+        toast.error('Đã xảy ra lỗi. Vui lòng thử lại!');
+    }
+};
+</script>
+
 <template>
     <div class="flex items-center justify-center min-h-screen w-full">
         <Card class="w-full max-w-md md:max-w-lg mx-auto">
@@ -11,22 +82,11 @@
                         <div class="grid gap-6">
                             <div class="grid gap-2">
                                 <Label for="email">Email</Label>
-                                <Input
-                                    v-model="email"
-                                    id="email"
-                                    type="email"
-                                    placeholder="example@example.com"
-                                    required
-                                />
+                                <Input v-model="email" id="email" type="email" required />
                             </div>
                             <div class="grid gap-2">
-                                <Input
-                                    v-model="password"
-                                    id="password"
-                                    type="password"
-                                    placeholder="Typing12#"
-                                    required
-                                />
+                                <Label for="password">Password</Label>
+                                <Input v-model="password" id="password" type="password" required />
                             </div>
                             <div class="flex justify-between items-center">
                                 <label class="flex items-center text-sm text-gray-500 dark:text-gray-300">
@@ -50,6 +110,7 @@
                             </span>
                         </div>
                         <div class="flex flex-col gap-4">
+                            <GoogleLogin :callback="callback" />
                             <Button @click.prevent variant="outline" class="w-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5 mr-2">
                                     <path
@@ -58,15 +119,6 @@
                                     />
                                 </svg>
                                 Login with Apple
-                            </Button>
-                            <Button @click.prevent variant="outline" class="w-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5 mr-2">
-                                    <path
-                                        d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                                        fill="currentColor"
-                                    />
-                                </svg>
-                                Login with Google
                             </Button>
                         </div>
                         <p class="text-center text-sm font-light text-gray-500 dark:text-gray-400">
@@ -84,45 +136,3 @@
         </Card>
     </div>
 </template>
-
-<script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-
-const email = ref('');
-const password = ref('');
-const router = useRouter();
-const toast = useToast();
-
-const onSubmit = async () => {
-    try {
-        const response = await fetch(`${import.meta.env.VITE_API_BACKEND}/api/user/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email.value,
-                password: password.value,
-            }),
-        });
-
-        const data = await response.json();
-        if (!data.success) {
-            toast.error(data.message);
-            return;
-        }
-
-        toast.success('Đăng nhập thành công!');
-        localStorage.setItem('user', JSON.stringify(data)); // Store user info
-        router.push('/admin/dashboard');
-    } catch (error) {
-        toast.error('Đã xảy ra lỗi. Vui lòng thử lại!');
-    }
-};
-</script>
